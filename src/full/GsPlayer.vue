@@ -1,5 +1,5 @@
 <template>
-  <div class="gs-player" ref="playerContainerRef">
+  <div class="gs-player" ref="playerContainerRef" @click="handlePlayerClick" @dblclick="handlePlayerDblClick">
     <Player
         ref="playerRef"
         :src="props.src"
@@ -139,7 +139,9 @@ import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackRate, Playe
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
   showError: true,
-  errorMessage: '请求错误'
+  errorMessage: '请求错误',
+  handleClick: true,
+  handleDblClick: true
 });
 
 // Emits
@@ -343,6 +345,32 @@ function webFullscreen() {
 
 function switchToNextSrc() {
   playerRef.value?.play(props.nextSrc);
+}
+
+function handlePlayerClick() {
+  if (props.handleClick) {
+    if (isMuted.value) {
+      // 静音时，取消静音
+      toggleMute();
+    } else {
+      // 否则，切换播放/暂停
+      togglePlay();
+    }
+  }
+}
+
+function handlePlayerDblClick() {
+  if (props.handleDblClick) {
+    if (document.fullscreenElement) {
+      // 在任意全屏状态，退出全屏
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    } else {
+      // 在常规状态，切换到网页全屏
+      webFullscreen();
+    }
+  }
 }
 
 // Lifecycle

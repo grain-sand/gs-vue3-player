@@ -20,7 +20,7 @@ let index = 1;
 
 
 function getUrl() {
-  return videos[index++]
+  return videos[index++ % videos.length]
 }
 
 const src = ref(getUrl())
@@ -28,7 +28,6 @@ const next = ref(null)
 
 function srcChange(nextSrc: PlayerSource) {
   console.log(copyObject(nextSrc));
-  console.log(videos.length, index)
   next.value = getUrl();
 }
 

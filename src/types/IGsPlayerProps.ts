@@ -10,6 +10,10 @@ export interface IGsPlayerProps extends IPlayerProps {
   errorMessage?: string;
   /** 下一个输入源 */
   nextSrc?: PlayerSource;
+  /** 是否处理播放器单击，默认为true，为静音时，为取消静音，否则为切换播放 */
+  handleClick?: boolean;
+  /** 是否处理播放器双击，默认为true，用于 在常规状态切换到网页全屏，在任意全屏状态都是退出全屏 */
+  handleDblClick?: boolean;
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {
