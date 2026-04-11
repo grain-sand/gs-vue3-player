@@ -1,0 +1,46 @@
+// 播放器容器
+.gs-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--gs-player-bg);
+  overflow: hidden;
+  user-select: none;
+
+  // 视频元素
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  // 底部控制区域
+  .gs-player-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--gs-player-control-bg);
+  }
+
+  // 非全屏时，控制栏默认隐藏，鼠标悬停时显示，移出后延迟隐藏
+  &:not(:fullscreen) .gs-player-controls {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease-out 0.5s;
+  }
+
+  // 鼠标悬停时立即显示控制栏
+  &:not(:fullscreen):hover .gs-player-controls {
+    height: var(--gs-player-control-height);
+    overflow: visible;
+    transition: height 0.3s ease-out 0s;
+  }
+
+  // 全屏时始终显示控制栏
+  :fullscreen & .gs-player-controls {
+    height: var(--gs-player-control-height);
+    overflow: visible;
+    transition: none;
+  }
+}

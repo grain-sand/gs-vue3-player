@@ -171,6 +171,8 @@
         padding: 2px 8px;
         border-radius: 4px;
         transition: var(--gs-player-hover-transition);
+        position: relative;
+        display: inline-block;
 
         &:hover {
           background-color: var(--gs-player-control-hover);
@@ -180,21 +182,23 @@
         .gs-player-speed-dropdown {
           position: absolute;
           bottom: 100%;
-          right: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-bottom: 8px;
           background-color: var(--gs-player-dropdown-bg);
           border-radius: 4px;
           padding: 8px 0;
-          z-index: 100;
+          z-index: 1000;
           display: none;
-
-          &.show {
-            display: block;
-          }
+          min-width: 80px;
+          pointer-events: auto;
 
           .gs-player-speed-option {
             padding: 8px 16px;
             cursor: pointer;
             transition: var(--gs-player-hover-transition);
+            text-align: center;
+            pointer-events: auto;
 
             &:hover {
               background-color: var(--gs-player-dropdown-hover);
@@ -204,6 +208,11 @@
               color: var(--gs-player-progress-fill);
             }
           }
+        }
+
+        // 鼠标悬停时显示菜单
+        &:hover .gs-player-speed-dropdown {
+          display: block;
         }
       }
 
@@ -217,9 +226,73 @@
         align-items: center;
         justify-content: center;
         transition: var(--gs-player-hover-transition);
+        position: relative;
 
         &:hover {
           color: var(--gs-player-button-hover);
+        }
+
+        // 音量滑块容器
+        .gs-player-volume-slider-container {
+          position: absolute;
+          bottom: 100%;
+          right: 50%;
+          transform: translateX(50%);
+          margin-bottom: 8px;
+          width: 20px;
+          height: 80px;
+          background-color: rgba(0, 0, 0, 0.8);
+          border-radius: 10px;
+          padding: 4px;
+          z-index: 1000;
+          display: none;
+          align-items: center;
+          justify-content: center;
+
+          // 音量滑块
+          .gs-player-volume-slider {
+            width: 4px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+
+            // 音量滑块填充
+            .gs-player-volume-slider-fill {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              background-color: #409eff;
+              border-radius: 2px;
+              transition: height 0.1s linear;
+            }
+
+            // 音量滑块手柄
+            .gs-player-volume-slider-handle {
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%) translateY(50%);
+              width: 12px;
+              height: 12px;
+              background-color: white;
+              border-radius: 50%;
+              transition: bottom 0.1s linear;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            &:hover {
+              .gs-player-volume-slider-handle {
+                opacity: 1;
+              }
+            }
+          }
+        }
+
+        // 鼠标悬停时显示音量滑块
+        &:hover .gs-player-volume-slider-container {
+          display: flex;
         }
       }
 

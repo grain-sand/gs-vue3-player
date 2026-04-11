@@ -1,48 +1,48 @@
 // 颜色变量
 :root {
+
+  // 暗风格
+  &:not([theme="light"]) {
+	--gs-player-bg: #000;
+	--gs-player-text: #fff;
+	--gs-player-control-bg: rgba(0, 0, 0, 0.7);
+	--gs-player-control-hover: rgba(255, 255, 255, 0.2);
+	--gs-player-progress-bg: #555;
+	--gs-player-progress-fill: #fff;
+	--gs-player-progress-handle: #fff;
+	--gs-player-error-color: #fff;
+	--gs-player-button-color: #fff;
+	--gs-player-button-hover: #f0f0f0;
+	--gs-player-dropdown-bg: rgba(0, 0, 0, 0.9);
+	--gs-player-dropdown-hover: rgba(255, 255, 255, 0.1);
+  }
+
   // 明风格
-  --gs-player-bg: #000;
-  --gs-player-text: #fff;
-  --gs-player-control-bg: rgba(0, 0, 0, 0.7);
-  --gs-player-control-hover: rgba(255, 255, 255, 0.2);
-  --gs-player-progress-bg: #555;
-  --gs-player-progress-fill: #fff;
-  --gs-player-progress-handle: #fff;
-  --gs-player-error-color: #fff;
-  --gs-player-button-color: #fff;
-  --gs-player-button-hover: #f0f0f0;
-  --gs-player-dropdown-bg: rgba(0, 0, 0, 0.9);
-  --gs-player-dropdown-hover: rgba(255, 255, 255, 0.1);
-}
+  &[theme="light"] {
+	--gs-player-bg: #f5f5f5;
+	--gs-player-text: #333;
+	--gs-player-control-bg: rgba(255, 255, 255, 0.9);
+	--gs-player-control-hover: rgba(0, 0, 0, 0.1);
+	--gs-player-progress-bg: #ddd;
+	--gs-player-progress-fill: #409eff;
+	--gs-player-progress-handle: #409eff;
+	--gs-player-error-color: #333;
+	--gs-player-button-color: #333;
+	--gs-player-button-hover: #000;
+	--gs-player-dropdown-bg: rgba(255, 255, 255, 0.95);
+	--gs-player-dropdown-hover: rgba(0, 0, 0, 0.05);
+  }
 
-// 暗风格
-[data-theme="dark"] {
-  --gs-player-bg: #000;
-  --gs-player-text: #fff;
-  --gs-player-control-bg: rgba(0, 0, 0, 0.7);
-  --gs-player-control-hover: rgba(255, 255, 255, 0.2);
-  --gs-player-progress-bg: #555;
-  --gs-player-progress-fill: #fff;
-  --gs-player-progress-handle: #fff;
-  --gs-player-error-color: #fff;
-  --gs-player-button-color: #fff;
-  --gs-player-button-hover: #f0f0f0;
-  --gs-player-dropdown-bg: rgba(0, 0, 0, 0.9);
-  --gs-player-dropdown-hover: rgba(255, 255, 255, 0.1);
-}
-
-// 尺寸变量
-:root {
+  // 尺寸变量
   --gs-player-control-height: 40px;
   --gs-player-progress-height: 4px;
   --gs-player-button-size: 24px;
   --gs-player-icon-size: 16px;
   --gs-player-time-font-size: 12px;
   --gs-player-error-font-size: 14px;
-}
 
-// 动画变量
-:root {
+  // 动画变量
   --gs-player-transition: all 0.3s ease;
   --gs-player-hover-transition: all 0.2s ease;
+
 }

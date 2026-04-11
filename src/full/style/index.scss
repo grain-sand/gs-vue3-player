@@ -1,2 +1,6 @@
 @use './variables';
-@use './player';
+@use './base';
+@use './error';
+@use './progress';
+@use './controls';
+@use './responsive';

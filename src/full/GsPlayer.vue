@@ -1,16 +1,17 @@
 <template>
   <div class="gs-player" ref="playerContainerRef">
     <Player
-      ref="playerRef"
-      :src="props.src"
-      :hls-config="props.hlsConfig"
-      :quality="props.quality"
-      :use-browser-hls="props.useBrowserHls"
-      @error="handleError"
-      @play="handlePlay"
-      @pause="handlePause"
-      @timeupdate="handleTimeUpdate"
-      @loadedmetadata="handleLoadedMetadata"
+        ref="playerRef"
+        :src="props.src"
+        :hls-config="props.hlsConfig"
+        :quality="props.quality"
+        :use-browser-hls="props.useBrowserHls"
+        @error="handleError"
+        @play="handlePlay"
+        @pause="handlePause"
+        @timeupdate="handleTimeUpdate"
+        @loadedmetadata="handleLoadedMetadata"
+        v-bind="$attrs"
     />
 
     <!-- 错误信息 -->
@@ -18,79 +19,102 @@
       {{ props.errorMessage || '请求错误' }}
     </div>
 
-    <!-- 进度条 -->
-    <div v-if="props.showControls" class="gs-player-progress-container">
-      <div
-        class="gs-player-progress"
-        @click="handleProgressClick"
-        @mousemove="handleProgressMouseMove"
-        @mouseleave="handleProgressMouseLeave"
-      >
+    <!-- 底部控制区域 -->
+    <footer v-if="props.showControls" class="gs-player-footer">
+      <!-- 进度条 -->
+      <div class="gs-player-progress-container">
         <div
-          class="gs-player-progress-fill"
-          :style="{ width: `${progress}%` }"
-        ></div>
-        <div
-          class="gs-player-progress-handle"
-          :style="{ left: `${progress}%` }"
-        ></div>
-        <!-- 时间提示 -->
-        <div
-          v-if="showProgressTooltip"
-          class="gs-player-progress-tooltip"
-          :style="{ left: `${tooltipPosition}%` }"
+            class="gs-player-progress"
+            @click="handleProgressClick"
+            @mousemove="handleProgressMouseMove"
+            @mouseleave="handleProgressMouseLeave"
         >
-          {{ formatTime(tooltipTime) }}
+          <div
+              class="gs-player-progress-fill"
+              :style="{ width: `${progress}%` }"
+          ></div>
+          <div
+              class="gs-player-progress-handle"
+              :style="{ left: `${progress}%` }"
+          ></div>
+          <!-- 时间提示 -->
+          <div
+              v-if="showProgressTooltip"
+              class="gs-player-progress-tooltip"
+              :style="{ left: `${tooltipPosition}%` }"
+          >
+            {{ formatTime(tooltipTime) }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 控制面板 -->
-    <div v-if="props.showControls" class="gs-player-controls">
-      <!-- 播放/暂停按钮 -->
-      <div class="gs-player-play-btn" @click="togglePlay">
-        {{ isPlaying ? '⏸' : '▶' }}
-      </div>
+      <!-- 控制面板 -->
+      <div class="gs-player-controls">
+        <!-- 播放/暂停按钮 -->
+        <div class="gs-player-play-btn" @click="togglePlay">
+          {{ isPlaying ? '⏸' : '▶' }}
+        </div>
 
-      <!-- 时间显示 -->
-      <div class="gs-player-time">
-        {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
-      </div>
+        <!-- 时间显示 -->
+        <div class="gs-player-time">
+          {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+        </div>
 
-      <!-- 右侧控制按钮 -->
-      <div class="gs-player-right-controls">
-        <!-- 倍速按钮 -->
-        <div class="gs-player-speed-btn" @click="toggleSpeedDropdown">
-          倍速
-          <div class="gs-player-speed-dropdown" :class="{ show: showSpeedDropdown }">
-            <div
-              v-for="rate in playbackRates"
-              :key="rate"
-              class="gs-player-speed-option"
-              :class="{ active: rate === playbackRate }"
-              @click="setPlaybackRate(rate)"
-            >
-              {{ rate }}x
+        <!-- 右侧控制按钮 -->
+        <div class="gs-player-right-controls">
+          <!-- 倍速按钮 -->
+          <div class="gs-player-speed-btn">
+            {{ playbackRate }}x
+            <div class="gs-player-dropdown">
+              <div
+                  v-for="rate in playbackRates"
+                  :key="rate"
+                  class="gs-player-dropdown-option"
+                  :class="{ active: rate === playbackRate }"
+                  @click.stop="setPlaybackRate(rate)"
+              >
+                {{ rate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- 音量按钮 -->
+          <div class="gs-player-volume-btn" @click="toggleMute" @mouseenter="handleVolumeMouseEnter" @mouseleave="handleVolumeMouseLeave">
+            {{ isMuted ? '🔇' : '🔊' }}
+            <!-- 音量滑块 -->
+            <div class="gs-player-dropdown" @click.stop>
+              <div class="gs-player-slider-label">{{ Math.round(volume * 100) }}%</div>
+              <div class="gs-player-slider-wrapper" @click="handleVolumeSliderClick">
+                <div class="gs-player-slider">
+                  <div
+                      class="gs-player-slider-fill"
+                      :style="{ height: `${volume * 100}%` }"
+                  ></div>
+                  <div
+                      class="gs-player-slider-handle"
+                      :style="{ bottom: `${volume * 100}%` }"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 网页全屏按钮 -->
+          <div class="gs-player-web-fullscreen-btn" @click.stop="webFullscreen">
+            ⛶
+            <div class="gs-player-dropdown">
+              <div class="gs-player-dropdown-option" @click.stop="fullscreen">
+                <span class="fullscreen-icon">
+                  <span>
+                    ←→
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- 音量按钮 -->
-        <div class="gs-player-volume-btn" @click="toggleMute">
-          {{ isMuted ? '🔇' : '🔊' }}
-        </div>
-
-        <!-- 网页全屏按钮 -->
-        <div class="gs-player-web-fullscreen-btn" @click="webFullscreen">
-          ⛶
-        </div>
-
-        <!-- 全屏按钮 -->
-        <div class="gs-player-fullscreen-btn" @click="fullscreen">
-          ⛶
-        </div>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -125,6 +149,9 @@ const playbackRates: PlaybackRate[] = [0.5, 0.75, 1, 1.25, 1.5, 2];
 const showProgressTooltip = ref(false);
 const tooltipPosition = ref(0);
 const tooltipTime = ref(0);
+// 音量滑块相关
+const volume = ref(1);
+const previousVolume = ref(1);
 
 // Computed
 const progress = computed(() => {
@@ -182,7 +209,8 @@ function handleProgressMouseMove(event: MouseEvent) {
   const time = percentage * duration.value;
 
   showProgressTooltip.value = true;
-  tooltipPosition.value = percentage * 100;
+  // 确保时间提示的位置不会超出播放器的范围，限制在 5% 到 95% 之间
+  tooltipPosition.value = Math.max(5, Math.min(95, percentage * 100));
   tooltipTime.value = time;
 }
 
@@ -209,20 +237,57 @@ async function unmute() {
 
 function toggleMute() {
   if (playerRef.value?.el) {
+    if (!isMuted.value) {
+      // 静音时，保存当前音量并设置显示为 0
+      previousVolume.value = volume.value;
+      volume.value = 0;
+    } else {
+      // 取消静音时，恢复之前的音量
+      volume.value = previousVolume.value;
+    }
     playerRef.value.el.muted = !isMuted.value;
     isMuted.value = !isMuted.value;
   }
 }
 
-function setVolume(volume: number) {
+function setVolume(newVolume: number) {
+  const clampedVolume = Math.max(0, Math.min(1, newVolume));
+  volume.value = clampedVolume;
   if (playerRef.value?.el) {
-    playerRef.value.el.volume = Math.max(0, Math.min(1, volume));
+    playerRef.value.el.volume = clampedVolume;
+    // 如果音量不为0，确保取消静音
+    if (clampedVolume > 0) {
+      playerRef.value.el.muted = false;
+      isMuted.value = false;
+    }
   }
 }
 
-function toggleSpeedDropdown() {
-  showSpeedDropdown.value = !showSpeedDropdown.value;
+function handleVolumeSliderClick(event: MouseEvent) {
+  const slider = event.currentTarget as HTMLElement;
+  const rect = slider.getBoundingClientRect();
+  const offsetY = rect.bottom - event.clientY;
+  const percentage = Math.max(0, Math.min(1, offsetY / rect.height));
+  setVolume(percentage);
 }
+
+function handleVolumeWheel(event: WheelEvent) {
+  event.preventDefault();
+  const delta = event.deltaY > 0 ? -0.15 : 0.15;
+  const newVolume = Math.max(0, Math.min(1, volume.value + delta));
+  setVolume(newVolume);
+}
+
+function handleVolumeMouseEnter() {
+  // 注册鼠标滚轮事件
+  document.addEventListener('wheel', handleVolumeWheel, { passive: false });
+}
+
+function handleVolumeMouseLeave() {
+  // 取消鼠标滚轮事件
+  document.removeEventListener('wheel', handleVolumeWheel);
+}
+
 
 function setPlaybackRate(rate: PlaybackRate) {
   playbackRate.value = rate;
