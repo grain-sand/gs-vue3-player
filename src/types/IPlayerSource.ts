@@ -17,19 +17,20 @@ export interface IVideoQualityItem extends IVideoQuality {
 	url: string;
 }
 
-export interface ITypedPlayerSource<T extends string | IVideoQualityItem[]> {
+export interface ITypedPlayerSource<D=any, T extends string | IVideoQualityItem[]> {
 	type: PlayerSourceType;
 	poster?: string;
 	title?: string;
 	src: T;
+	data?: D;
 }
 
 // 指定类型与URL
-export interface IStringPlayerSource extends ITypedPlayerSource<string> {
+export interface IStringPlayerSource<D=any> extends ITypedPlayerSource<D, string> {
 }
 
-export interface IQualitiesPlayerSource extends ITypedPlayerSource<Array<IVideoQualityItem>> {
+export interface IQualitiesPlayerSource<D=any> extends ITypedPlayerSource<D, IVideoQualityItem[]> {
 }
 
 // 输入类型
-export type PlayerSource = string | IStringPlayerSource | IQualitiesPlayerSource;
+export type PlayerSource<D = any> = string | IStringPlayerSource<D> | IQualitiesPlayerSource<D>;

@@ -1,7 +1,7 @@
 import {ITypedPlayerSource, PlayerSource, PlayerSourceType} from "../types";
 import {isString} from "gs-base";
 
-export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any> {
+export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any, any> {
 	if (isString(source)) {
 		const type = getSourceTypeFromUrl(source as string);
 		return {
@@ -9,7 +9,7 @@ export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any> 
 			src: source
 		};
 	}
-	return source as ITypedPlayerSource<any>;
+	return source as ITypedPlayerSource<any, any>;
 }
 
 function getSourceTypeFromUrl(url: string): PlayerSourceType {

@@ -17,8 +17,36 @@
 	justify-content: center;
 	transition: var(--gs-player-hover-transition);
 
+	> span {
+	  display: block;
+	}
+
+	&.isPlaying > span {
+	  transform: translateY(-1.5px);
+	}
+
 	&:hover {
-	  color: var(--gs-player-button-hover);
+	  background-color: var(--gs-player-control-hover);
+	}
+  }
+
+  // 下一个按钮
+  .gs-player-next-btn {
+	width: var(--gs-player-button-size);
+	height: var(--gs-player-button-size);
+	color: var(--gs-player-button-color);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: var(--gs-player-hover-transition);
+
+	&:hover {
+	  background-color: var(--gs-player-control-hover);
+	}
+
+	> span {
+	  transform: translateY(-1px);
 	}
   }
 
@@ -103,7 +131,7 @@
 	  position: relative;
 
 	  &:hover {
-		color: var(--gs-player-button-hover);
+		background-color: var(--gs-player-control-hover);
 	  }
 
 	  // 音量滑块容器
@@ -192,14 +220,15 @@
 	  position: relative;
 
 	  &:hover {
-		color: var(--gs-player-button-hover);
+		background-color: var(--gs-player-control-hover);
 	  }
 
 	  // 全屏图标
 	  .fullscreen-icon {
 		display: block;
-		transform:rotate(130deg);
-		>span{
+		transform: rotate(130deg);
+
+		> span {
 		  display: block;
 		  text-align: center;
 		  transform: scaleX(.5);
@@ -226,7 +255,7 @@
 		  text-align: left;
 
 		  &:hover {
-			background-color: var(--gs-player-dropdown-hover);
+			background-color: var(--gs-player-control-hover);
 		  }
 		}
 	  }

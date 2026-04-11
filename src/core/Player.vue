@@ -27,6 +27,11 @@ defineOptions({
 
 const props = defineProps<IPlayerProps>();
 
+// Emits
+const emit = defineEmits<{
+  (e: 'srcChange', src: PlayerSource): void;
+}>();
+
 const videoRef = ref<HTMLVideoElement>();
 const hlsInstance = shallowRef<Hls>();
 
@@ -72,6 +77,9 @@ function setSrc(src: PlayerSource) {
   } else {
     video.src = srcStr;
   }
+
+  // 触发源切换事件
+  emit('srcChange', src);
 }
 
 watch(() => props.src, setSrc);

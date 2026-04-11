@@ -1,4 +1,5 @@
 import type {IPlayerExpose, IPlayerProps} from './IPlayerProps';
+import type {PlayerSource} from './IPlayerSource';
 
 export interface IGsPlayerProps extends IPlayerProps {
   /** 是否显示控制面板 */
@@ -7,6 +8,8 @@ export interface IGsPlayerProps extends IPlayerProps {
   showError?: boolean;
   /** 自定义错误信息 */
   errorMessage?: string;
+  /** 下一个输入源 */
+  nextSrc?: PlayerSource;
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {

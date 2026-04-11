@@ -11,6 +11,7 @@
         @pause="handlePause"
         @timeupdate="handleTimeUpdate"
         @loadedmetadata="handleLoadedMetadata"
+        @srcChange="emit('srcChange', $event)"
         v-bind="$attrs"
     />
 
@@ -51,8 +52,17 @@
       <!-- 控制面板 -->
       <div class="gs-player-controls">
         <!-- 播放/暂停按钮 -->
-        <div class="gs-player-play-btn" @click="togglePlay">
+        <div :class="{'gs-player-play-btn': true,isPlaying}" @click.stop="togglePlay">
+          <span>
           {{ isPlaying ? '⏸' : '▶' }}
+          </span>
+        </div>
+
+        <!-- 下一个按钮 -->
+        <div v-if="nextSrc" class="gs-player-next-btn" @click.stop="switchToNextSrc">
+          <span>
+          ⏭
+          </span>
         </div>
 
         <!-- 时间显示 -->
@@ -79,7 +89,8 @@
           </div>
 
           <!-- 音量按钮 -->
-          <div class="gs-player-volume-btn" @click="toggleMute" @mouseenter="handleVolumeMouseEnter" @mouseleave="handleVolumeMouseLeave">
+          <div class="gs-player-volume-btn" @click="toggleMute" @mouseenter="handleVolumeMouseEnter"
+               @mouseleave="handleVolumeMouseLeave">
             {{ isMuted ? '🔇' : '🔊' }}
             <!-- 音量滑块 -->
             <div class="gs-player-dropdown" @click.stop>
@@ -121,7 +132,7 @@
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Player from '../core/Player.vue';
-import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackRate} from '../types';
+import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackRate, PlayerSource} from '../types';
 
 
 // Props
@@ -130,6 +141,11 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showError: true,
   errorMessage: '请求错误'
 });
+
+// Emits
+const emit = defineEmits<{
+  (e: 'srcChange', src: PlayerSource): void;
+}>();
 
 // Refs
 const playerRef = ref<InstanceType<typeof Player>>() as { value: IPlayerExpose };
@@ -280,7 +296,7 @@ function handleVolumeWheel(event: WheelEvent) {
 
 function handleVolumeMouseEnter() {
   // 注册鼠标滚轮事件
-  document.addEventListener('wheel', handleVolumeWheel, { passive: false });
+  document.addEventListener('wheel', handleVolumeWheel, {passive: false});
 }
 
 function handleVolumeMouseLeave() {
@@ -323,6 +339,10 @@ function webFullscreen() {
       }
     }
   }
+}
+
+function switchToNextSrc() {
+  playerRef.value?.play(props.nextSrc);
 }
 
 // Lifecycle
