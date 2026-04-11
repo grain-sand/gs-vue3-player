@@ -9,7 +9,8 @@ import type {IPlayerExpose, IPlayerProps} from '../types';
 import {PlayerSource} from "../types";
 import {getStringSource, parseVideoSource} from "../util";
 
-const defaultHlsConfig: Partial<HlsConfig> = Object.freeze({maxBufferLength: 1,        // 几乎不缓冲未来
+const defaultHlsConfig: Partial<HlsConfig> = Object.freeze({
+  maxBufferLength: 1,        // 几乎不缓冲未来
   maxMaxBufferLength: 2,
   maxBufferBackLength: 0,    // 不保留已播内容
   lowLatencyMode: false,      // 关闭低延迟（低延迟会多预载）
@@ -92,12 +93,10 @@ async function play() {
   }
 }
 
-defineExpose<IPlayerExpose>((new class {
-
+defineExpose<IPlayerExpose>({
   get el() {
     return videoRef.value
-  }
-
+  },
   async togglePlay() {
     const {value: el} = videoRef;
     if (el.paused) {
@@ -105,8 +104,7 @@ defineExpose<IPlayerExpose>((new class {
     } else {
       await el.pause()
     }
-  }
-
+  },
   async play(src?: PlayerSource) {
     if (!src) {
       await play()
@@ -114,15 +112,13 @@ defineExpose<IPlayerExpose>((new class {
     }
     setSrc(src);
     await play()
-  }
-
+  },
   async pause() {
     await videoRef.value?.pause()
-  }
-
+  },
   async unmute() {
     videoRef.value.muted = false
-  }
-}))
+  },
+})
 
 </script>

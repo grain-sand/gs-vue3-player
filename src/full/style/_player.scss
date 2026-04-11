@@ -1,0 +1,286 @@
+// 播放器容器
+.gs-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--gs-player-bg);
+  overflow: hidden;
+  user-select: none;
+
+  // 视频元素
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  // 错误信息
+  .gs-player-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gs-player-error-color);
+    font-size: var(--gs-player-error-font-size);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '⟲';
+      font-size: 18px;
+      animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  }
+
+  // 进度条容器
+  .gs-player-progress-container {
+    position: absolute;
+    bottom: var(--gs-player-control-height);
+    left: 0;
+    right: 0;
+    padding: 0 16px 16px;
+    background-color: var(--gs-player-control-bg);
+
+    // 进度条
+    .gs-player-progress {
+      width: 100%;
+      height: var(--gs-player-progress-height);
+      background-color: var(--gs-player-progress-bg);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      overflow: visible;
+
+      .gs-player-progress-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: var(--gs-player-progress-fill);
+        border-radius: 2px;
+        transition: width 0.1s linear;
+      }
+
+      .gs-player-progress-handle {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background-color: var(--gs-player-progress-handle);
+        border-radius: 50%;
+        opacity: 0;
+        transition: var(--gs-player-hover-transition);
+
+        &:hover,
+        &.active {
+          opacity: 1;
+        }
+      }
+
+      // 进度条时间提示
+      .gs-player-progress-tooltip {
+        position: absolute;
+        top: -30px;
+        left: 0;
+        transform: translateX(-50%);
+        padding: 4px 8px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        font-size: 12px;
+        border-radius: 4px;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 101;
+        display: block !important;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 4px;
+          border-style: solid;
+          border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+        }
+      }
+
+      &:hover {
+        .gs-player-progress-handle {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // 控制栏
+  .gs-player-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--gs-player-control-height);
+    background-color: var(--gs-player-control-bg);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+
+    // 播放/暂停按钮
+    .gs-player-play-btn {
+      width: var(--gs-player-button-size);
+      height: var(--gs-player-button-size);
+      color: var(--gs-player-button-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--gs-player-hover-transition);
+
+      &:hover {
+        color: var(--gs-player-button-hover);
+      }
+    }
+
+    // 时间显示
+    .gs-player-time {
+      color: var(--gs-player-text);
+      font-size: var(--gs-player-time-font-size);
+      min-width: 120px;
+    }
+
+    // 右侧控制按钮
+    .gs-player-right-controls {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      // 倍速按钮
+      .gs-player-speed-btn {
+        color: var(--gs-player-button-color);
+        cursor: pointer;
+        font-size: var(--gs-player-time-font-size);
+        padding: 2px 8px;
+        border-radius: 4px;
+        transition: var(--gs-player-hover-transition);
+
+        &:hover {
+          background-color: var(--gs-player-control-hover);
+        }
+
+        // 倍速下拉菜单
+        .gs-player-speed-dropdown {
+          position: absolute;
+          bottom: 100%;
+          right: 80px;
+          background-color: var(--gs-player-dropdown-bg);
+          border-radius: 4px;
+          padding: 8px 0;
+          z-index: 100;
+          display: none;
+
+          &.show {
+            display: block;
+          }
+
+          .gs-player-speed-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: var(--gs-player-hover-transition);
+
+            &:hover {
+              background-color: var(--gs-player-dropdown-hover);
+            }
+
+            &.active {
+              color: var(--gs-player-progress-fill);
+            }
+          }
+        }
+      }
+
+      // 音量按钮
+      .gs-player-volume-btn {
+        width: var(--gs-player-button-size);
+        height: var(--gs-player-button-size);
+        color: var(--gs-player-button-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--gs-player-hover-transition);
+
+        &:hover {
+          color: var(--gs-player-button-hover);
+        }
+      }
+
+      // 网页全屏按钮
+      .gs-player-web-fullscreen-btn {
+        width: var(--gs-player-button-size);
+        height: var(--gs-player-button-size);
+        color: var(--gs-player-button-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--gs-player-hover-transition);
+
+        &:hover {
+          color: var(--gs-player-button-hover);
+        }
+      }
+
+      // 全屏按钮
+      .gs-player-fullscreen-btn {
+        width: var(--gs-player-button-size);
+        height: var(--gs-player-button-size);
+        color: var(--gs-player-button-color);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--gs-player-hover-transition);
+
+        &:hover {
+          color: var(--gs-player-button-hover);
+        }
+      }
+    }
+  }
+
+  // 鼠标悬停时显示控制栏
+  &:hover {
+    .gs-player-controls {
+      opacity: 1;
+    }
+  }
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  .gs-player-progress-container {
+    padding: 0 12px;
+  }
+
+  .gs-player-controls {
+    padding: 0 12px;
+    gap: 12px;
+
+    .gs-player-time {
+      min-width: 100px;
+    }
+
+    .gs-player-right-controls {
+      gap: 12px;
+    }
+  }
+}

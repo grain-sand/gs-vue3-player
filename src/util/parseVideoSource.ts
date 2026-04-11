@@ -1,4 +1,4 @@
-import {ITypedPlayerSource, PlayerSource} from "../types";
+import {ITypedPlayerSource, PlayerSource, PlayerSourceType} from "../types";
 import {isString} from "gs-base";
 
 export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any> {
@@ -12,7 +12,7 @@ export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any> 
 	return source as ITypedPlayerSource<any>;
 }
 
-function getSourceTypeFromUrl(url: string): string {
+function getSourceTypeFromUrl(url: string): PlayerSourceType {
 	const lowerUrl = url.toLowerCase();
 	if (lowerUrl.includes('.m3u8') || lowerUrl.includes('hls')) {
 		return 'hls';

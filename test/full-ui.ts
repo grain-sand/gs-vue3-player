@@ -1,12 +1,12 @@
 import {describe, it} from "vitest";
 import {mount} from "@vue/test-utils";
-import TestCoreApp from "./view/TestCoreApp.vue";
+import TestFullApp from "./view/TestFullApp.vue";
 
-describe('core-ui', () => {
-	it('mp4', async (): Promise<void> => {
+describe('full-ui', () => {
+	it('list', async (): Promise<void> => {
 		document.body.innerHTML = '<div id="app"></div>'
 
-		mount(TestCoreApp, {
+		mount(TestFullApp, {
 			attachTo: '#app',
 		})
 	})

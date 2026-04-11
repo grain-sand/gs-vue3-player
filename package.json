@@ -5,8 +5,10 @@
     "build": "vite build && yarn run build:dts && yarn run build:merge",
     "build:dts": "vue-tsc --declaration --emitDeclarationOnly --rootDir \"src\" --outDir \"tmp\"",
     "build:merge": "gs-rollup -c",
-    "test": "vitest run",
-    "test:core-ui": "vitest core-ui"
+	"git:merge": "git branch -f master dev",
+	"test": "vitest run",
+    "test:core-ui": "vitest core-ui",
+    "test:full-ui": "vitest full-ui"
   },
   "dependencies": {
     "gs-base": "^0.1.20",
@@ -24,7 +26,8 @@
     "vite": "^8.0.5",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3",
-    "vue-tsc": "^3.2.6"
+    "vue-tsc": "^3.2.6",
+	"sass": "^1.97.2"
   },
   "license": "MIT",
   "type": "module"
