@@ -16,7 +16,7 @@ import {videos} from "./videos.local";
 import {GsPlayer, PlayerSource} from "../../src";
 import {copyObject} from "gs-base";
 
-let index = 1;
+let index = 0;
 
 
 function getUrl() {

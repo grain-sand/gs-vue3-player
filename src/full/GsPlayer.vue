@@ -1,138 +1,140 @@
 <template>
-  <div class="gs-player" ref="playerContainerRef" @click="handlePlayerClick" @dblclick="handlePlayerDblClick">
-    <Player
-        ref="playerRef"
-        :src="props.src"
-        :hls-config="props.hlsConfig"
-        :quality="props.quality"
-        :use-browser-hls="props.useBrowserHls"
-        @error="handleError"
-        @play="handlePlay"
-        @pause="handlePause"
-        @timeupdate="handleTimeUpdate"
-        @loadedmetadata="handleLoadedMetadata"
-        @srcChange="emit('srcChange', $event)"
-        v-bind="$attrs"
-    />
+  <Teleport to="body" :disabled="!isWebFullscreen">
+    <div class="gs-player" :class="{ 'gs-player-web-fullscreen': isWebFullscreen }" ref="playerContainerRef" @click="handlePlayerClick" @dblclick="handlePlayerDblClick">
+      <Player
+          ref="playerRef"
+          :src="props.src"
+          :hls-config="props.hlsConfig"
+          :quality="props.quality"
+          :use-browser-hls="props.useBrowserHls"
+          @error="handleError"
+          @play="handlePlay"
+          @pause="handlePause"
+          @timeupdate="handleTimeUpdate"
+          @loadedmetadata="handleLoadedMetadata"
+          @srcChange="emit('srcChange', $event)"
+          v-bind="$attrs"
+      />
 
-    <!-- 错误信息 -->
-    <div v-if="props.showError && error" class="gs-player-error">
-      {{ props.errorMessage || '请求错误' }}
-    </div>
-
-    <!-- 底部控制区域 -->
-    <footer v-if="props.showControls" class="gs-player-footer">
-      <!-- 进度条 -->
-      <div class="gs-player-progress-container">
-        <div
-            class="gs-player-progress"
-            @click="handleProgressClick"
-            @mousemove="handleProgressMouseMove"
-            @mouseleave="handleProgressMouseLeave"
-        >
-          <div
-              class="gs-player-progress-fill"
-              :style="{ width: `${progress}%` }"
-          ></div>
-          <div
-              class="gs-player-progress-handle"
-              :style="{ left: `${progress}%` }"
-          ></div>
-          <!-- 时间提示 -->
-          <div
-              v-if="showProgressTooltip"
-              class="gs-player-progress-tooltip"
-              :style="{ left: `${tooltipPosition}%` }"
-          >
-            {{ formatTime(tooltipTime) }}
-          </div>
-        </div>
+      <!-- 错误信息 -->
+      <div v-if="props.showError && error" class="gs-player-error">
+        {{ props.errorMessage || '请求错误' }}
       </div>
 
-      <!-- 控制面板 -->
-      <div class="gs-player-controls">
-        <!-- 播放/暂停按钮 -->
-        <div :class="{'gs-player-play-btn': true,isPlaying}" @click.stop="togglePlay">
-          <span>
-          {{ isPlaying ? '⏸' : '▶' }}
-          </span>
-        </div>
-
-        <!-- 下一个按钮 -->
-        <div v-if="nextSrc" class="gs-player-next-btn" @click.stop="switchToNextSrc">
-          <span>
-          ⏭
-          </span>
-        </div>
-
-        <!-- 时间显示 -->
-        <div class="gs-player-time">
-          {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
-        </div>
-
-        <!-- 右侧控制按钮 -->
-        <div class="gs-player-right-controls">
-          <!-- 倍速按钮 -->
-          <div class="gs-player-speed-btn">
-            {{ playbackRate }}x
-            <div class="gs-player-dropdown">
-              <div
-                  v-for="rate in playbackRates"
-                  :key="rate"
-                  class="gs-player-dropdown-option"
-                  :class="{ active: rate === playbackRate }"
-                  @click.stop="setPlaybackRate(rate)"
-              >
-                {{ rate }}
-              </div>
+      <!-- 底部控制区域 -->
+      <footer v-if="props.showControls" class="gs-player-footer">
+        <!-- 进度条 -->
+        <div class="gs-player-progress-container">
+          <div
+              class="gs-player-progress"
+              @click="handleProgressClick"
+              @mousemove="handleProgressMouseMove"
+              @mouseleave="handleProgressMouseLeave"
+          >
+            <div
+                class="gs-player-progress-fill"
+                :style="{ width: `${progress}%` }"
+            ></div>
+            <div
+                class="gs-player-progress-handle"
+                :style="{ left: `${progress}%` }"
+            ></div>
+            <!-- 时间提示 -->
+            <div
+                v-if="showProgressTooltip"
+                class="gs-player-progress-tooltip"
+                :style="{ left: `${tooltipPosition}%` }"
+            >
+              {{ formatTime(tooltipTime) }}
             </div>
           </div>
+        </div>
 
-          <!-- 音量按钮 -->
-          <div class="gs-player-volume-btn" @click="toggleMute" @mouseenter="handleVolumeMouseEnter"
-               @mouseleave="handleVolumeMouseLeave">
-            {{ isMuted ? '🔇' : '🔊' }}
-            <!-- 音量滑块 -->
-            <div class="gs-player-dropdown" @click.stop>
-              <div class="gs-player-slider-label">{{ Math.round(volume * 100) }}%</div>
-              <div class="gs-player-slider-wrapper" @click="handleVolumeSliderClick">
-                <div class="gs-player-slider">
-                  <div
-                      class="gs-player-slider-fill"
-                      :style="{ height: `${volume * 100}%` }"
-                  ></div>
-                  <div
-                      class="gs-player-slider-handle"
-                      :style="{ bottom: `${volume * 100}%` }"
-                  ></div>
+        <!-- 控制面板 -->
+        <div class="gs-player-controls">
+          <!-- 播放/暂停按钮 -->
+          <div v-if="isButtonVisible('play')" :class="{'gs-player-play-btn': true,isPlaying}" @click.stop="togglePlay">
+            <span>
+              {{ isPlaying ? '⏸' : '▶' }}
+            </span>
+          </div>
+
+          <!-- 下一个按钮 -->
+          <div v-if="isButtonVisible('next') && nextSrc" class="gs-player-next-btn" @click.stop="switchToNextSrc">
+            <span>
+              ⏭
+            </span>
+          </div>
+
+          <!-- 时间显示 -->
+          <div class="gs-player-time">
+            {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+          </div>
+
+          <!-- 右侧控制按钮 -->
+          <div class="gs-player-right-controls">
+            <!-- 倍速按钮 -->
+            <div v-if="isButtonVisible('speed')" class="gs-player-speed-btn">
+              {{ playbackRate === 1 ? '1.0' : playbackRate === 2 ? '2.0' : playbackRate }}
+              <div class="gs-player-dropdown">
+                <div
+                    v-for="rate in props.playbackRates"
+                    :key="rate"
+                    class="gs-player-dropdown-option"
+                    :class="{ active: rate === playbackRate }"
+                    @click.stop="setPlaybackRate(rate)"
+                >
+                  {{ rate === 1 ? '1.0' : rate === 2 ? '2.0' : rate }}
+                </div>
+              </div>
+            </div>
+
+            <!-- 音量按钮 -->
+            <div v-if="isButtonVisible('volume')" class="gs-player-volume-btn" @click="toggleMute" @mouseenter="handleVolumeMouseEnter"
+                 @mouseleave="handleVolumeMouseLeave">
+              {{ isMuted ? '🔇' : '🔊' }}
+              <!-- 音量滑块 -->
+              <div class="gs-player-dropdown" @click.stop>
+                <div class="gs-player-slider-label">{{ Math.round(volume * 100) }}%</div>
+                <div class="gs-player-slider-wrapper" @click="handleVolumeSliderClick">
+                  <div class="gs-player-slider">
+                    <div
+                        class="gs-player-slider-fill"
+                        :style="{ height: `${volume * 100}%` }"
+                    ></div>
+                    <div
+                        class="gs-player-slider-handle"
+                        :style="{ bottom: `${volume * 100}%` }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 网页全屏按钮 -->
+            <div v-if="isButtonVisible('fullscreen')" class="gs-player-web-fullscreen-btn" @click.stop="webFullscreen">
+              ⛶
+              <div class="gs-player-dropdown">
+                <div class="gs-player-dropdown-option" @click.stop="fullscreen">
+                  <span class="fullscreen-icon">
+                    <span>
+                      ←→
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- 网页全屏按钮 -->
-          <div class="gs-player-web-fullscreen-btn" @click.stop="webFullscreen">
-            ⛶
-            <div class="gs-player-dropdown">
-              <div class="gs-player-dropdown-option" @click.stop="fullscreen">
-                <span class="fullscreen-icon">
-                  <span>
-                    ←→
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </footer>
-  </div>
+      </footer>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref} from 'vue';
 import Player from '../core/Player.vue';
-import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackRate, PlayerSource} from '../types';
+import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlayerSource} from '../types';
 
 
 // Props
@@ -141,7 +143,10 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showError: true,
   errorMessage: '请求错误',
   handleClick: true,
-  handleDblClick: true
+  handleDblClick: true,
+  playbackRates: () => [0.5, 0.8, 1, 1.2, 1.5, 2],
+  showButtons: () => [],
+  hideButtons: () => []
 });
 
 // Emits
@@ -158,11 +163,11 @@ const error = ref(false);
 const isPlaying = ref(false);
 const isMuted = ref(false);
 const isFullscreen = ref(false);
+const isWebFullscreen = ref(false);
 const showSpeedDropdown = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
-const playbackRate = ref<PlaybackRate>(1);
-const playbackRates: PlaybackRate[] = [0.5, 0.75, 1, 1.25, 1.5, 2];
+const playbackRate = ref<number>(1);
 // 进度条提示相关
 const showProgressTooltip = ref(false);
 const tooltipPosition = ref(0);
@@ -170,6 +175,20 @@ const tooltipTime = ref(0);
 // 音量滑块相关
 const volume = ref(1);
 const previousVolume = ref(1);
+
+// Computed
+const isButtonVisible = (buttonName: string) => {
+  // 排除优先级更高
+  if (props.hideButtons.includes(buttonName)) {
+    return false;
+  }
+  // 如果没有指定显示的按钮，默认全部显示
+  if (props.showButtons.length === 0) {
+    return true;
+  }
+  // 否则，只显示指定的按钮
+  return props.showButtons.includes(buttonName);
+};
 
 // Computed
 const progress = computed(() => {
@@ -307,7 +326,7 @@ function handleVolumeMouseLeave() {
 }
 
 
-function setPlaybackRate(rate: PlaybackRate) {
+function setPlaybackRate(rate: number) {
   playbackRate.value = rate;
   if (playerRef.value?.el) {
     playerRef.value.el.playbackRate = rate;
@@ -330,17 +349,7 @@ function fullscreen() {
 }
 
 function webFullscreen() {
-  if (playerContainerRef.value) {
-    if (!document.fullscreenElement) {
-      playerContainerRef.value.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  }
+  isWebFullscreen.value = !isWebFullscreen.value;
 }
 
 function switchToNextSrc() {
@@ -366,6 +375,9 @@ function handlePlayerDblClick() {
       if (document.exitFullscreen) {
         document.exitFullscreen();
       }
+    } else if (isWebFullscreen.value) {
+      // 在网页全屏状态，退出网页全屏
+      isWebFullscreen.value = false;
     } else {
       // 在常规状态，切换到网页全屏
       webFullscreen();

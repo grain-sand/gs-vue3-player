@@ -14,6 +14,12 @@ export interface IGsPlayerProps extends IPlayerProps {
   handleClick?: boolean;
   /** 是否处理播放器双击，默认为true，用于 在常规状态切换到网页全屏，在任意全屏状态都是退出全屏 */
   handleDblClick?: boolean;
+  /** 可改变速度的数字数组，默认为 [0.5, 0.8, 1, 1.2, 1.5, 2] */
+  playbackRates?: number[];
+  /** 需要显示的按钮，默认为全部显示 */
+  showButtons?: string[];
+  /** 排除显示的按钮，默认为空，冲突时排除优先级更高 */
+  hideButtons?: string[];
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {
@@ -28,7 +34,5 @@ export interface IGsPlayerExpose extends IPlayerExpose {
   /** 网页全屏 */
   webFullscreen(): void;
 }
-
-export type PlaybackRate = 0.5 | 0.75 | 1 | 1.25 | 1.5 | 2;
 
 export type PlayerStatus = 'loading' | 'playing' | 'paused' | 'error';
