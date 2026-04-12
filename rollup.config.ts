@@ -32,14 +32,14 @@ export default <RollupOptions[]>[
 			deleteProps: /^(devDependencies|scripts)$/,
 			overwriteProps:{
 				sideEffects: ["*.css"],
-				style: "./lib/gs-player.css"
+				style: "./lib/style.css"
 			},
 			after(pkg) {
 				delete pkg.main
 				for (const e of Object.values(pkg.exports)) {
 					delete e.require
 				}
-				pkg.exports['./lib/gs-player.css'] = './lib/gs-player.css'
+				pkg.exports['./lib/style.css'] = './lib/style.css'
 			}
 		},
 		addPlugins: [vueDtsRedirectPlugin()]

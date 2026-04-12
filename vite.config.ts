@@ -15,6 +15,12 @@ export default defineConfig({
 			external: ['vue', 'hls.js','gs-base'],
 			output: {
 				entryFileNames: '[name].mjs',
+				assetFileNames: (assetInfo) => {
+					if (assetInfo.name?.endsWith('.css')) {
+						return 'style.css'   // 固定文件名
+					}
+					return '[name][extname]'
+				}
 			},
 		} as any,
 		outDir: 'dist/lib',

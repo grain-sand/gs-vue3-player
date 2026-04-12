@@ -1,13 +1,13 @@
-# GsPlayer
+# GsVue3Player
 
-一个基于Vue3和TS的可能通过插槽、样式完全自定义的网页播放器！
+一个基于Vue3和TS的可通过插槽、样式完全自定义的网页播放器！
 
 [English](README.md)
 
 ## 安装
 
 ```bash
-yarn add gs-player
+yarn add gs-vue3-player
 ```
 
 ## 使用
@@ -20,7 +20,7 @@ yarn add gs-player
 </template>
 
 <script setup lang="ts">
-import { GsPlayer } from 'gs-player';
+import { GsPlayer } from 'gs-vue3-player';
 </script>
 ```
 
@@ -43,7 +43,7 @@ import { GsPlayer } from 'gs-player';
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { GsPlayer } from 'gs-player';
+import { GsPlayer } from 'gs-vue3-player';
 
 const videoSrc = 'https://example.com/video.mp4';
 const playlist = [
@@ -81,15 +81,15 @@ const handlePlaybackRateChange = (rate: number) => {
 </template>
 
 <script setup lang="ts">
-import { GsPlayer } from 'gs-player';
+import { GsPlayer } from 'gs-vue3-player';
 </script>
 
 <style scoped>
 .custom-player {
-  --gs-player-primary-color: #ff6b6b;
-  --gs-player-bg-color: rgba(0, 0, 0, 0.8);
-  --gs-player-text-color: #ffffff;
-  --gs-player-hover-color: #ff8787;
+  --gs-vue3-player-primary-color: #ff6b6b;
+  --gs-vue3-player-bg-color: rgba(0, 0, 0, 0.8);
+  --gs-vue3-player-text-color: #ffffff;
+  --gs-vue3-player-hover-color: #ff8787;
 }
 </style>
 ```
@@ -102,7 +102,7 @@ import { GsPlayer } from 'gs-player';
 </template>
 
 <script setup lang="ts">
-import { GsPlayer } from 'gs-player';
+import { GsPlayer } from 'gs-vue3-player';
 
 const customI18n = {
   titles: {
@@ -186,7 +186,7 @@ const customI18n = {
 </template>
 
 <script setup lang="ts">
-import { GsPlayer } from 'gs-player';
+import { GsPlayer } from 'gs-vue3-player';
 </script>
 
 <style scoped>
