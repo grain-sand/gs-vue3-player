@@ -20,6 +20,7 @@ export const enUS: II18n = {
 		mute: 'Mute',
 		speed: 'Playback Speed',
 		fullscreen: 'Fullscreen',
-		webFullscreen: 'Web Fullscreen'
+		webFullscreen: 'Web Fullscreen',
+		pip: 'Picture-in-Picture'
 	}
 };

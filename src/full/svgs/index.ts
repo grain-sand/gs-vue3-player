@@ -12,6 +12,7 @@ import loopAll from './loop-all.svg';
 import shuffle from './shuffle.svg';
 import WebFullscreenSvg from './web-fullscreen.svg';
 import FullscreenSvg from './fullscreen.svg';
+import PipSvg from './pip.svg';
 import {PlaybackMode} from "../../types";
 
 // 类型断言，确保 svg 文件被正确识别为组件
@@ -38,5 +39,6 @@ export {
 	PreSvg,
 	NextSvg,
 	WebFullscreenSvg,
-	FullscreenSvg
+	FullscreenSvg,
+	PipSvg
 };

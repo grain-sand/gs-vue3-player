@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   padding: 2px 8px 0;
-  gap: 6px;
+  gap: 4px;
   background: var(--gs-panel-bg);
   backdrop-filter: blur(4px);
   transition: var(--gs-transition);
@@ -15,6 +15,7 @@
 	font-size: 13px;
 	font-variant-numeric: tabular-nums;
 	opacity: 0.9;
+	padding: 2px 4px;
   }
 
   /* 按钮通用 */

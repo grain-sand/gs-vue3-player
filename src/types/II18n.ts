@@ -35,5 +35,7 @@ export interface II18n {
     fullscreen: string;
     /** 网页全屏 */
     webFullscreen: string;
+    /** 弹出小窗 */
+    pip: string;
   };
 }

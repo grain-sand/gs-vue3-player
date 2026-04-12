@@ -119,6 +119,7 @@
                 :i18n="props.i18n"
                 :web-fullscreen="webFullscreen"
                 :fullscreen="fullscreen"
+                :pip="pip"
               />
             </div>
           </slot>
@@ -211,6 +212,7 @@ const {
   setVolume: originalSetVolume,
   fullscreen,
   webFullscreen,
+  pip,
   handlePlayerClick,
   handlePlayerDblClick
 } = usePlayer({ playerRef, playerContainerRef, props });

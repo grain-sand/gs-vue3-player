@@ -156,6 +156,21 @@ export function usePlayerControls({
 
   const webFullscreen = () => (isWebFullscreen.value = !isWebFullscreen.value);
 
+  const pip = async () => {
+    const video = playerRef.value?.el;
+    if (!video) return;
+
+    try {
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+      } else {
+        await video.requestPictureInPicture();
+      }
+    } catch (error) {
+      console.error('Error toggling Picture-in-Picture:', error);
+    }
+  };
+
   const handlePlayerClick = () => props.handleClick && togglePlay();
   const handlePlayerDblClick = () => {
     if (!props.handleDblClick) return;
@@ -200,6 +215,7 @@ export function usePlayerControls({
     setVolume,
     fullscreen,
     webFullscreen,
+    pip,
     handlePlayerClick,
     handlePlayerDblClick
   };
