@@ -100,6 +100,7 @@
                 :controls-visibility="controlsVisibility"
                 :i18n="props.i18n"
                 :player-ref="playerRef"
+                :on-volume-change="setVolume"
               />
 
               <!-- 播放模式 -->
@@ -166,7 +167,12 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
 });
 
-const emit = defineEmits<{ (e: 'srcChange', src: PlayerSource): void }>();
+const emit = defineEmits<{
+  (e: 'srcChange', src: PlayerSource): void;
+  (e: 'volumeChange', volume: number): void;
+  (e: 'playbackModeChange', mode: string): void;
+  (e: 'playbackRateChange', rate: number): void;
+}>();
 
 // Refs
 const playerRef = ref() as { value: IPlayerExpose };
@@ -200,14 +206,30 @@ const {
   unmute,
   switchToNextSrc,
   switchToPreSrc,
-  setPlaybackMode,
-  setPlaybackRate,
-  setVolume,
+  setPlaybackMode: originalSetPlaybackMode,
+  setPlaybackRate: originalSetPlaybackRate,
+  setVolume: originalSetVolume,
   fullscreen,
   webFullscreen,
   handlePlayerClick,
   handlePlayerDblClick
 } = usePlayer({ playerRef, playerContainerRef, props });
+
+// 包装方法，触发事件
+const setVolume = (volume: number) => {
+  originalSetVolume(volume);
+  emit('volumeChange', volume);
+};
+
+const setPlaybackMode = (mode: string) => {
+  originalSetPlaybackMode(mode as any);
+  emit('playbackModeChange', mode);
+};
+
+const setPlaybackRate = (rate: number) => {
+  originalSetPlaybackRate(rate);
+  emit('playbackRateChange', rate);
+};
 
 defineExpose<IGsPlayerExpose>({
   get el() {

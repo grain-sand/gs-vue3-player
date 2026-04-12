@@ -5,6 +5,9 @@
         :volume="0.3"
         @srcChange="srcChange"
         :playlist="videoList"
+        @volumeChange="eventChange('volumeChange',$event)"
+        @playbackModeChange="eventChange('playbackModeChange',$event)"
+        @playbackRateChange="eventChange('playbackRateChange',$event)"
     >
     </gs-player>
   </div>
@@ -42,6 +45,10 @@ function srcChange(nextSrc: IStringPlayerSource<number>) {
   // index = nextSrc.data;
   // next.value = getUrl();
   // pre.value = getPreUrl();
+}
+
+function eventChange(name:string,value:any) {
+  console.log(name,value)
 }
 
 </script>

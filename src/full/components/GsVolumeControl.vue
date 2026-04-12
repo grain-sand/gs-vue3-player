@@ -32,10 +32,12 @@ interface Props {
     };
   };
   playerRef: { value: any } | undefined;
+  onVolumeChange?: (volume: number) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  playerRef: () => ({ value: undefined })
+  playerRef: () => ({ value: undefined }),
+  onVolumeChange: () => () => {}
 });
 
 // 状态
@@ -65,6 +67,7 @@ const setVolume = (newVol: number) => {
     isMuted.value = volume.value === 0;
     props.playerRef.value.el.muted = isMuted.value;
   }
+  props.onVolumeChange?.(volume.value);
 };
 
 const toggleMute = () => {
