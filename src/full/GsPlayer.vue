@@ -107,7 +107,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showError: true,
   handleClick: true,
   handleDblClick: true,
-  playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
+  playbackRates: () => [0.8, 1.0, 1.2, 1.5, 2.0, 3.0],
   visibleControls: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
   hiddenControls: () => [],
   webFullscreenTarget: 'body',
@@ -278,27 +278,65 @@ const setPlaybackRate = (rate: number) => {
 // 提供依赖项给子组件
 provide(PlayerInjectKey, {
   // 状态
-  get error() { return error.value; },
-  get isPlaying() { return isPlaying.value; },
-  get isWebFullscreen() { return isWebFullscreen.value; },
-  get currentTime() { return currentTime.value; },
-  get duration() { return duration.value; },
-  get playbackRate() { return playbackRate.value; },
-  get currentPlaybackMode() { return currentPlaybackMode.value; },
-  get currentIndex() { return currentIndex.value; },
+  get error() {
+    return error.value;
+  },
+  get isPlaying() {
+    return isPlaying.value;
+  },
+  get isWebFullscreen() {
+    return isWebFullscreen.value;
+  },
+  get currentTime() {
+    return currentTime.value;
+  },
+  get duration() {
+    return duration.value;
+  },
+  get playbackRate() {
+    return playbackRate.value;
+  },
+  get currentPlaybackMode() {
+    return currentPlaybackMode.value;
+  },
+  get currentIndex() {
+    return currentIndex.value;
+  },
   // 计算属性
-  get controlsVisibility() { return controlsVisibility.value; },
-  get progress() { return progress.value; },
-  get availablePlaybackModes() { return availablePlaybackModes.value; },
+  get controlsVisibility() {
+    return controlsVisibility.value;
+  },
+  get progress() {
+    return progress.value;
+  },
+  get availablePlaybackModes() {
+    return availablePlaybackModes.value;
+  },
   // Props
-  get src() { return props.src; },
-  get playlist() { return props.playlist; },
-  get preSrc() { return props.preSrc; },
-  get nextSrc() { return props.nextSrc; },
-  get i18n() { return props.i18n; },
-  get playbackRates() { return props.playbackRates; },
-  get fullscreenButtonMode() { return props.fullscreenButtonMode; },
-  get webFullscreenTarget() { return props.webFullscreenTarget; },
+  get src() {
+    return props.src;
+  },
+  get playlist() {
+    return props.playlist;
+  },
+  get preSrc() {
+    return props.preSrc;
+  },
+  get nextSrc() {
+    return props.nextSrc;
+  },
+  get i18n() {
+    return props.i18n;
+  },
+  get playbackRates() {
+    return props.playbackRates;
+  },
+  get fullscreenButtonMode() {
+    return props.fullscreenButtonMode;
+  },
+  get webFullscreenTarget() {
+    return props.webFullscreenTarget;
+  },
   // 方法
   handleError,
   handleTimeUpdate,
