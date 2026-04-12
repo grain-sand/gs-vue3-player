@@ -2,7 +2,9 @@ import type {IPlayerExpose, IPlayerProps} from './IPlayerProps';
 import type {PlayerSource} from './IPlayerSource';
 import type {ControlType} from './ISlotProps';
 
-export interface IGsPlayerProps extends IPlayerProps {
+export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
+  /** 视频地址 */
+  src?: PlayerSource;
   /** 是否显示控制面板 */
   showControls?: boolean;
   /** 是否显示错误信息 */

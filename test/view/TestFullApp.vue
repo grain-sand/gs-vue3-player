@@ -2,12 +2,11 @@
   <div class="TestFullApp">
     <gs-player
         width="640"
-        :src="src"
-        :next-src="next"
-        :pre-src="pre"
         :volume="0.3"
         @srcChange="srcChange"
-    />
+        :playlist="videoList"
+    >
+    </gs-player>
   </div>
 </template>
 
@@ -39,10 +38,10 @@ const next = ref(null)
 const pre = ref(null)
 
 function srcChange(nextSrc: IStringPlayerSource<number>) {
-  index = nextSrc.data;
   console.log(copyObject(nextSrc));
-  next.value = getUrl();
-  pre.value = getPreUrl();
+  // index = nextSrc.data;
+  // next.value = getUrl();
+  // pre.value = getPreUrl();
 }
 
 </script>
