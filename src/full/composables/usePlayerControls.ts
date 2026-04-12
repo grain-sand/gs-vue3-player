@@ -22,18 +22,15 @@ export function usePlayerControls({
 	                                  props,
 	                                  currentPlaybackMode,
 	                                  currentIndex,
-	                                  isPlaying,
 	                                  playbackRate,
 	                                  isWebFullscreen,
 	                                  setCurrentTime,
 	                                  setDuration,
 	                                  setError,
-	                                  setIsPlaying
                                   }: UsePlayerControlsOptions) {
 	// 播放控制
 	const togglePlay = async () => {
 		await playerRef.value?.togglePlay();
-		setIsPlaying(!isPlaying.value);
 	};
 	const play = async (src?: number | any) => {
 		if (typeof src === 'number' && props.playlist && props.playlist.length > 0) {
@@ -54,11 +51,9 @@ export function usePlayerControls({
 		} else {
 			await playerRef.value?.play(src);
 		}
-		setIsPlaying(true);
 	};
 	const pause = async () => {
 		await playerRef.value?.pause();
-		setIsPlaying(false);
 	};
 	const unmute = async () => await playerRef.value?.unmute();
 	const switchToNextSrc = () => {
