@@ -43,99 +43,39 @@
           <!-- 进度条插槽 -->
           <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
             <!-- 进度条 -->
-            <GsProgressBar
-                :progress="progress"
-                :current-time="currentTime"
-                :duration="duration"
-                :player-ref="playerRef"
-            />
+            <GsProgressBar/>
           </slot>
 
           <slot name="controls" v-bind="slotProps">
             <!-- 控制面板 -->
             <div class="gs-controls" :title="playerTitle">
               <!-- 播放/暂停 -->
-              <GsPlayButton
-                  :is-playing="isPlaying"
-                  :controls-visibility="controlsVisibility"
-                  :i18n="props.i18n"
-                  :toggle-play="togglePlay"
-              />
+              <GsPlayButton/>
 
               <!-- 上一个 -->
-              <GsNavButton
-                  type="pre"
-                  :controls-visibility="controlsVisibility"
-                  :pre-src="props.preSrc"
-                  :next-src="props.nextSrc"
-                  :playlist="props.playlist"
-                  :current-index="currentIndex"
-                  :i18n="props.i18n"
-                  :switch-to-pre-src="switchToPreSrc"
-                  :switch-to-next-src="switchToNextSrc"
-              />
+              <GsNavButton type="pre"/>
 
               <!-- 下一个 -->
-              <GsNavButton
-                  type="next"
-                  :controls-visibility="controlsVisibility"
-                  :pre-src="props.preSrc"
-                  :next-src="props.nextSrc"
-                  :playlist="props.playlist"
-                  :current-index="currentIndex"
-                  :i18n="props.i18n"
-                  :switch-to-pre-src="switchToPreSrc"
-                  :switch-to-next-src="switchToNextSrc"
-              />
+              <GsNavButton type="next"/>
 
               <!-- 时间显示 -->
-              <GsTimeDisplay
-                  :controls-visibility="controlsVisibility"
-                  :current-time="currentTime"
-                  :duration="duration"
-                  :list-len="props.playlist?.length"
-                  :current-index="currentIndex"
-              />
+              <GsTimeDisplay/>
               <div class="space"></div>
               <slot v-bind="slotProps">
               </slot>
               <div class="space"></div>
 
               <!-- 速度控制 -->
-              <GsSpeedControl
-                  :controls-visibility="controlsVisibility"
-                  :playback-rate="playbackRate"
-                  :playback-rates="props.playbackRates"
-                  :i18n="props.i18n"
-                  :set-playback-rate="setPlaybackRate"
-              />
+              <GsSpeedControl/>
 
               <!-- 音量控制 -->
-              <GsVolumeControl
-                  :controls-visibility="controlsVisibility"
-                  :i18n="props.i18n"
-                  :player-ref="playerRef"
-                  :on-volume-change="setVolume"
-              />
+              <GsVolumeControl/>
 
               <!-- 播放模式 -->
-              <GsPlaybackModeControl
-                  :controls-visibility="controlsVisibility"
-                  :current-playback-mode="currentPlaybackMode"
-                  :available-playback-modes="availablePlaybackModes"
-                  :i18n="props.i18n"
-                  :set-playback-mode="setPlaybackMode"
-              />
+              <GsPlaybackModeControl/>
 
               <!-- 全屏控制 -->
-              <GsFullscreenControl
-                  :controls-visibility="controlsVisibility"
-                  :fullscreen-button-mode="props.fullscreenButtonMode"
-                  :i18n="props.i18n"
-                  :web-fullscreen="webFullscreen"
-                  :fullscreen="fullscreen"
-                  :pip="pip"
-              />
+              <GsFullscreenControl/>
             </div>
           </slot>
         </footer>
@@ -145,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import {computed, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {ControlType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../types';
 import {zhCN} from "./i18n/zhCN";
@@ -156,11 +96,11 @@ import {
   GsPlaybackModeControl,
   GsPlayButton,
   GsProgressBar,
-  GsSpeedControl,
-  GsTimeDisplay,
+  GsSpeedControl, GsTimeDisplay,
   GsVolumeControl
 } from './components';
 import {usePlayerControls} from './composables';
+import {PlayerInjectKey} from './types/PlayerInject';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -333,6 +273,91 @@ const setPlaybackRate = (rate: number) => {
   originalSetPlaybackRate(rate);
   emit('playbackRateChange', rate);
 };
+
+// 提供依赖项给子组件
+provide(PlayerInjectKey, {
+  // 状态
+  get error() {
+    return error.value;
+  },
+  get isPlaying() {
+    return isPlaying.value;
+  },
+  get isWebFullscreen() {
+    return isWebFullscreen.value;
+  },
+  get currentTime() {
+    return currentTime.value;
+  },
+  get duration() {
+    return duration.value;
+  },
+  get playbackRate() {
+    return playbackRate.value;
+  },
+  get currentPlaybackMode() {
+    return currentPlaybackMode.value;
+  },
+  get currentIndex() {
+    return currentIndex.value;
+  },
+  // 计算属性
+  get controlsVisibility() {
+    return controlsVisibility.value;
+  },
+  get progress() {
+    return progress.value;
+  },
+  get availablePlaybackModes() {
+    return availablePlaybackModes.value;
+  },
+  // Props
+  get src() {
+    return props.src;
+  },
+  get playlist() {
+    return props.playlist;
+  },
+  get preSrc() {
+    return props.preSrc;
+  },
+  get nextSrc() {
+    return props.nextSrc;
+  },
+  get i18n() {
+    return props.i18n;
+  },
+  get playbackRates() {
+    return props.playbackRates;
+  },
+  get fullscreenButtonMode() {
+    return props.fullscreenButtonMode;
+  },
+  get webFullscreenTarget() {
+    return props.webFullscreenTarget;
+  },
+  // 方法
+  handleError,
+  handleTimeUpdate,
+  handleLoadedMetadata,
+  handleEnded,
+  togglePlay,
+  play,
+  pause,
+  unmute,
+  switchToNextSrc,
+  switchToPreSrc,
+  setPlaybackMode,
+  setPlaybackRate,
+  setVolume,
+  fullscreen,
+  webFullscreen,
+  pip,
+  handlePlayerClick,
+  handlePlayerDblClick,
+  // Refs
+  playerRef
+});
 
 defineExpose<IGsPlayerExpose>({
   get player() {

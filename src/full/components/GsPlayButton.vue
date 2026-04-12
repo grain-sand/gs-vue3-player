@@ -1,25 +1,16 @@
 <template>
-  <div v-if="controlsVisibility.play" class="gs-btn" @click.stop="togglePlay"
-       :title="i18n.titles.play">
-    <component :is="PlayStateIcons[isPlaying.toString()]"/>
+  <div v-if="player.controlsVisibility.play" class="gs-btn" @click.stop="player.togglePlay"
+       :title="player.i18n.titles.play">
+    <component :is="PlayStateIcons[player.isPlaying.toString()]"/>
   </div>
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue';
 import { PlayStateIcons } from '../svgs';
+import { PlayerInjectKey } from '../types/PlayerInject';
 
-interface Props {
-  isPlaying: boolean;
-  controlsVisibility: {
-    play: boolean;
-  };
-  i18n: {
-    titles: {
-      play: string;
-    };
-  };
-  togglePlay: () => void;
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = defineProps<Props>();
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 </script>

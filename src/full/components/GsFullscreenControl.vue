@@ -1,51 +1,36 @@
 <template>
   <!-- 弹出小窗按钮 - 控制面板模式 -->
-  <div v-if="fullscreenButtonMode === 'control' && isPipSupported && controlsVisibility.fullscreen" class="gs-btn"
-       @click.stop="pip" :title="i18n.titles.pip">
+  <div v-if="player.fullscreenButtonMode === 'control' && isPipSupported && player.controlsVisibility.fullscreen" class="gs-btn"
+       @click.stop="player.pip" :title="player.i18n.titles.pip">
     <PipSvg style="transform: scale(0.8);"/>
   </div>
-  <div v-if="controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen"
-       :title="i18n.titles.webFullscreen">
+  <div v-if="player.controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="player.webFullscreen"
+       :title="player.i18n.titles.webFullscreen">
     <WebFullscreenSvg style="transform: scale(0.8);"/>
-    <div class="gs-dropdown" v-if="fullscreenButtonMode === 'submenu'">
-      <div class="gs-dropdown-item" @click.stop="fullscreen" :title="i18n.titles.fullscreen">
+    <div class="gs-dropdown" v-if="player.fullscreenButtonMode === 'submenu'">
+      <div class="gs-dropdown-item" @click.stop="player.fullscreen" :title="player.i18n.titles.fullscreen">
         <FullscreenSvg style="transform: scale(0.8);"/>
       </div>
-      <div v-if="isPipSupported" class="gs-dropdown-item" @click.stop="pip" :title="i18n.titles.pip">
+      <div v-if="isPipSupported" class="gs-dropdown-item" @click.stop="player.pip" :title="player.i18n.titles.pip">
         <PipSvg style="transform: scale(0.8);"/>
       </div>
     </div>
   </div>
   <!-- 全屏按钮 - 控制面板模式 -->
-  <div v-if="fullscreenButtonMode === 'control' && controlsVisibility.fullscreen" class="gs-btn"
-       @click.stop="fullscreen" :title="i18n.titles.fullscreen">
+  <div v-if="player.fullscreenButtonMode === 'control' && player.controlsVisibility.fullscreen" class="gs-btn"
+       @click.stop="player.fullscreen" :title="player.i18n.titles.fullscreen">
     <FullscreenSvg style="transform: scale(0.8);"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
+import { inject, ref, onMounted } from 'vue';
 import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../svgs';
-import type {FullscreenButtonMode} from '../../types';
+import { PlayerInjectKey } from '../types/PlayerInject';
 
-interface Props {
-  controlsVisibility: {
-    fullscreen: boolean;
-  };
-  fullscreenButtonMode: FullscreenButtonMode;
-  i18n: {
-    titles: {
-      webFullscreen: string;
-      fullscreen: string;
-      pip: string;
-    };
-  };
-  webFullscreen: () => void;
-  fullscreen: () => void;
-  pip: () => void;
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = defineProps<Props>();
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 
 const isPipSupported = ref(false);
 

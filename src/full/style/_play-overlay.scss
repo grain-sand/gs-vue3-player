@@ -7,13 +7,14 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.08);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	z-index: 10;
 	cursor: pointer;
 	padding-bottom: 5px;
+	transition: var(--gs-transition);
 
 	.gs-play-overlay-button {
 	  width: 80px;
@@ -24,20 +25,24 @@
 	  justify-content: center;
 	  pointer-events: auto;
 	  cursor: pointer;
-	  transition: transform 0.2s ease;
+	  transition: var(--gs-transition);
 	  //background: var(--gs-hover-bg);
 
 	  svg {
 		width: 50%;
 		height: 50%;
 		path{
-		  filter: drop-shadow(0 0 .15rem var(--gs-track-bg));
+		  filter: drop-shadow(0 0 .12rem var(--gs-track-bg));
+		  transition: var(--gs-transition);
 		}
 	  }
 	}
 
 	&:hover > .gs-play-overlay-button {
 	  transform: scale(1.1);
+	  path{
+		filter: drop-shadow(0 0 .12rem var(--gs-track-bg))  drop-shadow(0 0 .15rem var(--gs-track-bg));
+	  }
 	}
   }
 

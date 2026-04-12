@@ -1,13 +1,13 @@
 <template>
-  <div v-if="controlsVisibility.speed" class="gs-btn gs-dropdown-host" :title="i18n.titles.speed">
-    <span class="gs-text-btn">{{ playbackRate.toFixed(1) }}</span>
+  <div v-if="player.controlsVisibility.speed" class="gs-btn gs-dropdown-host" :title="player.i18n.titles.speed">
+    <span class="gs-text-btn">{{ player.playbackRate.toFixed(1) }}</span>
     <div class="gs-dropdown">
       <div
-          v-for="rate in playbackRates"
+          v-for="rate in player.playbackRates"
           :key="rate"
           class="gs-dropdown-item"
-          :class="{ active: rate === playbackRate }"
-          @click.stop="setPlaybackRate(rate)"
+          :class="{ active: rate === player.playbackRate }"
+          @click.stop="player.setPlaybackRate(rate)"
       >
         {{ rate.toFixed(1) }}
       </div>
@@ -16,19 +16,10 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  controlsVisibility: {
-    speed: boolean;
-  };
-  playbackRate: number;
-  playbackRates: number[];
-  i18n: {
-    titles: {
-      speed: string;
-    };
-  };
-  setPlaybackRate: (rate: number) => void;
-}
+import { inject } from 'vue';
+import { PlayerInjectKey } from '../types/PlayerInject';
 
-const props = defineProps<Props>();
+import type { PlayerInject } from '../types/PlayerInject';
+
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 </script>

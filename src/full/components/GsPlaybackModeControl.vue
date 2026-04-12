@@ -1,15 +1,15 @@
 <template>
-  <div v-if="controlsVisibility.play" class="gs-btn gs-dropdown-host"
-       :title="i18n.playbackModes[currentPlaybackMode]">
-    <component :is="PlaybackModeIcons[currentPlaybackMode]"
-               :style="{ transform: `scale(0.${currentPlaybackMode === 'disabled' ? '73' : '82' })` }"/>
+  <div v-if="player.controlsVisibility.play" class="gs-btn gs-dropdown-host"
+       :title="player.i18n.playbackModes[player.currentPlaybackMode]">
+    <component :is="PlaybackModeIcons[player.currentPlaybackMode]"
+               :style="{ transform: `scale(0.${player.currentPlaybackMode === 'disabled' ? '73' : '82' })` }"/>
     <div class="gs-dropdown">
       <div
-          v-for="mode in availablePlaybackModes"
+          v-for="mode in player.availablePlaybackModes"
           :key="mode.value"
           class="gs-dropdown-item"
-          :class="{ active: mode.value === currentPlaybackMode }"
-          @click.stop="setPlaybackMode(mode.value)"
+          :class="{ active: mode.value === player.currentPlaybackMode }"
+          @click.stop="player.setPlaybackMode(mode.value)"
           :title="mode.text"
       >
         <component :is="PlaybackModeIcons[mode.value]"
@@ -20,23 +20,11 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue';
 import { PlaybackModeIcons } from '../svgs';
-import type { PlaybackMode } from '../../types';
+import { PlayerInjectKey } from '../types/PlayerInject';
 
-interface Props {
-  controlsVisibility: {
-    play: boolean;
-  };
-  currentPlaybackMode: PlaybackMode;
-  availablePlaybackModes: Array<{
-    value: PlaybackMode;
-    text: string;
-  }>;
-  i18n: {
-    playbackModes: Record<PlaybackMode, string>;
-  };
-  setPlaybackMode: (mode: PlaybackMode) => void;
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = defineProps<Props>();
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 </script>

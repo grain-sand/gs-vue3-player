@@ -1,32 +1,25 @@
 <template>
-  <div v-if="controlsVisibility.time" class="gs-time-display" :title="title">
+  <div v-if="player.controlsVisibility.time" class="gs-time-display" :title="title">
     {{ time }}
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, inject} from "vue";
+import {PlayerInjectKey} from '../types/PlayerInject';
 
-interface Props {
-  controlsVisibility: {
-    time: boolean;
-  };
-  currentTime: number;
-  duration: number;
-  listLen?: number
-  currentIndex?: number
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = defineProps<Props>();
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 
 const time = computed(() => {
-  return `${formatTime(props.currentTime)}/${formatTime(props.duration)}`;
+  return `${formatTime(player.currentTime)}/${formatTime(player.duration)}`;
 });
 
 const title = computed(() => {
-  if (props.listLen) {
-    const currentPosition = props.currentIndex + 1;
-    const totalCount = props.listLen;
+  if (player.playlist && player.playlist.length > 0) {
+    const currentPosition = player.currentIndex + 1;
+    const totalCount = player.playlist.length;
     return `${currentPosition}/${totalCount}`;
   }
   return '';

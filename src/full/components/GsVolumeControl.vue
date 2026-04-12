@@ -1,7 +1,7 @@
 <template>
-  <div v-if="controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
+  <div v-if="player.controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
        @mouseenter="bindWheel" @mouseleave="unbindWheel"
-       :title="isMuted || volume === 0 ? i18n.titles.mute : i18n.titles.volume">
+       :title="isMuted || volume === 0 ? player.i18n.titles.mute : player.i18n.titles.volume">
     <component :is="VolumeStateIcons[isMuted.toString()]"
                style="transform: scale(0.95);"/>
 
@@ -18,27 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { VolumeStateIcons } from '../svgs';
+import { PlayerInjectKey } from '../types/PlayerInject';
 
-interface Props {
-  controlsVisibility: {
-    volume: boolean;
-  };
-  i18n: {
-    titles: {
-      mute: string;
-      volume: string;
-    };
-  };
-  playerRef: { value: any } | undefined;
-  onVolumeChange?: (volume: number) => void;
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = withDefaults(defineProps<Props>(), {
-  playerRef: () => ({ value: undefined }),
-  onVolumeChange: () => () => {}
-});
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 
 // 状态
 const volume = ref(1);
@@ -47,7 +33,7 @@ const previousVolume = ref(1);
 
 // 监听播放器音量变化
 watch(
-  () => props.playerRef.value?.el?.volume,
+  () => player.playerRef.value?.el?.volume,
   (newVolume) => {
     if (newVolume !== undefined) {
       volume.value = newVolume;
@@ -62,12 +48,12 @@ const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(
 // 音量控制
 const setVolume = (newVol: number) => {
   volume.value = clamp(newVol, 0, 1);
-  if (props.playerRef.value?.el) {
-    props.playerRef.value.el.volume = volume.value;
+  if (player.playerRef.value?.el) {
+    player.playerRef.value.el.volume = volume.value;
     isMuted.value = volume.value === 0;
-    props.playerRef.value.el.muted = isMuted.value;
+    player.playerRef.value.el.muted = isMuted.value;
   }
-  props.onVolumeChange?.(volume.value);
+  player.setVolume(volume.value);
 };
 
 const toggleMute = () => {

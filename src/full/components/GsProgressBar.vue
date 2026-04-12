@@ -2,8 +2,8 @@
   <div class="gs-progress-container" @click.stop="handleProgressClick" @mousemove="handleProgressMouseMove"
        @mouseleave="handleProgressMouseLeave">
     <div class="gs-progress-track">
-      <div class="gs-progress-fill" :style="{ width: `${progress}%` }"></div>
-      <div class="gs-progress-handle" :style="{ left: `${progress}%` }"></div>
+      <div class="gs-progress-fill" :style="{ width: `${player.progress}%` }"></div>
+      <div class="gs-progress-handle" :style="{ left: `${player.progress}%` }"></div>
       <!-- 时间提示 -->
       <div v-show="showProgressTooltip" class="gs-progress-tooltip" :style="{ left: `${tooltipPosition}%` }">
         {{ formatTime(tooltipTime) }}
@@ -13,18 +13,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {inject, ref} from 'vue';
+import {PlayerInjectKey} from '../types/PlayerInject';
 
-interface Props {
-  progress: number;
-  currentTime: number;
-  duration: number;
-  playerRef: { value: any } | undefined;
-}
+import type { PlayerInject } from '../types/PlayerInject';
 
-const props = withDefaults(defineProps<Props>(), {
-  playerRef: () => ({ value: undefined })
-});
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 
 // 状态
 const showProgressTooltip = ref(false);
@@ -49,15 +43,17 @@ const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
 };
 
 const handleProgressClick = (e: MouseEvent) => {
-  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * props.duration;
-  if (props.playerRef.value?.el) props.playerRef.value.el.currentTime = newTime;
+  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * player.duration;
+  if (player.playerRef.value?.el) {
+    player.playerRef.value.el.currentTime = newTime;
+  }
 };
 
 const handleProgressMouseMove = (e: MouseEvent) => {
   const ratio = getProgressRatio(e, e.currentTarget as HTMLElement);
   showProgressTooltip.value = true;
   tooltipPosition.value = clamp(ratio * 100, 5, 95);
-  tooltipTime.value = ratio * props.duration;
+  tooltipTime.value = ratio * player.duration;
 };
 
 const handleProgressMouseLeave = () => (showProgressTooltip.value = false);
