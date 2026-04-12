@@ -25,6 +25,12 @@ export interface IGsPlayerProps extends IPlayerProps {
   hiddenControls?: ControlType[];
   /** 网页全屏挂载目标，默认为body */
   webFullscreenTarget?: string | HTMLElement;
+  /** 全屏按钮显示方式，可选项为：子菜单（默认）、控制面板（最右位置）、隐藏 */
+  fullscreenButtonMode?: 'submenu' | 'control' | 'hidden';
+  /** 播放列表 */
+  playlist?: PlayerSource[];
+  /** 播放模式，可选项为：播放下一个（默认值）、只播当前、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
+  playbackMode?: 'next' | 'current' | 'loop' | 'loopAll' | 'shuffle';
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {

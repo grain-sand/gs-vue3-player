@@ -1,6 +1,7 @@
 <template>
   <div class="TestFullApp">
     <gs-player
+        width="640"
         :src="src"
         :next-src="next"
         :pre-src="pre"
