@@ -4,7 +4,7 @@ export const zhCN: II18n = {
 	errorMessage: '请求错误',
 	playbackModes: {
 		sequence: '顺序播放',
-		current: '只播当前',
+		disabled: '禁用',
 		loop: '单个循环',
 		loopAll: '全部循环',
 		shuffle: '随机播放'
@@ -16,7 +16,6 @@ export const zhCN: II18n = {
 		volume: '音量',
 		mute: '静音',
 		speed: '播放速度',
-		playbackMode: '播放模式',
 		fullscreen: '全屏',
 		webFullscreen: '网页全屏'
 	}

@@ -7,7 +7,7 @@ export const enUS: II18n = {
 	errorMessage: 'Request Error',
 	playbackModes: {
 		sequence: 'Play Sequence',
-		current: 'Play Current',
+		disabled: 'Disabled',
 		loop: 'Loop Current',
 		loopAll: 'Loop All',
 		shuffle: 'Shuffle'
@@ -19,7 +19,6 @@ export const enUS: II18n = {
 		volume: 'Volume',
 		mute: 'Mute',
 		speed: 'Playback Speed',
-		playbackMode: 'Playback Mode',
 		fullscreen: 'Fullscreen',
 		webFullscreen: 'Web Fullscreen'
 	}

@@ -25,10 +25,7 @@
 
       <!-- 错误信息 -->
       <div v-if="showError && error" class="gs-player-error">
-        <svg viewBox="0 0 24 24" class="gs-icon-spin">
-          <path fill="currentColor"
-                d="M12 2v4c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8H2c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2z"/>
-        </svg>
+        <ErrorSvg class="gs-icon-spin"/>
         <span>{{ props.i18n.errorMessage }}</span>
       </div>
 
@@ -39,162 +36,89 @@
           <!-- 进度条插槽 -->
           <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
             <!-- 进度条 -->
-            <div class="gs-progress-container" @click.stop="handleProgressClick" @mousemove="handleProgressMouseMove"
-                 @mouseleave="handleProgressMouseLeave">
-              <div class="gs-progress-track">
-                <div class="gs-progress-fill" :style="{ width: `${progress}%` }"></div>
-                <div class="gs-progress-handle" :style="{ left: `${progress}%` }"></div>
-                <!-- 时间提示 -->
-                <div v-show="showProgressTooltip" class="gs-progress-tooltip" :style="{ left: `${tooltipPosition}%` }">
-                  {{ formatTime(tooltipTime) }}
-                </div>
-              </div>
-            </div>
+            <GsProgressBar
+              :progress="progress"
+              :current-time="currentTime"
+              :duration="duration"
+              :player-ref="playerRef"
+            />
           </slot>
 
           <slot name="controls" v-bind="slotProps">
             <!-- 控制面板 -->
             <div class="gs-controls">
-
               <!-- 播放/暂停 -->
-              <div v-if="controlsVisibility.play" class="gs-btn" @click.stop="togglePlay"
-                   :title="props.i18n.titles.play">
-                <svg v-if="isPlaying" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                </svg>
-                <svg v-else viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
+              <GsPlayButton
+                :is-playing="isPlaying"
+                :controls-visibility="controlsVisibility"
+                :i18n="props.i18n"
+                :toggle-play="togglePlay"
+              />
 
               <!-- 上一个 -->
-              <div v-if="controlsVisibility.pre && (props.preSrc||playlist?.[currentIndex-1])"
-                   class="gs-btn" @click.stop="switchToPreSrc" :title="props.i18n.titles.pre">
-                <svg viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6z"/>
-                </svg>
-              </div>
+              <GsPreButton
+                :controls-visibility="controlsVisibility"
+                :pre-src="props.preSrc"
+                :playlist="props.playlist"
+                :current-index="currentIndex"
+                :i18n="props.i18n"
+                :switch-to-pre-src="switchToPreSrc"
+              />
 
               <!-- 下一个 -->
-              <div v-if="controlsVisibility.next && (props.nextSrc||playlist?.[currentIndex+1])"
-                   class="gs-btn" @click.stop="switchToNextSrc" :title="props.i18n.titles.next">
-                <svg viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-                </svg>
-              </div>
+              <GsNextButton
+                :controls-visibility="controlsVisibility"
+                :next-src="props.nextSrc"
+                :playlist="props.playlist"
+                :current-index="currentIndex"
+                :i18n="props.i18n"
+                :switch-to-next-src="switchToNextSrc"
+              />
 
               <!-- 时间显示 -->
-              <div v-if="controlsVisibility.time" class="gs-time-display">
-                {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
-              </div>
+              <GsTimeDisplay
+                :controls-visibility="controlsVisibility"
+                :current-time="currentTime"
+                :duration="duration"
+              />
               <div class="space"></div>
               <slot v-bind="slotProps">
               </slot>
               <div class="space"></div>
 
-              <div v-if="controlsVisibility.speed" class="gs-btn gs-dropdown-host">
-                <span class="gs-text-btn">{{ playbackRate.toFixed(1) }}x</span>
-                <div class="gs-dropdown">
-                  <div
-                      v-for="rate in playbackRates"
-                      :key="rate"
-                      class="gs-dropdown-item"
-                      :class="{ active: rate === playbackRate }"
-                      @click.stop="setPlaybackRate(rate)"
-                  >
-                    {{ rate.toFixed(1) }}x
-                  </div>
-                </div>
-              </div>
+              <!-- 速度控制 -->
+              <GsSpeedControl
+                :controls-visibility="controlsVisibility"
+                :playback-rate="playbackRate"
+                :playback-rates="props.playbackRates"
+                :i18n="props.i18n"
+                :set-playback-rate="setPlaybackRate"
+              />
 
-              <!-- 音量 -->
-              <div v-if="controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
-                   @mouseenter="bindWheel" @mouseleave="unbindWheel"
-                   :title="isMuted || volume === 0 ? props.i18n.titles.mute : props.i18n.titles.volume">
-                <svg viewBox="0 0 24 24" style="transform: scale(0.95);">
-                  <path v-if="isMuted || volume === 0" fill="currentColor"
-                        d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                  <path v-else fill="currentColor"
-                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                </svg>
-
-                <div class="gs-dropdown gs-volume-panel" @click.stop>
-                  <div class="gs-volume-val">{{ Math.round(volume * 100) }}%</div>
-                  <div class="gs-volume-slider" @mousedown="handleVolumeSliderClick">
-                    <div class="gs-volume-track">
-                      <div class="gs-volume-fill" :style="{ height: `${volume * 100}%` }"></div>
-                      <div class="gs-volume-handle" :style="{ bottom: `${volume * 100}%` }"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <!-- 音量控制 -->
+              <GsVolumeControl
+                :controls-visibility="controlsVisibility"
+                :i18n="props.i18n"
+                :player-ref="playerRef"
+              />
 
               <!-- 播放模式 -->
-              <div v-if="controlsVisibility.play" class="gs-btn gs-dropdown-host"
-                   :title="props.i18n.titles.playbackMode">
-                <svg viewBox="0 0 24 24" style="transform: scale(0.95);">
-                  <path fill="currentColor" :d="playbackModeIcons[currentPlaybackMode]"/>
-                </svg>
-                <div class="gs-dropdown">
-                  <div
-                      v-for="mode in availablePlaybackModes"
-                      :key="mode.value"
-                      class="gs-dropdown-item"
-                      :class="{ active: mode.value === currentPlaybackMode }"
-                      @click.stop="setPlaybackMode(mode.value)"
-                      :title="mode.text"
-                  >
-                    <svg viewBox="0 0 24 24" style="transform: scale(0.8);">
-                      <path fill="currentColor" :d="playbackModeIcons[mode.value]"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <GsPlaybackModeControl
+                :controls-visibility="controlsVisibility"
+                :current-playback-mode="currentPlaybackMode"
+                :available-playback-modes="availablePlaybackModes"
+                :i18n="props.i18n"
+                :set-playback-mode="setPlaybackMode"
+              />
 
-              <div v-if="controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen"
-                   :title="props.i18n.titles.webFullscreen">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
-                     style="transform: scale(0.8);">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                  <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                  <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                  <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                  <rect width="10" height="8" x="7" y="8" rx="1"/>
-                </svg>
-                <div class="gs-dropdown" v-if="fullscreenButtonMode === 'submenu'">
-                  <div class="gs-dropdown-item" @click.stop="fullscreen" :title="props.i18n.titles.fullscreen">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         style="transform: scale(0.8);">
-                      <path d="m15 15 6 6"/>
-                      <path d="m15 9 6-6"/>
-                      <path d="M21 16v5h-5"/>
-                      <path d="M21 8V3h-5"/>
-                      <path d="M3 16v5h5"/>
-                      <path d="m3 21 6-6"/>
-                      <path d="M3 8V3h5"/>
-                      <path d="M9 9 3 3"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <!-- 全屏按钮 - 控制面板模式 -->
-              <div v-if="fullscreenButtonMode === 'control' && controlsVisibility.fullscreen" class="gs-btn"
-                   @click.stop="fullscreen" :title="props.i18n.titles.fullscreen">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round"
-                     style="transform: scale(0.8);">
-                  <path d="m15 15 6 6"/>
-                  <path d="m15 9 6-6"/>
-                  <path d="M21 16v5h-5"/>
-                  <path d="M21 8V3h-5"/>
-                  <path d="M3 16v5h5"/>
-                  <path d="m3 21 6-6"/>
-                  <path d="M3 8V3h5"/>
-                  <path d="M9 9 3 3"/>
-                </svg>
-              </div>
+              <!-- 全屏控制 -->
+              <GsFullscreenControl
+                :controls-visibility="controlsVisibility"
+                :fullscreen-button-mode="props.fullscreenButtonMode"
+                :i18n="props.i18n"
+                :web-fullscreen="webFullscreen"
+                :fullscreen="fullscreen"
+              />
             </div>
           </slot>
         </footer>
@@ -204,18 +128,28 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, ref, watch} from 'vue';
+import {ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
-  ControlType,
-  ControlTypes,
   IGsPlayerExpose,
   IGsPlayerProps,
   IPlayerExpose,
-  PlaybackMode,
   PlayerSource
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
+import { ErrorSvg } from './svgs';
+import {
+  GsProgressBar,
+  GsPlayButton,
+  GsPreButton,
+  GsNextButton,
+  GsTimeDisplay,
+  GsSpeedControl,
+  GsVolumeControl,
+  GsPlaybackModeControl,
+  GsFullscreenControl
+} from './components';
+import {usePlayer} from './composables';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -223,7 +157,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleClick: true,
   handleDblClick: true,
   playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
-  visibleControls: () => [...ControlTypes],
+  visibleControls: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress'],
   hiddenControls: () => [],
   webFullscreenTarget: 'body',
   fullscreenButtonMode: 'submenu',
@@ -238,313 +172,42 @@ const emit = defineEmits<{ (e: 'srcChange', src: PlayerSource): void }>();
 const playerRef = ref() as { value: IPlayerExpose };
 const playerContainerRef = ref<HTMLDivElement>();
 
-// State
-const error = ref(false);
-const isPlaying = ref(false);
-const isMuted = ref(false);
-const isWebFullscreen = ref(false);
-const currentTime = ref(0);
-const duration = ref(0);
-const playbackRate = ref(1);
-const currentPlaybackMode = ref(props.playbackMode || 'sequence');
-const currentIndex = ref(0);
-
-// 播放模式图标路径
-const playbackModeIcons: Record<PlaybackMode, string> = {
-  sequence: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
-  current: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
-  loop: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
-  loopAll: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
-  shuffle: 'M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm0 14.17l-2.04-2.04L19.59 6 18.18 4.59 14.5 8.27v9.9z'
-};
-
-
-// 进度条与音量
-const showProgressTooltip = ref(false);
-const tooltipPosition = ref(0);
-const tooltipTime = ref(0);
-const volume = ref(1);
-const previousVolume = ref(1);
-
-// 工具函数：限制范围，去重
-const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
-
-// 计算属性：避免模板中频繁调用方法
-const controlsVisibility = computed(() => {
-  const isVisible = (name: ControlType) =>
-      !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
-  return {
-    play: isVisible('play'),
-    pre: isVisible('pre'),
-    next: isVisible('next'),
-    time: isVisible('time'),
-    speed: isVisible('speed'),
-    volume: isVisible('volume'),
-    fullscreen: isVisible('fullscreen'),
-    progress: isVisible('progress')
-  };
-});
-
-const progress = computed(() => duration.value ? (currentTime.value / duration.value) * 100 : 0);
-
-// 插槽属性
-const progressSlotProps = computed(() => ({
-  progress: progress.value,
-  currentTime: currentTime.value,
-  duration: duration.value,
-  handleProgressClick,
-  handleProgressMouseMove,
-  handleProgressMouseLeave
-}));
-
-const slotProps = computed(() => ({
-  ...progressSlotProps.value,
-  isPlaying: isPlaying.value,
-  isMuted: isMuted.value,
-  isWebFullscreen: isWebFullscreen.value,
-  playbackRate: playbackRate.value,
-  volume: volume.value,
-  controlsVisibility: controlsVisibility.value,
+// 使用 composable 管理播放器控制逻辑
+const {
+  // State
+  error,
+  isPlaying,
+  isWebFullscreen,
+  currentTime,
+  duration,
+  playbackRate,
+  currentPlaybackMode,
+  currentIndex,
+  // Computed
+  controlsVisibility,
+  progress,
+  availablePlaybackModes,
+  progressSlotProps,
+  slotProps,
+  // Methods
+  handleError,
+  handleTimeUpdate,
+  handleLoadedMetadata,
+  handleEnded,
   togglePlay,
   play,
   pause,
   unmute,
-  toggleMute,
-  setVolume,
-  setPlaybackRate,
-  switchToPreSrc,
   switchToNextSrc,
+  switchToPreSrc,
+  setPlaybackMode,
+  setPlaybackRate,
+  setVolume,
   fullscreen,
   webFullscreen,
-  formatTime
-}));
-
-// Methods
-const handleError = () => (error.value = true);
-const handleTimeUpdate = (e: Event) => (currentTime.value = (e.target as HTMLVideoElement).currentTime);
-const handleLoadedMetadata = (e: Event) => (duration.value = (e.target as HTMLVideoElement).duration);
-
-const formatTime = (seconds: number) => {
-  if (isNaN(seconds)) return '00:00';
-  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-  const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
-};
-
-// 可用的播放模式
-const availablePlaybackModes = computed<Array<{
-  value: PlaybackMode;
-  text: string
-}>>(() => {
-  const modes: Array<{ value: PlaybackMode; text: string }> = [
-    {value: 'sequence', text: props.i18n.playbackModes.sequence},
-    {value: 'current', text: props.i18n.playbackModes.current},
-    {value: 'loop', text: props.i18n.playbackModes.loop}
-  ];
-
-  // 如果设置了列表，添加全部循环和随机播放
-  if (props.playlist && props.playlist.length > 0) {
-    modes.push(
-        {value: 'loopAll', text: props.i18n.playbackModes.loopAll},
-        {value: 'shuffle', text: props.i18n.playbackModes.shuffle}
-    );
-  }
-
-  return modes;
-});
-
-// 进度条交互
-const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
-  const rect = el.getBoundingClientRect();
-  return clamp((e.clientX - rect.left) / rect.width, 0, 1);
-};
-
-const handleProgressClick = (e: MouseEvent) => {
-  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * duration.value;
-  if (playerRef.value?.el) playerRef.value.el.currentTime = newTime;
-};
-
-const handleProgressMouseMove = (e: MouseEvent) => {
-  const ratio = getProgressRatio(e, e.currentTarget as HTMLElement);
-  showProgressTooltip.value = true;
-  tooltipPosition.value = clamp(ratio * 100, 5, 95);
-  tooltipTime.value = ratio * duration.value;
-};
-
-const handleProgressMouseLeave = () => (showProgressTooltip.value = false);
-
-// 播放控制
-const togglePlay = async () => await playerRef.value?.togglePlay();
-const play = async (src?: any) => await playerRef.value?.play(src);
-const pause = async () => await playerRef.value?.pause();
-const unmute = async () => {
-  isMuted.value = false;
-  await playerRef.value?.unmute();
-};
-const switchToNextSrc = () => {
-  if (props.nextSrc) {
-    playerRef.value?.play(props.nextSrc);
-  } else if (props.playlist && props.playlist.length > 0) {
-    switchToNextInPlaylist();
-  }
-};
-const switchToPreSrc = () => {
-  if (props.preSrc) {
-    playerRef.value?.play(props.preSrc);
-  } else if (props.playlist && props.playlist.length > 0) {
-    switchToPreInPlaylist();
-  }
-};
-
-// 播放模式控制
-const setPlaybackMode = (mode: PlaybackMode) => {
-  currentPlaybackMode.value = mode;
-};
-
-// 播放列表管理
-const switchToNextInPlaylist = () => {
-  if (!props.playlist || props.playlist.length === 0) return;
-
-  let nextIndex = currentIndex.value;
-  if (currentPlaybackMode.value === 'shuffle') {
-    // 随机播放，确保不重复当前索引
-    do {
-      nextIndex = Math.floor(Math.random() * props.playlist.length);
-    } while (nextIndex === currentIndex.value && props.playlist.length > 1);
-  } else {
-    nextIndex = (currentIndex.value + 1) % props.playlist.length;
-  }
-
-  currentIndex.value = nextIndex;
-  playerRef.value?.play(props.playlist[nextIndex]);
-};
-
-const switchToPreInPlaylist = () => {
-  if (!props.playlist || props.playlist.length === 0) return;
-
-  let preIndex = currentIndex.value;
-  if (currentPlaybackMode.value === 'shuffle') {
-    // 随机播放，确保不重复当前索引
-    do {
-      preIndex = Math.floor(Math.random() * props.playlist.length);
-    } while (preIndex === currentIndex.value && props.playlist.length > 1);
-  } else {
-    preIndex = (currentIndex.value - 1 + props.playlist.length) % props.playlist.length;
-  }
-
-  currentIndex.value = preIndex;
-  playerRef.value?.play(props.playlist[preIndex]);
-};
-
-// 处理播放结束
-const handleEnded = () => {
-  switch (currentPlaybackMode.value) {
-    case 'sequence':
-      // 检查是否有下一个视频
-      if (props.nextSrc) {
-        switchToNextSrc();
-      } else if (props.playlist && props.playlist.length > 0) {
-        // 如果是播放列表的最后一个视频，则停止播放
-        if (currentIndex.value < props.playlist.length - 1) {
-          switchToNextInPlaylist();
-        } else {
-          pause();
-        }
-      } else {
-        // 没有下一个视频，停止播放
-        pause();
-      }
-      break;
-    case 'current':
-      // 停止播放
-      pause();
-      break;
-    case 'loop':
-      // 重新播放当前视频
-      playerRef.value?.el?.play();
-      break;
-    case 'loopAll':
-      switchToNextInPlaylist();
-      break;
-    case 'shuffle':
-      switchToNextInPlaylist();
-      break;
-  }
-};
-
-// 音量控制
-const setVolume = (newVol: number) => {
-  volume.value = clamp(newVol, 0, 1);
-  if (playerRef.value?.el) {
-    playerRef.value.el.volume = volume.value;
-    isMuted.value = volume.value === 0;
-    playerRef.value.el.muted = isMuted.value;
-  }
-};
-
-const toggleMute = () => {
-  if (volume.value > 0) {
-    previousVolume.value = volume.value;
-    setVolume(0);
-  } else {
-    setVolume(previousVolume.value || 0.5); // 恢复或默认 0.5
-  }
-};
-
-const handleVolumeSliderClick = (e: MouseEvent) => {
-  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-  setVolume((rect.bottom - e.clientY) / rect.height);
-};
-
-const handleVolumeWheel = (e: WheelEvent) => {
-  e.preventDefault();
-  setVolume(volume.value + (e.deltaY > 0 ? -0.1 : 0.1));
-};
-
-const bindWheel = () => document.addEventListener('wheel', handleVolumeWheel, {passive: false});
-const unbindWheel = () => document.removeEventListener('wheel', handleVolumeWheel);
-
-// 其他设置
-const setPlaybackRate = (rate: number) => {
-  playbackRate.value = rate;
-  if (playerRef.value?.el) playerRef.value.el.playbackRate = rate;
-};
-
-const fullscreen = () => {
-  const el = playerContainerRef.value;
-  if (!document.fullscreenElement && el) el.requestFullscreen().catch(console.error);
-  else if (document.exitFullscreen) document.exitFullscreen();
-};
-
-const webFullscreen = () => (isWebFullscreen.value = !isWebFullscreen.value);
-
-const handlePlayerClick = () => props.handleClick && (isMuted.value ? toggleMute() : togglePlay());
-const handlePlayerDblClick = () => {
-  if (!props.handleDblClick) return;
-  if (document.fullscreenElement) document.exitFullscreen();
-  else if (isWebFullscreen.value) isWebFullscreen.value = false;
-  else webFullscreen();
-};
-
-// Lifecycle
-
-// 监听 playlist 变化
-watch(
-    () => props.playlist,
-    (newPlaylist) => {
-      if (newPlaylist && newPlaylist.length > 0) {
-        // 如果没有设置 src，则使用 playlist 中的第一个视频
-        if (!props.src) {
-          playerRef.value?.play(newPlaylist[0]);
-        }
-      }
-    },
-    {deep: true}
-);
-
-onBeforeUnmount(() => {
-  unbindWheel();
-});
+  handlePlayerClick,
+  handlePlayerDblClick
+} = usePlayer({ playerRef, playerContainerRef, props });
 
 defineExpose<IGsPlayerExpose>({
   get el() {

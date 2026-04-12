@@ -8,8 +8,8 @@ export interface II18n {
   playbackModes: {
     /** 顺序播放 */
     sequence: string;
-    /** 只播当前 */
-    current: string;
+    /** 禁用 */
+    disabled: string;
     /** 单个循环 */
     loop: string;
     /** 全部循环 */
@@ -31,8 +31,6 @@ export interface II18n {
     mute: string;
     /** 播放速度 */
     speed: string;
-    /** 播放模式 */
-    playbackMode: string;
     /** 全屏 */
     fullscreen: string;
     /** 网页全屏 */

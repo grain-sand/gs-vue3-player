@@ -9,7 +9,7 @@ export const FullscreenButtonModes = ['submenu', 'control', 'hidden'] as const;
 export type FullscreenButtonMode = (typeof FullscreenButtonModes)[number];
 
 /** 播放模式 */
-export const PlaybackModes = ['sequence', 'current', 'loop', 'loopAll', 'shuffle'] as const;
+export const PlaybackModes = ['sequence', 'disabled', 'loop', 'loopAll', 'shuffle'] as const;
 /** 播放模式类型 */
 export type PlaybackMode = (typeof PlaybackModes)[number];
 
@@ -40,7 +40,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
   fullscreenButtonMode?: FullscreenButtonMode;
   /** 播放列表 */
   playlist?: PlayerSource[];
-  /** 播放模式，可选项为：播放下一个（默认值）、只播当前、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
+  /** 播放模式，可选项为：播放下一个（默认值）、禁用、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
   playbackMode?: PlaybackMode;
   /** 国际化配置 */
   i18n?: II18n;
