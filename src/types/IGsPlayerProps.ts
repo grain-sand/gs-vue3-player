@@ -1,10 +1,6 @@
 import type {IPlayerExpose, IPlayerProps} from './IPlayerProps';
 import type {PlayerSource} from './IPlayerSource';
-
-/** 按钮类型 */
-export const ControlTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen'] as const;
-/** 按钮类型联合类型 */
-export type ControlType = (typeof ControlTypes)[number];
+import type {ControlType} from './ISlotProps';
 
 export interface IGsPlayerProps extends IPlayerProps {
   /** 是否显示控制面板 */
