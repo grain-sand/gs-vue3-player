@@ -6,11 +6,7 @@
         :pre-src="pre"
         :volume="0.3"
         @srcChange="srcChange"
-    >
-      <template #footer>
-        <button></button>
-      </template>
-    </gs-player>
+    />
   </div>
 </template>
 
