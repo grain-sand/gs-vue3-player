@@ -44,6 +44,8 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
 	playbackMode?: PlaybackMode;
 	/** 国际化配置 */
 	i18n?: II18n;
+	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
+	keyboardTarget?: string | HTMLElement | false;
 }
 
 export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play'> {

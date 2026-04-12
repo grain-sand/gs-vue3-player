@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, provide, ref} from 'vue';
+import {computed, onMounted, onBeforeUnmount, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {ControlType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../types';
 import {zhCN} from "./i18n/zhCN";
@@ -115,6 +115,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   playlist: () => [],
   playbackMode: 'sequence',
   i18n: () => zhCN,
+  keyboardTarget: '.gs-player',
 });
 
 const emit = defineEmits<{
@@ -277,65 +278,27 @@ const setPlaybackRate = (rate: number) => {
 // 提供依赖项给子组件
 provide(PlayerInjectKey, {
   // 状态
-  get error() {
-    return error.value;
-  },
-  get isPlaying() {
-    return isPlaying.value;
-  },
-  get isWebFullscreen() {
-    return isWebFullscreen.value;
-  },
-  get currentTime() {
-    return currentTime.value;
-  },
-  get duration() {
-    return duration.value;
-  },
-  get playbackRate() {
-    return playbackRate.value;
-  },
-  get currentPlaybackMode() {
-    return currentPlaybackMode.value;
-  },
-  get currentIndex() {
-    return currentIndex.value;
-  },
+  get error() { return error.value; },
+  get isPlaying() { return isPlaying.value; },
+  get isWebFullscreen() { return isWebFullscreen.value; },
+  get currentTime() { return currentTime.value; },
+  get duration() { return duration.value; },
+  get playbackRate() { return playbackRate.value; },
+  get currentPlaybackMode() { return currentPlaybackMode.value; },
+  get currentIndex() { return currentIndex.value; },
   // 计算属性
-  get controlsVisibility() {
-    return controlsVisibility.value;
-  },
-  get progress() {
-    return progress.value;
-  },
-  get availablePlaybackModes() {
-    return availablePlaybackModes.value;
-  },
+  get controlsVisibility() { return controlsVisibility.value; },
+  get progress() { return progress.value; },
+  get availablePlaybackModes() { return availablePlaybackModes.value; },
   // Props
-  get src() {
-    return props.src;
-  },
-  get playlist() {
-    return props.playlist;
-  },
-  get preSrc() {
-    return props.preSrc;
-  },
-  get nextSrc() {
-    return props.nextSrc;
-  },
-  get i18n() {
-    return props.i18n;
-  },
-  get playbackRates() {
-    return props.playbackRates;
-  },
-  get fullscreenButtonMode() {
-    return props.fullscreenButtonMode;
-  },
-  get webFullscreenTarget() {
-    return props.webFullscreenTarget;
-  },
+  get src() { return props.src; },
+  get playlist() { return props.playlist; },
+  get preSrc() { return props.preSrc; },
+  get nextSrc() { return props.nextSrc; },
+  get i18n() { return props.i18n; },
+  get playbackRates() { return props.playbackRates; },
+  get fullscreenButtonMode() { return props.fullscreenButtonMode; },
+  get webFullscreenTarget() { return props.webFullscreenTarget; },
   // 方法
   handleError,
   handleTimeUpdate,
@@ -357,6 +320,109 @@ provide(PlayerInjectKey, {
   handlePlayerDblClick,
   // Refs
   playerRef
+});
+
+// 键盘事件处理
+const handleKeydown = (e: KeyboardEvent) => {
+  // 避免在输入框中触发
+  if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+    return;
+  }
+
+  switch (e.key) {
+    case 'ArrowLeft':
+      // 向左调整进度（默认5秒）
+      if (playerRef.value?.el) {
+        const step = e.ctrlKey ? 15 : 5;
+        playerRef.value.el.currentTime = Math.max(0, playerRef.value.el.currentTime - step);
+      }
+      break;
+    case 'ArrowRight':
+      // 向右调整进度（默认5秒）
+      if (playerRef.value?.el) {
+        const step = e.ctrlKey ? 15 : 5;
+        playerRef.value.el.currentTime = Math.min(playerRef.value.el.duration || 0, playerRef.value.el.currentTime + step);
+      }
+      break;
+    case 'ArrowUp':
+      if (e.ctrlKey) {
+        // Ctrl+上：上一个
+        switchToPreSrc();
+      } else {
+        // 向上调整播放速度
+        if (playbackRate.value < Math.max(...props.playbackRates)) {
+          const currentRateIndex = props.playbackRates.indexOf(playbackRate.value);
+          if (currentRateIndex < props.playbackRates.length - 1) {
+            setPlaybackRate(props.playbackRates[currentRateIndex + 1]);
+          }
+        }
+      }
+      break;
+    case 'ArrowDown':
+      if (e.ctrlKey) {
+        // Ctrl+下：下一个
+        switchToNextSrc();
+      } else {
+        // 向下调整播放速度
+        if (playbackRate.value > Math.min(...props.playbackRates)) {
+          const currentRateIndex = props.playbackRates.indexOf(playbackRate.value);
+          if (currentRateIndex > 0) {
+            setPlaybackRate(props.playbackRates[currentRateIndex - 1]);
+          }
+        }
+      }
+      break;
+    case ' ': // 空格键
+      e.preventDefault();
+      togglePlay();
+      break;
+    case 'Escape':
+    case 'Enter':
+      // 与双击功能一致
+      handlePlayerDblClick();
+      break;
+  }
+};
+
+// 键盘事件目标元素
+let keyboardEventTarget: EventTarget | null = null;
+
+// 监听键盘事件
+onMounted(() => {
+  // 普通键盘事件根据keyboardTarget注册
+  if (props.keyboardTarget !== false) {
+    if (typeof props.keyboardTarget === 'string') {
+      // 如果是字符串选择器，尝试获取元素
+      keyboardEventTarget = document.querySelector(props.keyboardTarget);
+      // 如果没有找到元素，默认使用播放器容器
+      if (!keyboardEventTarget && props.keyboardTarget === '.gs-player') {
+        keyboardEventTarget = playerContainerRef.value;
+      }
+    } else if (props.keyboardTarget instanceof HTMLElement) {
+      // 如果是HTMLElement，直接使用
+      keyboardEventTarget = props.keyboardTarget;
+    } else {
+      // 默认使用播放器容器
+      keyboardEventTarget = playerContainerRef.value;
+    }
+
+    // 如果找到目标元素，添加事件监听器
+    if (keyboardEventTarget) {
+      // 确保元素可以获取焦点
+      if (keyboardEventTarget instanceof HTMLElement && !keyboardEventTarget.hasAttribute('tabindex')) {
+        keyboardEventTarget.setAttribute('tabindex', '0');
+      }
+      keyboardEventTarget.addEventListener('keydown', handleKeydown);
+    }
+  }
+});
+
+// 移除键盘事件监听
+onBeforeUnmount(() => {
+  // 移除普通键盘事件监听
+  if (keyboardEventTarget) {
+    keyboardEventTarget.removeEventListener('keydown', handleKeydown);
+  }
 });
 
 defineExpose<IGsPlayerExpose>({
