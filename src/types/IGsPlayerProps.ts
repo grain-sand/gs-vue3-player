@@ -27,6 +27,8 @@ export interface IGsPlayerProps extends IPlayerProps {
   visibleControls?: ControlType[];
   /** 排除显示的按钮，默认为空，冲突时排除优先级更高 */
   hiddenControls?: ControlType[];
+  /** 网页全屏挂载目标，默认为body */
+  webFullscreenTarget?: string | HTMLElement;
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {

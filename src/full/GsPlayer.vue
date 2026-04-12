@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body" :disabled="!isWebFullscreen">
+  <Teleport :to="props.webFullscreenTarget" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
@@ -165,7 +165,8 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleDblClick: true,
   playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
   visibleControls: () => ControlTypes,
-  hiddenControls: () => []
+  hiddenControls: () => [],
+  webFullscreenTarget: 'body'
 });
 
 const emit = defineEmits<{ (e: 'srcChange', src: PlayerSource): void }>();
