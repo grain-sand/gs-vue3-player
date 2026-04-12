@@ -37,49 +37,57 @@
           <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
             <!-- 进度条 -->
             <GsProgressBar
-              :progress="progress"
-              :current-time="currentTime"
-              :duration="duration"
-              :player-ref="playerRef"
+                :progress="progress"
+                :current-time="currentTime"
+                :duration="duration"
+                :player-ref="playerRef"
             />
           </slot>
 
           <slot name="controls" v-bind="slotProps">
             <!-- 控制面板 -->
-            <div class="gs-controls">
+            <div class="gs-controls" :title="playerTitle">
               <!-- 播放/暂停 -->
               <GsPlayButton
-                :is-playing="isPlaying"
-                :controls-visibility="controlsVisibility"
-                :i18n="props.i18n"
-                :toggle-play="togglePlay"
+                  :is-playing="isPlaying"
+                  :controls-visibility="controlsVisibility"
+                  :i18n="props.i18n"
+                  :toggle-play="togglePlay"
               />
 
               <!-- 上一个 -->
-              <GsPreButton
-                :controls-visibility="controlsVisibility"
-                :pre-src="props.preSrc"
-                :playlist="props.playlist"
-                :current-index="currentIndex"
-                :i18n="props.i18n"
-                :switch-to-pre-src="switchToPreSrc"
+              <GsNavButton
+                  type="pre"
+                  :controls-visibility="controlsVisibility"
+                  :pre-src="props.preSrc"
+                  :next-src="props.nextSrc"
+                  :playlist="props.playlist"
+                  :current-index="currentIndex"
+                  :i18n="props.i18n"
+                  :switch-to-pre-src="switchToPreSrc"
+                  :switch-to-next-src="switchToNextSrc"
               />
 
               <!-- 下一个 -->
-              <GsNextButton
-                :controls-visibility="controlsVisibility"
-                :next-src="props.nextSrc"
-                :playlist="props.playlist"
-                :current-index="currentIndex"
-                :i18n="props.i18n"
-                :switch-to-next-src="switchToNextSrc"
+              <GsNavButton
+                  type="next"
+                  :controls-visibility="controlsVisibility"
+                  :pre-src="props.preSrc"
+                  :next-src="props.nextSrc"
+                  :playlist="props.playlist"
+                  :current-index="currentIndex"
+                  :i18n="props.i18n"
+                  :switch-to-pre-src="switchToPreSrc"
+                  :switch-to-next-src="switchToNextSrc"
               />
 
               <!-- 时间显示 -->
               <GsTimeDisplay
-                :controls-visibility="controlsVisibility"
-                :current-time="currentTime"
-                :duration="duration"
+                  :controls-visibility="controlsVisibility"
+                  :current-time="currentTime"
+                  :duration="duration"
+                  :list-len="props.playlist?.length"
+                  :current-index="currentIndex"
               />
               <div class="space"></div>
               <slot v-bind="slotProps">
@@ -88,38 +96,38 @@
 
               <!-- 速度控制 -->
               <GsSpeedControl
-                :controls-visibility="controlsVisibility"
-                :playback-rate="playbackRate"
-                :playback-rates="props.playbackRates"
-                :i18n="props.i18n"
-                :set-playback-rate="setPlaybackRate"
+                  :controls-visibility="controlsVisibility"
+                  :playback-rate="playbackRate"
+                  :playback-rates="props.playbackRates"
+                  :i18n="props.i18n"
+                  :set-playback-rate="setPlaybackRate"
               />
 
               <!-- 音量控制 -->
               <GsVolumeControl
-                :controls-visibility="controlsVisibility"
-                :i18n="props.i18n"
-                :player-ref="playerRef"
-                :on-volume-change="setVolume"
+                  :controls-visibility="controlsVisibility"
+                  :i18n="props.i18n"
+                  :player-ref="playerRef"
+                  :on-volume-change="setVolume"
               />
 
               <!-- 播放模式 -->
               <GsPlaybackModeControl
-                :controls-visibility="controlsVisibility"
-                :current-playback-mode="currentPlaybackMode"
-                :available-playback-modes="availablePlaybackModes"
-                :i18n="props.i18n"
-                :set-playback-mode="setPlaybackMode"
+                  :controls-visibility="controlsVisibility"
+                  :current-playback-mode="currentPlaybackMode"
+                  :available-playback-modes="availablePlaybackModes"
+                  :i18n="props.i18n"
+                  :set-playback-mode="setPlaybackMode"
               />
 
               <!-- 全屏控制 -->
               <GsFullscreenControl
-                :controls-visibility="controlsVisibility"
-                :fullscreen-button-mode="props.fullscreenButtonMode"
-                :i18n="props.i18n"
-                :web-fullscreen="webFullscreen"
-                :fullscreen="fullscreen"
-                :pip="pip"
+                  :controls-visibility="controlsVisibility"
+                  :fullscreen-button-mode="props.fullscreenButtonMode"
+                  :i18n="props.i18n"
+                  :web-fullscreen="webFullscreen"
+                  :fullscreen="fullscreen"
+                  :pip="pip"
               />
             </div>
           </slot>
@@ -130,7 +138,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import Player from '../core/Player.vue';
 import {
   IGsPlayerExpose,
@@ -139,12 +147,11 @@ import {
   PlayerSource
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
-import { ErrorSvg } from './svgs';
+import {ErrorSvg} from './svgs';
 import {
   GsProgressBar,
   GsPlayButton,
-  GsPreButton,
-  GsNextButton,
+  GsNavButton,
   GsTimeDisplay,
   GsSpeedControl,
   GsVolumeControl,
@@ -215,7 +222,29 @@ const {
   pip,
   handlePlayerClick,
   handlePlayerDblClick
-} = usePlayer({ playerRef, playerContainerRef, props });
+} = usePlayer({playerRef, playerContainerRef, props});
+
+// 计算播放器标题
+const playerTitle = computed(() => {
+  const hasPlaylist = props.playlist && props.playlist.length > 0;
+  const currentSource:any = hasPlaylist && currentIndex.value >= 0 && currentIndex.value < props.playlist.length
+      ? props.playlist[currentIndex.value]
+      : props.src;
+  const hasTitle = currentSource && typeof currentSource === 'object' && currentSource.title;
+
+  if (hasPlaylist && hasTitle) {
+    const currentPosition = currentIndex.value + 1;
+    const totalCount = props.playlist.length;
+    return `${currentSource.title} ( ${currentPosition}/${totalCount} )`;
+  } else if (hasTitle) {
+    return currentSource.title;
+  } else if (hasPlaylist) {
+    const currentPosition = currentIndex.value + 1;
+    const totalCount = props.playlist.length;
+    return `${currentPosition}/${totalCount}`;
+  }
+  return '';
+});
 
 // 包装方法，触发事件
 const setVolume = (volume: number) => {

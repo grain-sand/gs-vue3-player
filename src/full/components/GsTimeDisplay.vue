@@ -1,19 +1,36 @@
 <template>
-  <div v-if="controlsVisibility.time" class="gs-time-display">
-    {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+  <div v-if="controlsVisibility.time" class="gs-time-display" :title="title">
+    {{ time }}
   </div>
 </template>
 
 <script setup lang="ts">
+import {computed} from "vue";
+
 interface Props {
   controlsVisibility: {
     time: boolean;
   };
   currentTime: number;
   duration: number;
+  listLen?: number
+  currentIndex?: number
 }
 
 const props = defineProps<Props>();
+
+const time = computed(() => {
+  return `${formatTime(props.currentTime)}/${formatTime(props.duration)}`;
+});
+
+const title = computed(() => {
+  if (props.listLen) {
+    const currentPosition = props.currentIndex + 1;
+    const totalCount = props.listLen;
+    return `${currentPosition}/${totalCount}`;
+  }
+  return '';
+});
 
 // 格式化时间
 const formatTime = (seconds: number) => {
