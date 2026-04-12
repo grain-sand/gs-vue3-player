@@ -5,6 +5,7 @@ import PreSvg from './pre.svg';
 import NextSvg from './next.svg';
 import MuteSvg from './mute.svg';
 import VolumeSvg from './volume.svg';
+import PlayOverlaySvg from './play-overlay.svg';
 import sequence from './sequence.svg';
 import disabled from './disabled.svg';
 import loop from './loop-one.svg';
@@ -40,5 +41,6 @@ export {
 	NextSvg,
 	WebFullscreenSvg,
 	FullscreenSvg,
-	PipSvg
+	PipSvg,
+	PlayOverlaySvg
 };

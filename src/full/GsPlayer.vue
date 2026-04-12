@@ -23,6 +23,13 @@
           v-bind="$attrs"
       />
 
+      <!-- 播放覆盖层 -->
+      <div v-if="!isPlaying && controlsVisibility.playOverlay" class="gs-player-play-overlay">
+        <div class="gs-play-overlay-button">
+          <PlayOverlaySvg/>
+        </div>
+      </div>
+
       <!-- 错误信息 -->
       <div v-if="showError && error" class="gs-player-error">
         <ErrorSvg class="gs-icon-spin"/>
@@ -142,7 +149,7 @@ import {computed, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {ControlType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../types';
 import {zhCN} from "./i18n/zhCN";
-import {ErrorSvg} from './svgs';
+import {ErrorSvg, PlayOverlaySvg} from './svgs';
 import {
   GsFullscreenControl,
   GsNavButton,
@@ -161,7 +168,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleClick: true,
   handleDblClick: true,
   playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
-  visibleControls: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress'],
+  visibleControls: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
   hiddenControls: () => [],
   webFullscreenTarget: 'body',
   fullscreenButtonMode: 'submenu',
@@ -194,7 +201,7 @@ const currentIndex = ref(0);
 // 计算属性：避免模板中频繁调用方法
 const controlsVisibility = computed(() => {
   const isVisible = (name: ControlType) =>
-    !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
+      !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
   return {
     play: isVisible('play'),
     pre: isVisible('pre'),
@@ -203,7 +210,8 @@ const controlsVisibility = computed(() => {
     speed: isVisible('speed'),
     volume: isVisible('volume'),
     fullscreen: isVisible('fullscreen'),
-    progress: isVisible('progress')
+    progress: isVisible('progress'),
+    playOverlay: isVisible('playOverlay')
   };
 });
 
@@ -215,16 +223,16 @@ const availablePlaybackModes = computed<Array<{
   text: string
 }>>(() => {
   const modes: Array<{ value: PlaybackMode; text: string }> = [
-    { value: 'sequence', text: props.i18n.playbackModes.sequence },
-    { value: 'disabled', text: props.i18n.playbackModes.disabled },
-    { value: 'loop', text: props.i18n.playbackModes.loop }
+    {value: 'sequence', text: props.i18n.playbackModes.sequence},
+    {value: 'disabled', text: props.i18n.playbackModes.disabled},
+    {value: 'loop', text: props.i18n.playbackModes.loop}
   ];
 
   // 如果设置了列表，添加全部循环和随机播放
   if (props.playlist && props.playlist.length > 0) {
     modes.push(
-      { value: 'loopAll', text: props.i18n.playbackModes.loopAll },
-      { value: 'shuffle', text: props.i18n.playbackModes.shuffle }
+        {value: 'loopAll', text: props.i18n.playbackModes.loopAll},
+        {value: 'shuffle', text: props.i18n.playbackModes.shuffle}
     );
   }
 
@@ -291,7 +299,7 @@ const {
 // 计算播放器标题
 const playerTitle = computed(() => {
   const hasPlaylist = props.playlist && props.playlist.length > 0;
-  const currentSource:any = hasPlaylist && currentIndex.value >= 0 && currentIndex.value < props.playlist.length
+  const currentSource: any = hasPlaylist && currentIndex.value >= 0 && currentIndex.value < props.playlist.length
       ? props.playlist[currentIndex.value]
       : props.src;
   const hasTitle = currentSource && typeof currentSource === 'object' && currentSource.title;

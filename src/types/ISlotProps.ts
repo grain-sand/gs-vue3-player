@@ -1,5 +1,5 @@
 /** 按钮类型 */
-export const ControlTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress'] as const;
+export const ControlTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
 /** 按钮类型联合类型 */
 export type ControlType = (typeof ControlTypes)[number];
 
