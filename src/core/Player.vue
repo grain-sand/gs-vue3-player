@@ -58,10 +58,9 @@ function setSrc(src: PlayerSource) {
   destroyHls();
 
   const video = videoRef.value;
-  const {type, src: typedSrc, poster, title} = parseVideoSource(src);
+  const {type, src: typedSrc, poster} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster || ''
-  video.title = title || ''
 
   if (type === 'hls') {
     console.log(props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl'))

@@ -1,6 +1,7 @@
 <template>
   <div class="TestFullApp">
     <gs-player
+        ref="playerRef"
         width="640"
         :volume="0.3"
         @srcChange="srcChange"
@@ -10,6 +11,7 @@
         @playbackRateChange="eventChange('playbackRateChange',$event)"
     >
     </gs-player>
+    <button @click="switchToNextSrc">switchToNextSrc</button>
   </div>
 </template>
 
@@ -17,10 +19,11 @@
 import '../../src/full/style/index.scss'
 import {ref} from "vue";
 import {videos} from "./videos.local";
-import {GsPlayer, IStringPlayerSource} from "../../src";
+import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
 import {copyObject} from "gs-base";
 
 let index = 0;
+const playerRef = ref() as {value:IGsPlayerExpose}
 
 const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
   ...item,
@@ -49,6 +52,10 @@ function srcChange(nextSrc: IStringPlayerSource<number>) {
 
 function eventChange(name:string,value:any) {
   console.log(name,value)
+}
+
+function switchToNextSrc() {
+  playerRef.value.play(2);
 }
 
 </script>

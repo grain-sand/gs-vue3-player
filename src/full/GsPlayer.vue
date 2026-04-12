@@ -234,9 +234,6 @@ const setPlaybackRate = (rate: number) => {
 };
 
 defineExpose<IGsPlayerExpose>({
-  get el() {
-    return playerRef.value?.el;
-  },
   get player() {
     return playerRef.value?.el;
   },
