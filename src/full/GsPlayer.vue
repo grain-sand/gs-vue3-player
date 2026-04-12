@@ -138,27 +138,22 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import {computed, ref} from 'vue';
 import Player from '../core/Player.vue';
-import {
-  IGsPlayerExpose,
-  IGsPlayerProps,
-  IPlayerExpose,
-  PlayerSource
-} from '../types';
+import {ControlType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../types';
 import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg} from './svgs';
 import {
-  GsProgressBar,
-  GsPlayButton,
+  GsFullscreenControl,
   GsNavButton,
-  GsTimeDisplay,
-  GsSpeedControl,
-  GsVolumeControl,
   GsPlaybackModeControl,
-  GsFullscreenControl
+  GsPlayButton,
+  GsProgressBar,
+  GsSpeedControl,
+  GsTimeDisplay,
+  GsVolumeControl
 } from './components';
-import {usePlayer} from './composables';
+import {usePlayerControls} from './composables';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -186,23 +181,79 @@ const emit = defineEmits<{
 const playerRef = ref() as { value: IPlayerExpose };
 const playerContainerRef = ref<HTMLDivElement>();
 
-// 使用 composable 管理播放器控制逻辑
+// State
+const error = ref(false);
+const isPlaying = ref(false);
+const isWebFullscreen = ref(false);
+const currentTime = ref(0);
+const duration = ref(0);
+const playbackRate = ref(1);
+const currentPlaybackMode = ref(props.playbackMode || 'sequence');
+const currentIndex = ref(0);
+
+// 计算属性：避免模板中频繁调用方法
+const controlsVisibility = computed(() => {
+  const isVisible = (name: ControlType) =>
+    !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
+  return {
+    play: isVisible('play'),
+    pre: isVisible('pre'),
+    next: isVisible('next'),
+    time: isVisible('time'),
+    speed: isVisible('speed'),
+    volume: isVisible('volume'),
+    fullscreen: isVisible('fullscreen'),
+    progress: isVisible('progress')
+  };
+});
+
+const progress = computed(() => duration.value ? (currentTime.value / duration.value) * 100 : 0);
+
+// 可用的播放模式
+const availablePlaybackModes = computed<Array<{
+  value: PlaybackMode;
+  text: string
+}>>(() => {
+  const modes: Array<{ value: PlaybackMode; text: string }> = [
+    { value: 'sequence', text: props.i18n.playbackModes.sequence },
+    { value: 'disabled', text: props.i18n.playbackModes.disabled },
+    { value: 'loop', text: props.i18n.playbackModes.loop }
+  ];
+
+  // 如果设置了列表，添加全部循环和随机播放
+  if (props.playlist && props.playlist.length > 0) {
+    modes.push(
+      { value: 'loopAll', text: props.i18n.playbackModes.loopAll },
+      { value: 'shuffle', text: props.i18n.playbackModes.shuffle }
+    );
+  }
+
+  return modes;
+});
+
+// 插槽属性
+const progressSlotProps = computed(() => ({
+  progress: progress.value,
+  currentTime: currentTime.value,
+  duration: duration.value
+}));
+
+const slotProps = computed(() => ({
+  ...progressSlotProps.value,
+  isPlaying: isPlaying.value,
+  isWebFullscreen: isWebFullscreen.value,
+  playbackRate: playbackRate.value,
+  controlsVisibility: controlsVisibility.value
+}));
+
+// 状态设置函数
+const setCurrentTime = (time: number) => currentTime.value = time;
+const setDuration = (newDuration: number) => duration.value = newDuration;
+const setError = (newError: boolean) => error.value = newError;
+const setIsPlaying = (playing: boolean) => isPlaying.value = playing;
+
+// 使用控制逻辑
 const {
-  // State
-  error,
-  isPlaying,
-  isWebFullscreen,
-  currentTime,
-  duration,
-  playbackRate,
-  currentPlaybackMode,
-  currentIndex,
-  // Computed
-  controlsVisibility,
-  progress,
-  availablePlaybackModes,
-  progressSlotProps,
-  slotProps,
   // Methods
   handleError,
   handleTimeUpdate,
@@ -222,7 +273,20 @@ const {
   pip,
   handlePlayerClick,
   handlePlayerDblClick
-} = usePlayer({playerRef, playerContainerRef, props});
+} = usePlayerControls({
+  playerRef,
+  playerContainerRef,
+  props,
+  currentPlaybackMode,
+  currentIndex,
+  isPlaying,
+  playbackRate,
+  isWebFullscreen,
+  setCurrentTime,
+  setDuration,
+  setError,
+  setIsPlaying
+});
 
 // 计算播放器标题
 const playerTitle = computed(() => {
