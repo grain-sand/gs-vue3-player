@@ -17,7 +17,7 @@ export interface IVideoQualityItem extends IVideoQuality {
 	url: string;
 }
 
-export interface ITypedPlayerSource<T extends string | IVideoQualityItem[], D=any> {
+export interface ITypedPlayerSource<D = any, T extends string | IVideoQualityItem[] = any> {
 	type: PlayerSourceType;
 	poster?: string;
 	title?: string;
@@ -26,10 +26,10 @@ export interface ITypedPlayerSource<T extends string | IVideoQualityItem[], D=an
 }
 
 // 指定类型与URL
-export interface IStringPlayerSource<D=any> extends ITypedPlayerSource<string, D> {
+export interface IStringPlayerSource<D = any> extends ITypedPlayerSource<D, string> {
 }
 
-export interface IQualitiesPlayerSource<D=any> extends ITypedPlayerSource<Array<IVideoQualityItem>, D> {
+export interface IQualitiesPlayerSource<D = any> extends ITypedPlayerSource<D, Array<IVideoQualityItem>> {
 }
 
 // 输入类型

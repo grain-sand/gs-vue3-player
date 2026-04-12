@@ -48,8 +48,9 @@
 
         <!-- 控制面板 -->
         <div class="gs-controls">
+
           <!-- 播放/暂停 -->
-          <div v-if="btnsVisibility.play" class="gs-btn" @click.stop="togglePlay">
+          <div v-if="controlsVisibility.play" class="gs-btn" @click.stop="togglePlay">
             <svg v-if="isPlaying" viewBox="0 0 24 24">
               <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
             </svg>
@@ -58,22 +59,29 @@
             </svg>
           </div>
 
+          <!-- 上一个 -->
+          <div v-if="controlsVisibility.pre && props.preSrc" class="gs-btn" @click.stop="switchToPreSrc">
+            <svg viewBox="0 0 24 24">
+              <path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6z"/>
+            </svg>
+          </div>
+
           <!-- 下一个 -->
-          <div v-if="btnsVisibility.next && nextSrc" class="gs-btn" @click.stop="switchToNextSrc">
+          <div v-if="controlsVisibility.next && nextSrc" class="gs-btn" @click.stop="switchToNextSrc">
             <svg viewBox="0 0 24 24">
               <path fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
             </svg>
           </div>
 
           <!-- 时间显示 -->
-          <div class="gs-time-display">
+          <div v-if="controlsVisibility.time" class="gs-time-display">
             {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
           </div>
 
           <!-- 右侧控制 -->
           <div class="gs-controls-right">
             <!-- 倍速 -->
-            <div v-if="btnsVisibility.speed" class="gs-btn gs-dropdown-host">
+            <div v-if="controlsVisibility.speed" class="gs-btn gs-dropdown-host">
               <span class="gs-text-btn">{{ playbackRate.toFixed(1) }}x</span>
               <div class="gs-dropdown">
                 <div
@@ -89,7 +97,7 @@
             </div>
 
             <!-- 音量 -->
-            <div v-if="btnsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
+            <div v-if="controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
                  @mouseenter="bindWheel" @mouseleave="unbindWheel">
               <svg viewBox="0 0 24 24" style="transform: scale(0.95);">
                 <path v-if="isMuted || volume === 0" fill="currentColor"
@@ -110,7 +118,7 @@
             </div>
 
             <!-- 网页全屏 -->
-            <div v-if="btnsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen">
+            <div v-if="controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                    stroke-linecap="round" stroke-linejoin="round"
                    style="transform: scale(0.8);">
@@ -147,7 +155,7 @@
 <script setup lang="ts">
 import {computed, onBeforeUnmount, ref} from 'vue';
 import Player from '../core/Player.vue';
-import type {IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlayerSource} from '../types';
+import {ControlType, ControlTypes, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlayerSource} from '../types';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -156,8 +164,8 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleClick: true,
   handleDblClick: true,
   playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
-  showButtons: () => [],
-  hideButtons: () => []
+  visibleControls: () => ControlTypes,
+  hiddenControls: () => []
 });
 
 const emit = defineEmits<{ (e: 'srcChange', src: PlayerSource): void }>();
@@ -186,14 +194,14 @@ const previousVolume = ref(1);
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 
 // 计算属性：避免模板中频繁调用方法
-const btnsVisibility = computed(() => {
-  const isVisible = (name: string) =>
-      !props.hideButtons.includes(name) &&
-      (props.showButtons.length === 0 || props.showButtons.includes(name));
-
+const controlsVisibility = computed(() => {
+  const isVisible = (name: ControlType) =>
+      !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
   return {
     play: isVisible('play'),
+    pre: isVisible('pre'),
     next: isVisible('next'),
+    time: isVisible('time'),
     speed: isVisible('speed'),
     volume: isVisible('volume'),
     fullscreen: isVisible('fullscreen')
@@ -243,6 +251,7 @@ const unmute = async () => {
   await playerRef.value?.unmute();
 };
 const switchToNextSrc = () => playerRef.value?.play(props.nextSrc);
+const switchToPreSrc = () => playerRef.value?.play(props.preSrc);
 
 // 音量控制
 const setVolume = (newVol: number) => {
