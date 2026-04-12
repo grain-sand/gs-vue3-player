@@ -9,7 +9,7 @@
     >
       <Player
           ref="playerRef"
-          :src="src"
+          :src="src || playlist?.[0]"
           :hls-config="hlsConfig"
           :quality="quality"
           :use-browser-hls="useBrowserHls"
@@ -29,7 +29,7 @@
           <path fill="currentColor"
                 d="M12 2v4c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8H2c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2z"/>
         </svg>
-        <span>{{ errorMessage }}</span>
+        <span>{{ props.i18n.errorMessage }}</span>
       </div>
 
       <!-- 默认插槽 -->
@@ -57,7 +57,8 @@
             <div class="gs-controls">
 
               <!-- 播放/暂停 -->
-              <div v-if="controlsVisibility.play" class="gs-btn" @click.stop="togglePlay">
+              <div v-if="controlsVisibility.play" class="gs-btn" @click.stop="togglePlay"
+                   :title="props.i18n.titles.play">
                 <svg v-if="isPlaying" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                 </svg>
@@ -68,7 +69,7 @@
 
               <!-- 上一个 -->
               <div v-if="controlsVisibility.pre && (props.preSrc||playlist?.[currentIndex-1])"
-                   class="gs-btn" @click.stop="switchToPreSrc">
+                   class="gs-btn" @click.stop="switchToPreSrc" :title="props.i18n.titles.pre">
                 <svg viewBox="0 0 24 24">
                   <path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6l-8.5 6z"/>
                 </svg>
@@ -76,7 +77,7 @@
 
               <!-- 下一个 -->
               <div v-if="controlsVisibility.next && (props.nextSrc||playlist?.[currentIndex+1])"
-                   class="gs-btn" @click.stop="switchToNextSrc">
+                   class="gs-btn" @click.stop="switchToNextSrc" :title="props.i18n.titles.next">
                 <svg viewBox="0 0 24 24">
                   <path fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
                 </svg>
@@ -108,7 +109,8 @@
 
               <!-- 音量 -->
               <div v-if="controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
-                   @mouseenter="bindWheel" @mouseleave="unbindWheel">
+                   @mouseenter="bindWheel" @mouseleave="unbindWheel"
+                   :title="isMuted || volume === 0 ? props.i18n.titles.mute : props.i18n.titles.volume">
                 <svg viewBox="0 0 24 24" style="transform: scale(0.95);">
                   <path v-if="isMuted || volume === 0" fill="currentColor"
                         d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
@@ -128,18 +130,10 @@
               </div>
 
               <!-- 播放模式 -->
-              <div v-if="controlsVisibility.play" class="gs-btn gs-dropdown-host">
+              <div v-if="controlsVisibility.play" class="gs-btn gs-dropdown-host"
+                   :title="props.i18n.titles.playbackMode">
                 <svg viewBox="0 0 24 24" style="transform: scale(0.95);">
-                  <path v-if="currentPlaybackMode === 'next'" fill="currentColor"
-                        d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-                  <path v-else-if="currentPlaybackMode === 'current'" fill="currentColor"
-                        d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                  <path v-else-if="currentPlaybackMode === 'loop'" fill="currentColor"
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                  <path v-else-if="currentPlaybackMode === 'loopAll'" fill="currentColor"
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                  <path v-else-if="currentPlaybackMode === 'shuffle'" fill="currentColor"
-                        d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm0 14.17l-2.04-2.04L19.59 6 18.18 4.59 14.5 8.27v9.9z"/>
+                  <path fill="currentColor" :d="playbackModeIcons[currentPlaybackMode]"/>
                 </svg>
                 <div class="gs-dropdown">
                   <div
@@ -148,23 +142,17 @@
                       class="gs-dropdown-item"
                       :class="{ active: mode.value === currentPlaybackMode }"
                       @click.stop="setPlaybackMode(mode.value)"
+                      :title="mode.text"
                   >
                     <svg viewBox="0 0 24 24" style="transform: scale(0.8);">
-                      <path v-if="mode.value === 'next'" fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-                      <path v-else-if="mode.value === 'current'" fill="currentColor"
-                            d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                      <path v-else-if="mode.value === 'loop'" fill="currentColor"
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                      <path v-else-if="mode.value === 'loopAll'" fill="currentColor"
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                      <path v-else-if="mode.value === 'shuffle'" fill="currentColor"
-                            d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm0 14.17l-2.04-2.04L19.59 6 18.18 4.59 14.5 8.27v9.9z"/>
+                      <path fill="currentColor" :d="playbackModeIcons[mode.value]"/>
                     </svg>
                   </div>
                 </div>
               </div>
 
-              <div v-if="controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen">
+              <div v-if="controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host" @click.stop="webFullscreen"
+                   :title="props.i18n.titles.webFullscreen">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                      stroke-linecap="round" stroke-linejoin="round"
                      style="transform: scale(0.8);">
@@ -175,7 +163,7 @@
                   <rect width="10" height="8" x="7" y="8" rx="1"/>
                 </svg>
                 <div class="gs-dropdown" v-if="fullscreenButtonMode === 'submenu'">
-                  <div class="gs-dropdown-item" @click.stop="fullscreen">
+                  <div class="gs-dropdown-item" @click.stop="fullscreen" :title="props.i18n.titles.fullscreen">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          style="transform: scale(0.8);">
@@ -193,7 +181,7 @@
               </div>
               <!-- 全屏按钮 - 控制面板模式 -->
               <div v-if="fullscreenButtonMode === 'control' && controlsVisibility.fullscreen" class="gs-btn"
-                   @click.stop="fullscreen">
+                   @click.stop="fullscreen" :title="props.i18n.titles.fullscreen">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                      stroke-linecap="round" stroke-linejoin="round"
                      style="transform: scale(0.8);">
@@ -218,12 +206,20 @@
 <script setup lang="ts">
 import {computed, onBeforeUnmount, ref, watch} from 'vue';
 import Player from '../core/Player.vue';
-import {ControlType, ControlTypes, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlayerSource} from '../types';
+import {
+  ControlType,
+  ControlTypes,
+  IGsPlayerExpose,
+  IGsPlayerProps,
+  IPlayerExpose,
+  PlaybackMode,
+  PlayerSource
+} from '../types';
+import {zhCN} from "./i18n/zhCN";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
   showError: true,
-  errorMessage: '请求错误',
   handleClick: true,
   handleDblClick: true,
   playbackRates: () => [0.5, 0.8, 1.0, 1.2, 1.5, 2.0],
@@ -232,8 +228,8 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   webFullscreenTarget: 'body',
   fullscreenButtonMode: 'submenu',
   playlist: () => [],
-  playbackMode: 'next',
-  src: (props) => props.playlist?.[0] || '',
+  playbackMode: 'sequence',
+  i18n: () => zhCN,
 });
 
 const emit = defineEmits<{ (e: 'srcChange', src: PlayerSource): void }>();
@@ -250,8 +246,17 @@ const isWebFullscreen = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
 const playbackRate = ref(1);
-const currentPlaybackMode = ref(props.playbackMode);
+const currentPlaybackMode = ref(props.playbackMode || 'sequence');
 const currentIndex = ref(0);
+
+// 播放模式图标路径
+const playbackModeIcons: Record<PlaybackMode, string> = {
+  sequence: 'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z',
+  current: 'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
+  loop: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
+  loopAll: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
+  shuffle: 'M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm0 14.17l-2.04-2.04L19.59 6 18.18 4.59 14.5 8.27v9.9z'
+};
 
 
 // 进度条与音量
@@ -328,20 +333,20 @@ const formatTime = (seconds: number) => {
 
 // 可用的播放模式
 const availablePlaybackModes = computed<Array<{
-  value: 'next' | 'current' | 'loop' | 'loopAll' | 'shuffle';
+  value: PlaybackMode;
   text: string
 }>>(() => {
-  const modes: Array<{ value: 'next' | 'current' | 'loop' | 'loopAll' | 'shuffle'; text: string }> = [
-    {value: 'next', text: '播放下一个'},
-    {value: 'current', text: '只播当前'},
-    {value: 'loop', text: '单个循环'}
+  const modes: Array<{ value: PlaybackMode; text: string }> = [
+    {value: 'sequence', text: props.i18n.playbackModes.sequence},
+    {value: 'current', text: props.i18n.playbackModes.current},
+    {value: 'loop', text: props.i18n.playbackModes.loop}
   ];
 
   // 如果设置了列表，添加全部循环和随机播放
   if (props.playlist && props.playlist.length > 0) {
     modes.push(
-        {value: 'loopAll', text: '全部循环'},
-        {value: 'shuffle', text: '随机播放'}
+        {value: 'loopAll', text: props.i18n.playbackModes.loopAll},
+        {value: 'shuffle', text: props.i18n.playbackModes.shuffle}
     );
   }
 
@@ -392,7 +397,7 @@ const switchToPreSrc = () => {
 };
 
 // 播放模式控制
-const setPlaybackMode = (mode: 'next' | 'current' | 'loop' | 'loopAll' | 'shuffle') => {
+const setPlaybackMode = (mode: PlaybackMode) => {
   currentPlaybackMode.value = mode;
 };
 
@@ -434,7 +439,7 @@ const switchToPreInPlaylist = () => {
 // 处理播放结束
 const handleEnded = () => {
   switch (currentPlaybackMode.value) {
-    case 'next':
+    case 'sequence':
       // 检查是否有下一个视频
       if (props.nextSrc) {
         switchToNextSrc();

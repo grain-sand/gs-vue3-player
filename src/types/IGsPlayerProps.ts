@@ -1,6 +1,17 @@
 import type {IPlayerExpose, IPlayerProps} from './IPlayerProps';
 import type {PlayerSource} from './IPlayerSource';
 import type {ControlType} from './ISlotProps';
+import {II18n} from "./II18n";
+
+/** 全屏按钮显示方式 */
+export const FullscreenButtonModes = ['submenu', 'control', 'hidden'] as const;
+/** 全屏按钮显示方式类型 */
+export type FullscreenButtonMode = (typeof FullscreenButtonModes)[number];
+
+/** 播放模式 */
+export const PlaybackModes = ['sequence', 'current', 'loop', 'loopAll', 'shuffle'] as const;
+/** 播放模式类型 */
+export type PlaybackMode = (typeof PlaybackModes)[number];
 
 export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
   /** 视频地址 */
@@ -9,8 +20,6 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
   showControls?: boolean;
   /** 是否显示错误信息 */
   showError?: boolean;
-  /** 自定义错误信息 */
-  errorMessage?: string;
   /** 下一个输入源 */
   nextSrc?: PlayerSource;
   /** 上一个输入源 */
@@ -28,11 +37,13 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
   /** 网页全屏挂载目标，默认为body */
   webFullscreenTarget?: string | HTMLElement;
   /** 全屏按钮显示方式，可选项为：子菜单（默认）、控制面板（最右位置）、隐藏 */
-  fullscreenButtonMode?: 'submenu' | 'control' | 'hidden';
+  fullscreenButtonMode?: FullscreenButtonMode;
   /** 播放列表 */
   playlist?: PlayerSource[];
   /** 播放模式，可选项为：播放下一个（默认值）、只播当前、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
-  playbackMode?: 'next' | 'current' | 'loop' | 'loopAll' | 'shuffle';
+  playbackMode?: PlaybackMode;
+  /** 国际化配置 */
+  i18n?: II18n;
 }
 
 export interface IGsPlayerExpose extends IPlayerExpose {

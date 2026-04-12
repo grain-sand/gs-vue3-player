@@ -58,9 +58,3 @@ export interface IControlsSlotProps extends IProgressSlotProps {
   /** 格式化时间 */
   formatTime: (seconds: number) => string;
 }
-
-/** 默认插槽接口 */
-export type IDefaultSlotProps = IControlsSlotProps;
-
-/** Footer 插槽接口 */
-export type IFooterSlotProps = IControlsSlotProps;
