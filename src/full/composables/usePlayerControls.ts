@@ -1,5 +1,5 @@
 import {watch} from 'vue';
-import type {IGsPlayerProps, IPlayerExpose, PlaybackMode} from '../../types';
+import type {IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../../types';
 
 interface UsePlayerControlsOptions {
 	playerRef: { value: IPlayerExpose };
@@ -32,12 +32,18 @@ export function usePlayerControls({
 	const togglePlay = async () => {
 		await playerRef.value?.togglePlay();
 	};
+
+	const playSource = async (src: PlayerSource) => {
+		await playerRef.value?.play(src);
+		playerRef.value.el.playbackRate = playbackRate.value;
+	}
+
 	const play = async (src?: number | any) => {
 		if (typeof src === 'number' && props.playlist && props.playlist.length > 0) {
 			// 处理索引播放
 			const index = Math.max(0, Math.min(src, props.playlist.length - 1));
 			currentIndex.value = index;
-			await playerRef.value?.play(props.playlist[index]);
+			await playSource(props.playlist[index]);
 		} else if (src !== undefined && props.playlist && props.playlist.length > 0) {
 			// 处理非数字源，查找索引
 			const index = props.playlist.findIndex((item: any) => item === src || item.src === src);
@@ -47,9 +53,9 @@ export function usePlayerControls({
 				// 源不存在，将当前索引-1
 				currentIndex.value = Math.max(-1, currentIndex.value - 1);
 			}
-			await playerRef.value?.play(src);
+			await playSource(src);
 		} else {
-			await playerRef.value?.play(src);
+			await playSource(src);
 		}
 	};
 	const pause = async () => {
@@ -58,14 +64,14 @@ export function usePlayerControls({
 	const unmute = async () => await playerRef.value?.unmute();
 	const switchToNextSrc = () => {
 		if (props.nextSrc) {
-			playerRef.value?.play(props.nextSrc);
+			playSource(props.nextSrc);
 		} else if (props.playlist && props.playlist.length > 0) {
 			switchToNextInPlaylist();
 		}
 	};
 	const switchToPreSrc = () => {
 		if (props.preSrc) {
-			playerRef.value?.play(props.preSrc);
+			playSource(props.preSrc);
 		} else if (props.playlist && props.playlist.length > 0) {
 			switchToPreInPlaylist();
 		}
@@ -91,7 +97,7 @@ export function usePlayerControls({
 		}
 
 		currentIndex.value = nextIndex;
-		playerRef.value?.play(props.playlist[nextIndex]);
+		playSource(props.playlist[nextIndex]);
 	};
 
 	const switchToPreInPlaylist = () => {
@@ -108,7 +114,7 @@ export function usePlayerControls({
 		}
 
 		currentIndex.value = preIndex;
-		playerRef.value?.play(props.playlist[preIndex]);
+		playSource(props.playlist[preIndex]);
 	};
 
 	// 处理播放结束
@@ -198,7 +204,7 @@ export function usePlayerControls({
 			if (newPlaylist && newPlaylist.length > 0) {
 				// 如果没有设置 src，则使用 playlist 中的第一个视频
 				if (!props.src) {
-					playerRef.value?.play(newPlaylist[0]);
+					playSource(newPlaylist[0]);
 				}
 			}
 		},

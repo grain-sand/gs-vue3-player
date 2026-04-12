@@ -77,8 +77,6 @@ function setSrc(src: PlayerSource) {
   } else {
     video.src = srcStr;
   }
-
-  // 触发源切换事件
   emit('srcChange', src);
 }
 
