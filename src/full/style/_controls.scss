@@ -1,282 +1,56 @@
-// 网页全屏样式
-.gs-player-web-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  background-color: black;
+/* 控制栏基础 */
+.gs-controls {
+  height: var(--gs-ctrl-h); display: flex; align-items: center; padding: 0 16px; gap: 12px;
 }
 
-// 控制栏
-.gs-player-controls {
-  height: var(--gs-player-control-height);
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  gap: 16px;
+.gs-time-display { color: var(--gs-text); font-size: 13px; font-variant-numeric: tabular-nums; opacity: 0.9; }
+.gs-controls-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-  // 播放/暂停按钮
-  .gs-player-play-btn {
-	width: var(--gs-player-button-size);
-	height: var(--gs-player-button-size);
-	color: var(--gs-player-button-color);
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: var(--gs-player-hover-transition);
+/* 按钮通用 */
+.gs-btn {
+  width: 32px; height: 32px; color: var(--gs-text); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--gs-radius); transition: background 0.2s;
 
-	> span {
-	  display: block;
-	}
+  svg { width: 22px; height: 22px; }
+  .gs-text-btn { font-size: 14px; font-weight: 500; }
+  &:hover { background: var(--gs-hover-bg); }
+}
 
-	&.isPlaying > span {
-	  transform: translateY(-1.5px);
-	}
+/* 下拉菜单系统 (整合提取) */
+.gs-dropdown-host {
+  position: relative;
 
-	&:hover {
-	  background-color: var(--gs-player-control-hover);
-	}
+  .gs-dropdown {
+	position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+	background: var(--gs-panel-bg); border-radius: var(--gs-radius);
+	padding: 6px; opacity: 0; visibility: hidden; transition: var(--gs-transition);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
-  // 下一个按钮
-  .gs-player-next-btn {
-	width: var(--gs-player-button-size);
-	height: var(--gs-player-button-size);
-	color: var(--gs-player-button-color);
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: var(--gs-player-hover-transition);
+  &:hover .gs-dropdown { opacity: 1; visibility: visible; bottom: calc(100% + 12px); }
+}
 
-	&:hover {
-	  background-color: var(--gs-player-control-hover);
-	}
+.gs-dropdown-item {
+  padding: 6px 16px; color: var(--gs-text); font-size: 13px; cursor: pointer;
+  border-radius: 4px; display: flex; align-items: center; white-space: nowrap;
 
-	> span {
-	  transform: translateY(-1px);
-	}
-  }
+  &:hover { background: var(--gs-hover-bg); }
+  &.active { color: var(--gs-primary); font-weight: bold; background: rgba(64, 158, 255, 0.1); }
+}
 
-  // 时间显示
-  .gs-player-time {
-	color: var(--gs-player-text);
-	font-size: var(--gs-player-time-font-size);
-	min-width: 120px;
-  }
+/* 音量特异性样式 */
+.gs-volume-panel {
+  padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 10px;
 
-  // 右侧控制按钮
-  .gs-player-right-controls {
-	margin-left: auto;
-	display: flex;
-	align-items: center;
-	gap: 16px;
+  .gs-volume-val { font-size: 12px; color: var(--gs-text); font-weight: 600; width: 32px; text-align: center; }
+  .gs-volume-slider { width: 24px; height: 90px; cursor: pointer; display: flex; justify-content: center; }
 
-	// 倍速按钮
-	.gs-player-speed-btn {
-	  color: var(--gs-player-button-color);
-	  cursor: pointer;
-	  font-size: var(--gs-player-time-font-size);
-	  padding: 2px 8px;
-	  border-radius: 4px;
-	  transition: var(--gs-player-hover-transition);
-	  position: relative;
-	  display: inline-block;
-
-	  &:hover {
-		background-color: var(--gs-player-control-hover);
-	  }
-
-	  // 倍速下拉菜单
-	  .gs-player-dropdown {
-		position: absolute;
-		bottom: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-		background-color: var(--gs-player-dropdown-bg);
-		border-radius: 6px;
-		overflow: hidden;
-		padding: 8px;
-		z-index: 1000;
-		display: none;
-		min-width: 44px;
-		pointer-events: auto;
-
-		.gs-player-dropdown-option {
-		  padding: 8px 12px;
-		  cursor: pointer;
-		  transition: var(--gs-player-hover-transition);
-		  text-align: left;
-
-		  &:hover {
-			background-color: var(--gs-player-dropdown-hover);
-		  }
-
-		  &.active {
-			color: var(--gs-player-progress-fill);
-			font-weight: 600;
-			background-color: rgba(64, 158, 255, 0.1);
-		  }
-		}
-	  }
-
-	  // 鼠标悬停时显示菜单
-	  &:hover .gs-player-dropdown {
-		display: block;
-	  }
-	}
-
-	// 音量按钮
-	.gs-player-volume-btn {
-	  width: var(--gs-player-button-size);
-	  height: var(--gs-player-button-size);
-	  color: var(--gs-player-button-color);
-	  cursor: pointer;
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	  transition: var(--gs-player-hover-transition);
-	  position: relative;
-
-	  &:hover {
-		background-color: var(--gs-player-control-hover);
-	  }
-
-	  // 音量滑块容器
-	  .gs-player-dropdown {
-		position: absolute;
-		bottom: 100%;
-		right: 50%;
-		transform: translateX(50%);
-		width: 30px;
-		height: 120px;
-		background-color: rgba(0, 0, 0, 0.8);
-		border-radius: 6px;
-		padding: 12px 8px 8px;
-		z-index: 1000;
-		display: none;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-between;
-
-		// 音量标签
-		.gs-player-slider-label {
-		  color: white;
-		  font-size: 12px;
-		  font-weight: 500;
-		}
-
-
-		.gs-player-slider-wrapper {
-		  width: 100%;
-		  display: flex;
-		  flex-flow: nowrap row;
-		  justify-content: center;
-
-		  .gs-player-slider {
-			width: 4px;
-			height: 95px;
-			background-color: rgba(255, 255, 255, 0.3);
-			border-radius: 2px;
-			position: relative;
-			cursor: pointer;
-
-			// 音量滑块填充
-			.gs-player-slider-fill {
-			  position: absolute;
-			  bottom: 0;
-			  left: 0;
-			  width: 100%;
-			  background-color: #409eff;
-			  border-radius: 2px;
-			  transition: height 0.1s linear;
-			}
-
-			// 音量滑块手柄
-			.gs-player-slider-handle {
-			  position: absolute;
-			  left: 50%;
-			  transform: translateX(-50%) translateY(50%);
-			  width: 12px;
-			  height: 12px;
-			  background-color: white;
-			  border-radius: 50%;
-			  transition: bottom 0.1s linear;
-			  // 添加蓝色边框，与填充颜色一致
-			  box-shadow: 0 0 0 2px #409eff, 0 2px 4px rgba(0, 0, 0, 0.2);
-			}
-		  }
-		}
-	  }
-
-	  // 鼠标悬停时显示音量滑块
-	  &:hover .gs-player-dropdown {
-		display: flex;
-	  }
-	}
-
-	// 网页全屏按钮
-	.gs-player-web-fullscreen-btn {
-	  width: var(--gs-player-button-size);
-	  height: var(--gs-player-button-size);
-	  color: var(--gs-player-button-color);
-	  cursor: pointer;
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	  transition: var(--gs-player-hover-transition);
-	  position: relative;
-
-	  &:hover {
-		background-color: var(--gs-player-control-hover);
-	  }
-
-	  // 全屏图标
-	  .fullscreen-icon {
-		display: block;
-		transform: rotate(130deg);
-
-		> span {
-		  display: block;
-		  text-align: center;
-		  transform: scaleX(.5);
-		}
-	  }
-
-	  // 全屏菜单
-	  .gs-player-dropdown {
-		position: absolute;
-		bottom: 100%;
-		right: -10px;
-		background-color: var(--gs-player-dropdown-bg);
-		border-radius: 6px;
-		overflow: hidden;
-		padding: 0;
-		z-index: 1000;
-		display: none;
-		pointer-events: auto;
-
-		.gs-player-dropdown-option {
-		  padding: 8px 6px;
-		  cursor: pointer;
-		  transition: var(--gs-player-hover-transition);
-		  text-align: left;
-
-		  &:hover {
-			background-color: var(--gs-player-control-hover);
-		  }
-		}
-	  }
-
-	  // 鼠标悬停时显示菜单
-	  &:hover .gs-player-dropdown {
-		display: block;
-	  }
-	}
+  .gs-volume-track { width: 4px; height: 100%; background: var(--gs-track-bg); border-radius: 2px; position: relative; }
+  .gs-volume-fill { position: absolute; bottom: 0; width: 100%; background: var(--gs-primary); border-radius: 2px; pointer-events: none; }
+  .gs-volume-handle {
+	position: absolute; left: 50%; transform: translate(-50%, 50%);
+	width: 12px; height: 12px; background: #fff; border-radius: 50%;
+	box-shadow: 0 0 0 2px var(--gs-primary); pointer-events: none;
   }
 }

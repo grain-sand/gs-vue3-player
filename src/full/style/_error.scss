@@ -1,23 +1,12 @@
-// 错误信息
+/* 错误提示 */
 .gs-player-error {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--gs-player-error-color);
-  font-size: var(--gs-player-error-font-size);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: var(--gs-text); display: flex; align-items: center; gap: 8px;
+  background: var(--gs-panel-bg); padding: 8px 16px; border-radius: var(--gs-radius);
 
-  &::before {
-    content: '⟲';
-    font-size: 18px;
-    animation: rotate 2s linear infinite;
-  }
-
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  .gs-icon-spin {
+	width: 20px; height: 20px;
+	animation: gs-spin 1s linear infinite;
   }
 }
+@keyframes gs-spin { 100% { transform: rotate(360deg); } }
