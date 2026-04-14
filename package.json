@@ -10,11 +10,9 @@
 		"url": "git+https://github.com/grain-sand/gs-vue3-player.git"
 	},
 	"scripts": {
-		"build": "vite build && yarn run build:dts && yarn run build:merge",
-		"build:js": "vite build",
-		"build:rewrite": "vite build && yarn run build:dts && yarn run build:copy:adpter && yarn run build:merge",
+		"build": "vite build && yarn run build:dts && yarn run build:copy:adapter && yarn run build:merge",
 		"build:dts": "vue-tsc --declaration --emitDeclarationOnly --rootDir \"src\" --outDir \"tmp\"",
-		"build:copy:adpter": "xcopy adpter tmp /s /e /R /Y /I",
+		"build:copy:adapter": "xcopy adapter tmp /s /e /R /Y /I",
 		"build:merge": "gs-rollup -c",
 		"git:merge": "git branch -f master dev",
 		"test": "vitest run",
