@@ -17,7 +17,7 @@ export default defineConfig({
 				entryFileNames: '[name].mjs',
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name?.endsWith('.css')) {
-						return 'style.css'   // 固定文件名
+						return 'main.css'   // 固定文件名
 					}
 					return '[name][extname]'
 				}

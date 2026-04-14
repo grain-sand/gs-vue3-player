@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import '../../src/full/style/index.scss'
+import '../../src/full/style/main.scss'
 import {ref} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
