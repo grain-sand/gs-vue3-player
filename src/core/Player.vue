@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import Hls, {HlsConfig} from 'hls.js';
-import type {IPlayerExpose, IPlayerProps} from '../types';
+import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from '../types';
 import {PlayerSource} from "../types";
 import {getStringSource, parseVideoSource} from "../util";
 
@@ -29,9 +29,7 @@ defineOptions({
 const props = defineProps<IPlayerProps>();
 
 // Emits
-const emit = defineEmits<{
-  (e: 'srcChange', src: PlayerSource): void;
-}>();
+const emit = defineEmits<IPlayerEmits>();
 
 const videoRef = ref<HTMLVideoElement>();
 const hlsInstance = shallowRef<Hls>();

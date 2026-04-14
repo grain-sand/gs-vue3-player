@@ -85,9 +85,17 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onBeforeUnmount, provide, ref} from 'vue';
+import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
-import {ControlType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode, PlayerSource} from '../types';
+import {
+  ControlType,
+  IGsPlayerEmits,
+  IGsPlayerExpose,
+  IGsPlayerProps,
+  IGsPlayerSlots,
+  IPlayerExpose,
+  PlaybackMode
+} from '../types';
 import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg, PlayOverlaySvg} from './svgs';
 import {
@@ -96,7 +104,8 @@ import {
   GsPlaybackModeControl,
   GsPlayButton,
   GsProgressBar,
-  GsSpeedControl, GsTimeDisplay,
+  GsSpeedControl,
+  GsTimeDisplay,
   GsVolumeControl
 } from './components';
 import {usePlayerControls} from './composables';
@@ -118,12 +127,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   keyboardTarget: '.gs-player',
 });
 
-const emit = defineEmits<{
-  (e: 'srcChange', src: PlayerSource): void;
-  (e: 'volumeChange', volume: number): void;
-  (e: 'playbackModeChange', mode: string): void;
-  (e: 'playbackRateChange', rate: number): void;
-}>();
+const emit = defineEmits<IGsPlayerEmits>();
 
 // Refs
 const playerRef = ref() as { value: IPlayerExpose };
@@ -181,13 +185,13 @@ const availablePlaybackModes = computed<Array<{
 });
 
 // 插槽属性
-const progressSlotProps = computed(() => ({
+const progressSlotProps: any = computed(() => ({
   progress: progress.value,
   currentTime: currentTime.value,
   duration: duration.value
 }));
 
-const slotProps = computed(() => ({
+const slotProps: any = computed(() => ({
   ...progressSlotProps.value,
   isPlaying: isPlaying.value,
   isWebFullscreen: isWebFullscreen.value,
@@ -462,6 +466,8 @@ onBeforeUnmount(() => {
     keyboardEventTarget.removeEventListener('keydown', handleKeydown);
   }
 });
+
+defineSlots<IGsPlayerSlots>()
 
 defineExpose<IGsPlayerExpose>({
   get player() {

@@ -1,6 +1,5 @@
 import {RollupOptions} from 'rollup'
 import {defineDts, GsRollupDefaults as Defaults} from 'gs-rollup'
-import vueDtsRedirectPlugin from "./script/vue-dts-redirect";
 import fs from "node:fs";
 
 const file = 'tmp/index.d.ts'
@@ -42,6 +41,5 @@ export default <RollupOptions[]>[
 				pkg.exports['./lib/style.css'] = './lib/style.css'
 			}
 		},
-		addPlugins: [vueDtsRedirectPlugin()]
 	}),
 ]

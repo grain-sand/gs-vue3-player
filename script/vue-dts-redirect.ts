@@ -1,7 +1,7 @@
 import {FunctionPluginHooks, Plugin} from "rollup";
 import fs from 'node:fs'
 
-export default function vueDtsRedirectPlugin(): Plugin<any> {
+export default function vueDtsRedirectPlugin(): Plugin {
 	return <Plugin & Partial<FunctionPluginHooks>>{
 		name: 'vue-dts-redirect',
 		async resolveId(source, importer) {
@@ -15,9 +15,11 @@ export default function vueDtsRedirectPlugin(): Plugin<any> {
 
 			if (!resolved) return null
 
+			if (resolved.id) return null
+
 			const dtsPath = resolved.id + '.d.ts'
 
-			console.log(dtsPath)
+			if (!fs.existsSync(dtsPath)) return null
 
 			return dtsPath
 		},

@@ -73,3 +73,13 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play'> {
 	webFullscreen(): void;
 
 }
+
+export interface IGsPlayerEmits {
+	(e: 'srcChange', src: PlayerSource): void;
+
+	(e: 'volumeChange', volume: number): void;
+
+	(e: 'playbackModeChange', mode: string): void;
+
+	(e: 'playbackRateChange', rate: number): void;
+}

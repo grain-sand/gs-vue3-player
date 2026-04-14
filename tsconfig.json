@@ -22,6 +22,7 @@
 	"vite.config.ts"
   ],
   "vueCompilerOptions": {
-	"target": 3.3
+	"target": 3.5,
+	"plugins": ["@vue/language-plugin-pug"]
   }
 }

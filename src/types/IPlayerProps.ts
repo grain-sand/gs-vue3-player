@@ -32,3 +32,7 @@ export interface IPlayerExpose {
 	unmute(): Promise<void>
 
 }
+
+export interface IPlayerEmits {
+	(e: 'srcChange', src: PlayerSource): void;
+}

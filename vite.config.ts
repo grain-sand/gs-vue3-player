@@ -26,7 +26,7 @@ export default defineConfig({
 		outDir: 'dist/lib',
 	},
 	plugins: [
+		svgPlugin(),
 		vue(),
-		svgPlugin()
 	]
 })
