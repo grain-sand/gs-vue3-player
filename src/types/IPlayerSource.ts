@@ -21,6 +21,10 @@ export interface ITypedPlayerSource<D = any, T extends string | IVideoQualityIte
 	type: PlayerSourceType;
 	poster?: string;
 	title?: string;
+	/**
+	 * 当使用列表时，触发`srcChange`事件，当前播放索引的实时位置
+	 */
+	index?: number
 	src: T;
 	data?: D;
 }

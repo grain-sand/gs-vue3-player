@@ -75,11 +75,8 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play'> {
 }
 
 export interface IGsPlayerEmits {
-	(e: 'srcChange', src: PlayerSource): void;
-
-	(e: 'volumeChange', volume: number): void;
-
-	(e: 'playbackModeChange', mode: string): void;
-
-	(e: 'playbackRateChange', rate: number): void;
+	srcChange: (src: PlayerSource) => void
+	volumeChange: (volume: number) => void
+	playbackModeChange: (mode: string) => void
+	playbackRateChange: (rate: number) => void
 }

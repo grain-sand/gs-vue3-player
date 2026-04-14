@@ -4,7 +4,7 @@
         ref="playerRef"
         width="640"
         :volume="0.3"
-        @srcChange="srcChange"
+        @srcChange="srcChange($event)"
         :playlist="videoList"
         @volumeChange="eventChange('volumeChange',$event)"
         @playbackModeChange="eventChange('playbackModeChange',$event)"
@@ -23,7 +23,7 @@ import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
 import {copyObject} from "gs-base";
 
 let index = 0;
-const playerRef = ref() as {value:IGsPlayerExpose}
+const playerRef = ref() as { value: IGsPlayerExpose }
 
 const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
   ...item,
@@ -50,8 +50,8 @@ function srcChange(nextSrc: IStringPlayerSource<number>) {
   // pre.value = getPreUrl();
 }
 
-function eventChange(name:string,value:any) {
-  console.log(name,value)
+function eventChange(name: string, data: any) {
+  console.log(name, data)
 }
 
 function switchToNextSrc() {

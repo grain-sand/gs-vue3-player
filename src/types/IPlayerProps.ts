@@ -34,5 +34,5 @@ export interface IPlayerExpose {
 }
 
 export interface IPlayerEmits {
-	(e: 'srcChange', src: PlayerSource): void;
+	srcChange: (src: PlayerSource) => void
 }

@@ -75,7 +75,7 @@ function setSrc(src: PlayerSource) {
   } else {
     video.src = srcStr;
   }
-  emit('srcChange', src);
+  emit('srcChange', src as any);
 }
 
 watch(() => props.src, setSrc);

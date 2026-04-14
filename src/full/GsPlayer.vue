@@ -19,7 +19,7 @@
           @timeupdate="handleTimeUpdate"
           @loadedmetadata="handleLoadedMetadata"
           @ended="handleEnded"
-          @srcChange="emit('srcChange', $event)"
+          @srcChange="$event.index = currentIndex; emit('srcChange', $event)"
           v-bind="$attrs"
       />
 
@@ -266,17 +266,17 @@ const playerTitle = computed(() => {
 // 包装方法，触发事件
 const setVolume = (volume: number) => {
   originalSetVolume(volume);
-  emit('volumeChange', volume);
+  emit('volumeChange', volume as any);
 };
 
 const setPlaybackMode = (mode: string) => {
   originalSetPlaybackMode(mode as any);
-  emit('playbackModeChange', mode);
+  emit('playbackModeChange', mode as any);
 };
 
 const setPlaybackRate = (rate: number) => {
   originalSetPlaybackRate(rate);
-  emit('playbackRateChange', rate);
+  emit('playbackRateChange', rate as any);
 };
 
 // 提供依赖项给子组件
