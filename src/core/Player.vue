@@ -33,14 +33,23 @@ const emit = defineEmits<IPlayerEmits>();
 const videoRef = ref<HTMLVideoElement>();
 const hlsInstance = shallowRef<Hls>();
 const muted = ref(false);
+const volume = ref(0);
 
-onMounted(() => muted.value = videoRef.value?.muted)
+onMounted(() => {
+  muted.value = videoRef.value?.muted
+  volume.value = videoRef.value?.volume
+})
 
 function volumeChange() {
   if (muted.value !== videoRef.value?.muted) {
     muted.value = videoRef.value?.muted
     // @ts-ignore
     emit('mutedChange', muted.value)
+  }
+  if (volume.value !== videoRef.value?.volume) {
+    volume.value = videoRef.value?.volume
+    // @ts-ignore
+    emit('volumeChange', volume.value)
   }
 }
 
@@ -95,6 +104,17 @@ onMounted(() => setSrc(props.src));
 
 onBeforeUnmount(destroyHls);
 
+function setVolume(volume: number) {
+  const {value: el} = videoRef;
+  if (el) {
+    el.volume = volume;
+    if (volume > 0) try {
+      el.muted = false;
+    } catch {
+    }
+  }
+}
+
 async function play() {
   const {value: el} = videoRef;
   try {
@@ -111,6 +131,24 @@ async function play() {
 defineExpose<IPlayerExpose>({
   get el() {
     return videoRef.value
+  },
+  get volume() {
+    return volume.value
+  },
+  get muted() {
+    return muted.value
+  },
+  get paused() {
+    return videoRef.value?.paused
+  },
+  get time() {
+    return videoRef.value?.currentTime
+  },
+  get duration() {
+    return videoRef.value?.duration
+  },
+  get rate() {
+    return videoRef.value?.playbackRate
   },
   async togglePlay() {
     const {value: el} = videoRef;
@@ -129,6 +167,7 @@ defineExpose<IPlayerExpose>({
     await play()
   },
   setSrc,
+  setVolume,
   async pause() {
     await videoRef.value?.pause()
   },

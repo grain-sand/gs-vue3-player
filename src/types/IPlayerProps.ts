@@ -21,7 +21,19 @@ export interface IPlayerProps extends /* @vue-ignore */ Omit<VideoHTMLAttributes
 
 export interface IPlayerExpose {
 
-	el: HTMLVideoElement
+	readonly el: HTMLVideoElement
+
+	readonly volume: number
+
+	readonly muted: boolean
+
+	readonly paused: boolean
+
+	readonly time: number
+
+	readonly duration: number
+
+	readonly rate: number
 
 	play(src?: PlayerSource): Promise<void>
 
@@ -31,11 +43,14 @@ export interface IPlayerExpose {
 
 	pause(): Promise<void>
 
+	setVolume(volume: number): void
+
 	unmute(): Promise<void>
 
 }
 
 export interface IPlayerEmits {
 	srcChange: (src: PlayerSource) => void
+	volumeChange: (volume: number) => void
 	mutedChange: (muted: boolean) => void
 }

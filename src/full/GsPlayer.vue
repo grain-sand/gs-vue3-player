@@ -269,7 +269,6 @@ const playerTitle = computed(() => {
 const setVolume = (volume: number) => {
   originalSetVolume(volume);
   // @ts-ignore
-  emit('volumeChange', volume as any);
 };
 
 const setPlaybackMode = (mode: string) => {
@@ -479,6 +478,24 @@ defineExpose<IGsPlayerExpose>({
   get player() {
     return playerRef.value?.el;
   },
-  play, pause, togglePlay, unmute, setVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre
+  get volume() {
+    return playerRef.value.volume
+  },
+  get muted() {
+    return playerRef.value.muted
+  },
+  get paused() {
+    return playerRef.value?.paused
+  },
+  get time() {
+    return playerRef.value?.time
+  },
+  get duration() {
+    return playerRef.value?.duration
+  },
+  get rate() {
+    return playerRef.value?.rate
+  },
+  play, pause, togglePlay, unmute, setVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
 });
 </script>
