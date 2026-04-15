@@ -171,12 +171,7 @@ export function usePlayerControls({
 	};
 
 	const setVolume = (volume: number) => {
-		if (playerRef.value?.el) {
-			playerRef.value.el.volume = volume;
-			if(volume>0) {
-				playerRef.value.el.muted = false;
-			}
-		}
+		playerRef.value?.setVolume(volume);
 	};
 
 	const fullscreen = () => {

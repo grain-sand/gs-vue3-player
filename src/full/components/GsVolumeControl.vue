@@ -18,37 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, watch } from 'vue';
-import { VolumeStateIcons } from '../svgs';
-import { PlayerInjectKey } from '../types/PlayerInject';
+import {inject, computed} from 'vue';
+import {VolumeStateIcons} from '../svgs';
+import {PlayerInjectKey} from '../types/PlayerInject';
 
-import type { PlayerInject } from '../types/PlayerInject';
+import type {PlayerInject} from '../types/PlayerInject';
 
 const player = inject<PlayerInject>(PlayerInjectKey)!;
 
-// 状态
-const volume = ref(1);
-const isMuted = ref(false);
-
-// 监听播放器音量变化
-watch(
-  () => player.playerRef.value?.el?.volume,
-  (newVolume) => {
-    if (newVolume !== undefined) {
-      volume.value = newVolume;
-    }
-  }
-);
-
-// 监听播放器静音状态变化
-watch(
-  () => player.playerRef.value?.el?.muted,
-  (newMuted) => {
-    if (newMuted !== undefined) {
-      isMuted.value = newMuted;
-    }
-  }
-);
+// 计算属性：从playerRef获取音量和静音状态
+const volume = computed(() => player.playerRef.value?.volume || 0);
+const isMuted = computed(() => player.playerRef.value?.muted || false);
 
 // 工具函数：限制范围
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
@@ -56,14 +36,6 @@ const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(
 // 音量控制
 const setVolume = (newVol: number) => {
   const clampedVolume = clamp(newVol, 0, 1);
-  volume.value = clampedVolume;
-  if (player.playerRef.value?.el) {
-    player.playerRef.value.el.volume = clampedVolume;
-    // 当设置音量时，自动取消静音
-    if (clampedVolume > 0) {
-      player.playerRef.value.el.muted = false;
-    }
-  }
   player.setVolume(clampedVolume);
 };
 
@@ -83,6 +55,6 @@ const handleVolumeWheel = (e: WheelEvent) => {
   setVolume(volume.value + (e.deltaY > 0 ? -0.1 : 0.1));
 };
 
-const bindWheel = () => document.addEventListener('wheel', handleVolumeWheel, { passive: false });
+const bindWheel = () => document.addEventListener('wheel', handleVolumeWheel, {passive: false});
 const unbindWheel = () => document.removeEventListener('wheel', handleVolumeWheel);
 </script>

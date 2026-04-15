@@ -266,11 +266,6 @@ const playerTitle = computed(() => {
 });
 
 // 包装方法，触发事件
-const setVolume = (volume: number) => {
-  originalSetVolume(volume);
-  // @ts-ignore
-};
-
 const setPlaybackMode = (mode: string) => {
   originalSetPlaybackMode(mode as any);
   // @ts-ignore
@@ -358,7 +353,7 @@ provide(PlayerInjectKey, {
   playPre,
   setPlaybackMode,
   setPlaybackRate,
-  setVolume,
+  setVolume: originalSetVolume,
   fullscreen,
   webFullscreen,
   pip,
@@ -496,6 +491,6 @@ defineExpose<IGsPlayerExpose>({
   get rate() {
     return playerRef.value?.rate
   },
-  play, pause, togglePlay, unmute, setVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
+  play, pause, togglePlay, unmute, setVolume: originalSetVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
 });
 </script>

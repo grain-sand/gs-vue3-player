@@ -13,6 +13,13 @@
     >
     </gs-player>
     <button @click="switchToNextSrc">switchToNextSrc</button>
+    <hr/>
+    volume: {{ playerRef?.volume }}<br/>
+    muted: {{ playerRef?.muted }}<br/>
+    paused: {{ playerRef?.paused }}<br/>
+    time: {{ playerRef?.time }}<br/>
+    duration: {{ playerRef?.duration }}<br/>
+    rate: {{ playerRef?.rate }}<br/>
   </div>
 </template>
 
@@ -24,7 +31,7 @@ import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
 import {copyObject} from "gs-base";
 
 let index = 0;
-const playerRef = ref() as { value: IGsPlayerExpose }
+const playerRef = ref<IGsPlayerExpose>()
 
 const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
   ...item,
