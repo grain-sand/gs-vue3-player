@@ -1,3 +1,5 @@
+import {VNode} from "vue";
+
 /** 按钮类型 */
 export const ControlTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
 /** 按钮类型联合类型 */
@@ -61,11 +63,13 @@ export interface IControlsSlotProps extends IProgressSlotProps {
 
 
 export interface IGsPlayerSlots {
-	default(props: IControlsSlotProps): any
 
-	footer(props: IControlsSlotProps): any
+	default(props: IControlsSlotProps): VNode[] | VNode
 
-	controls(props: IControlsSlotProps): any
+	footer(props: IControlsSlotProps): VNode[] | VNode
 
-	progress(props: IProgressSlotProps): any
+	controls(props: IControlsSlotProps): VNode[] | VNode
+
+	progress(props: IProgressSlotProps): VNode[] | VNode
+
 }
