@@ -3,12 +3,13 @@
     <gs-player
         ref="playerRef"
         width="640"
-        :volume="0.3"
+        :volume="0.5"
         @srcChange="srcChange($event)"
         :playlist="videoList"
         @volumeChange="eventChange('volumeChange',$event)"
         @playbackModeChange="eventChange('playbackModeChange',$event)"
         @playbackRateChange="eventChange('playbackRateChange',$event)"
+        @mutedChange="eventChange('mutedChange',$event)"
     >
     </gs-player>
     <button @click="switchToNextSrc">switchToNextSrc</button>

@@ -20,8 +20,8 @@
           @timeupdate="handleTimeUpdate"
           @loadedmetadata="handleLoadedMetadata"
           @ended="handleEnded"
-          @srcChange="$event.index = currentIndex; emit('srcChange', $event)"
           v-bind="$attrs"
+          @src-change="$event.index = currentIndex; emit('srcChange', $event)"
       />
 
       <!-- 播放覆盖层 -->

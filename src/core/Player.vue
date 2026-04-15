@@ -1,5 +1,5 @@
 <template>
-  <video ref="videoRef" v-bind="$attrs"></video>
+  <video ref="videoRef" v-bind="$attrs" @volumechange="volumeChange"></video>
 </template>
 
 <script setup lang="ts">
@@ -20,9 +20,8 @@ const defaultHlsConfig: Partial<HlsConfig> = Object.freeze({
   minBufferLength: 1,
   startLevel: -1,
 })
-
 defineOptions({
-  name: 'PureVideoPlayer',
+  name: 'Player',
   inheritAttrs: false // 禁用默认继承，手动让 video 标签接管
 });
 
@@ -33,6 +32,18 @@ const emit = defineEmits<IPlayerEmits>();
 
 const videoRef = ref<HTMLVideoElement>();
 const hlsInstance = shallowRef<Hls>();
+const muted = ref(false);
+
+onMounted(() => muted.value = videoRef.value?.muted)
+
+function volumeChange() {
+  if (muted.value !== videoRef.value?.muted) {
+    muted.value = videoRef.value?.muted
+    // @ts-ignore
+    emit('mutedChange', muted.value)
+  }
+}
+
 
 const destroyHls = () => {
   if (hlsInstance.value) {

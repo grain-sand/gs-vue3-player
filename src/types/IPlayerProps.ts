@@ -37,4 +37,5 @@ export interface IPlayerExpose {
 
 export interface IPlayerEmits {
 	srcChange: (src: PlayerSource) => void
+	mutedChange: (muted: boolean) => void
 }
