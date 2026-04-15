@@ -75,6 +75,7 @@ function setSrc(src: PlayerSource) {
   } else {
     video.src = srcStr;
   }
+  // @ts-ignore
   emit('srcChange', src as any);
 }
 

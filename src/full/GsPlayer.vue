@@ -7,6 +7,7 @@
         @click="handlePlayerClick"
         @dblclick="handlePlayerDblClick"
     >
+      <!-- @vue-ignore-->
       <Player
           ref="playerRef"
           :src="src || playlist?.[0]"
@@ -266,16 +267,19 @@ const playerTitle = computed(() => {
 // 包装方法，触发事件
 const setVolume = (volume: number) => {
   originalSetVolume(volume);
+  // @ts-ignore
   emit('volumeChange', volume as any);
 };
 
 const setPlaybackMode = (mode: string) => {
   originalSetPlaybackMode(mode as any);
+  // @ts-ignore
   emit('playbackModeChange', mode as any);
 };
 
 const setPlaybackRate = (rate: number) => {
   originalSetPlaybackRate(rate);
+  // @ts-ignore
   emit('playbackRateChange', rate as any);
 };
 
