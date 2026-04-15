@@ -217,8 +217,8 @@ const {
   play,
   pause,
   unmute,
-  switchToNextSrc,
-  switchToPreSrc,
+  playNext,
+  playPre,
   setPlaybackMode: originalSetPlaybackMode,
   setPlaybackRate: originalSetPlaybackRate,
   setVolume: originalSetVolume,
@@ -226,7 +226,8 @@ const {
   webFullscreen,
   pip,
   handlePlayerClick,
-  handlePlayerDblClick
+  handlePlayerDblClick,
+  setSrc
 } = usePlayerControls({
   playerRef,
   playerContainerRef,
@@ -354,8 +355,8 @@ provide(PlayerInjectKey, {
   play,
   pause,
   unmute,
-  switchToNextSrc,
-  switchToPreSrc,
+  playNext,
+  playPre,
   setPlaybackMode,
   setPlaybackRate,
   setVolume,
@@ -364,6 +365,7 @@ provide(PlayerInjectKey, {
   pip,
   handlePlayerClick,
   handlePlayerDblClick,
+  setSrc,
   // Refs
   playerRef
 });
@@ -393,7 +395,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     case 'ArrowUp':
       if (e.ctrlKey) {
         // Ctrl+上：上一个
-        switchToPreSrc();
+        playPre();
       } else {
         // 向上调整播放速度
         if (playbackRate.value < Math.max(...props.playbackRates)) {
@@ -407,7 +409,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     case 'ArrowDown':
       if (e.ctrlKey) {
         // Ctrl+下：下一个
-        switchToNextSrc();
+        playNext();
       } else {
         // 向下调整播放速度
         if (playbackRate.value > Math.min(...props.playbackRates)) {
@@ -477,6 +479,6 @@ defineExpose<IGsPlayerExpose>({
   get player() {
     return playerRef.value?.el;
   },
-  play, pause, togglePlay, unmute, setVolume, setPlaybackRate, fullscreen, webFullscreen
+  play, pause, togglePlay, unmute, setVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre
 });
 </script>

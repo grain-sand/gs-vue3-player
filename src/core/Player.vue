@@ -61,7 +61,6 @@ function setSrc(src: PlayerSource) {
   video.poster = poster || ''
 
   if (type === 'hls') {
-    console.log(props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl'))
     if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = srcStr;
     } else if (Hls.isSupported()) {
@@ -88,8 +87,8 @@ onBeforeUnmount(destroyHls);
 async function play() {
   const {value: el} = videoRef;
   try {
-    el.playsInline = true
     el.autoplay = true
+    el.playsInline = true
     el.muted = false
     await el?.play()
   } catch {
@@ -118,6 +117,7 @@ defineExpose<IPlayerExpose>({
     setSrc(src);
     await play()
   },
+  setSrc,
   async pause() {
     await videoRef.value?.pause()
   },

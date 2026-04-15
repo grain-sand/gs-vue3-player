@@ -36,9 +36,9 @@ const hasSource = computed(() => {
 
 const onClick = () => {
   if (props.type === 'pre') {
-    player.switchToPreSrc();
+    player.playPre();
   } else {
-    player.switchToNextSrc();
+    player.playNext();
   }
 };
 </script>

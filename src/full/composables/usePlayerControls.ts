@@ -38,40 +38,51 @@ export function usePlayerControls({
 		playerRef.value.el.playbackRate = playbackRate.value;
 	}
 
-	const play = async (src?: number | any) => {
-		if (typeof src === 'number' && props.playlist && props.playlist.length > 0) {
+	const setSrc = (src: number | PlayerSource) => {
+		if (!src && src !== 0) return;
+		if (typeof src === 'number' && props.playlist?.length) {
 			// 处理索引播放
 			const index = Math.max(0, Math.min(src, props.playlist.length - 1));
 			currentIndex.value = index;
-			await playSource(props.playlist[index]);
-		} else if (src !== undefined && props.playlist && props.playlist.length > 0) {
-			// 处理非数字源，查找索引
-			const index = props.playlist.findIndex((item: any) => item === src || item.src === src);
-			if (index !== -1) {
-				currentIndex.value = index;
-			} else {
-				// 源不存在，将当前索引-1
-				currentIndex.value = Math.max(-1, currentIndex.value - 1);
-			}
-			await playSource(src);
+			playerRef.value?.setSrc(props.playlist[index]);
 		} else {
-			await playSource(src);
+			if (props.playlist?.length) {
+				// 处理非数字源，查找索引
+				const index = props.playlist.findIndex((item: any) => item === src || item.src === src);
+				if (index !== -1) {
+					currentIndex.value = index;
+				} else {
+					// 源不存在，将当前索引-1
+					currentIndex.value = Math.max(-1, currentIndex.value - 1);
+				}
+			}
+			if (typeof src !== 'number') {
+				playerRef.value?.setSrc(src);
+			}
 		}
+	}
+
+	const play = async (src?: number | any) => {
+		if(src) {
+			setSrc(src);
+		}
+		await playerRef.value?.play();
 	};
+
 	const pause = async () => {
 		await playerRef.value?.pause();
 	};
 	const unmute = async () => await playerRef.value?.unmute();
-	const switchToNextSrc = () => {
+	const playNext = async () => {
 		if (props.nextSrc) {
-			playSource(props.nextSrc);
+			await playSource(props.nextSrc);
 		} else if (props.playlist && props.playlist.length > 0) {
 			switchToNextInPlaylist();
 		}
 	};
-	const switchToPreSrc = () => {
+	const playPre = async () => {
 		if (props.preSrc) {
-			playSource(props.preSrc);
+			await playSource(props.preSrc);
 		} else if (props.playlist && props.playlist.length > 0) {
 			switchToPreInPlaylist();
 		}
@@ -123,7 +134,7 @@ export function usePlayerControls({
 			case 'sequence':
 				// 检查是否有下一个视频
 				if (props.nextSrc) {
-					switchToNextSrc();
+					playNext();
 				} else if (props.playlist && props.playlist.length > 0) {
 					// 如果是播放列表的最后一个视频，则停止播放
 					if (currentIndex.value < props.playlist.length - 1) {
@@ -162,7 +173,9 @@ export function usePlayerControls({
 	const setVolume = (volume: number) => {
 		if (playerRef.value?.el) {
 			playerRef.value.el.volume = volume;
-			playerRef.value.el.muted = volume === 0;
+			if(volume>0) {
+				playerRef.value.el.muted = false;
+			}
 		}
 	};
 
@@ -189,7 +202,16 @@ export function usePlayerControls({
 		}
 	};
 
-	const handlePlayerClick = () => props.handleClick && togglePlay();
+	const handlePlayerClick = async () => {
+		if (!props.handleClick || !playerRef.value?.el) return;
+		const {el} = playerRef.value;
+		if (el.muted) {
+			await unmute();
+			await play();
+		} else {
+			await togglePlay();
+		}
+	}
 	const handlePlayerDblClick = () => {
 		if (!props.handleDblClick) return;
 		if (document.fullscreenElement) document.exitFullscreen();
@@ -226,8 +248,8 @@ export function usePlayerControls({
 		play,
 		pause,
 		unmute,
-		switchToNextSrc,
-		switchToPreSrc,
+		playNext,
+		playPre,
 		setPlaybackMode,
 		setPlaybackRate,
 		setVolume,
@@ -235,6 +257,7 @@ export function usePlayerControls({
 		webFullscreen,
 		pip,
 		handlePlayerClick,
-		handlePlayerDblClick
+		handlePlayerDblClick,
+		setSrc
 	};
 }

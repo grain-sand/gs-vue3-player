@@ -41,8 +41,8 @@ export interface PlayerInject {
   play: (src?: any) => void;
   pause: () => void;
   unmute: () => void;
-  switchToNextSrc: () => void;
-  switchToPreSrc: () => void;
+  playNext: () => void;
+  playPre: () => void;
   setPlaybackMode: (mode: string) => void;
   setPlaybackRate: (rate: number) => void;
   setVolume: (volume: number) => void;

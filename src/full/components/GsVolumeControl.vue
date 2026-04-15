@@ -29,7 +29,6 @@ const player = inject<PlayerInject>(PlayerInjectKey)!;
 // 状态
 const volume = ref(1);
 const isMuted = ref(false);
-const previousVolume = ref(1);
 
 // 监听播放器音量变化
 watch(
@@ -37,7 +36,16 @@ watch(
   (newVolume) => {
     if (newVolume !== undefined) {
       volume.value = newVolume;
-      isMuted.value = newVolume === 0;
+    }
+  }
+);
+
+// 监听播放器静音状态变化
+watch(
+  () => player.playerRef.value?.el?.muted,
+  (newMuted) => {
+    if (newMuted !== undefined) {
+      isMuted.value = newMuted;
     }
   }
 );
@@ -47,21 +55,21 @@ const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(
 
 // 音量控制
 const setVolume = (newVol: number) => {
-  volume.value = clamp(newVol, 0, 1);
+  const clampedVolume = clamp(newVol, 0, 1);
+  volume.value = clampedVolume;
   if (player.playerRef.value?.el) {
-    player.playerRef.value.el.volume = volume.value;
-    isMuted.value = volume.value === 0;
-    player.playerRef.value.el.muted = isMuted.value;
+    player.playerRef.value.el.volume = clampedVolume;
+    // 当设置音量时，自动取消静音
+    if (clampedVolume > 0) {
+      player.playerRef.value.el.muted = false;
+    }
   }
-  player.setVolume(volume.value);
+  player.setVolume(clampedVolume);
 };
 
 const toggleMute = () => {
-  if (volume.value > 0) {
-    previousVolume.value = volume.value;
-    setVolume(0);
-  } else {
-    setVolume(previousVolume.value || 0.5); // 恢复或默认 0.5
+  if (player.playerRef.value?.el) {
+    player.playerRef.value.el.muted = !player.playerRef.value.el.muted;
   }
 };
 

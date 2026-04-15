@@ -25,6 +25,8 @@ export interface IPlayerExpose {
 
 	play(src?: PlayerSource): Promise<void>
 
+	setSrc(src?: PlayerSource): void
+
 	togglePlay(): Promise<void>
 
 	pause(): Promise<void>

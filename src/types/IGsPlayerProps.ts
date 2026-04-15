@@ -48,7 +48,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src'> {
 	keyboardTarget?: string | HTMLElement | false;
 }
 
-export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play'> {
+export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc'> {
 
 
 	/** 播放器实例 */
@@ -59,6 +59,13 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play'> {
 	 * @param src 视频地址 或 索引 ( 仅当设置了列表字段时生效 )
 	 */
 	play(src?: number | PlayerSource): Promise<void>
+
+	playPre(): Promise<void>
+
+	playNext(): Promise<void>
+
+
+	setSrc(src: number | PlayerSource): void;
 
 	/** 设置音量 */
 	setVolume(volume: number): void;
