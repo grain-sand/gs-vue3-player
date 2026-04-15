@@ -1,6 +1,6 @@
 {
 	"name": "gs-vue3-player",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"author": {
 		"name": "grain-sand"
 	},
@@ -41,5 +41,14 @@
 		"vue-tsc": "^3.2.6"
 	},
 	"license": "MIT",
-	"type": "module"
+	"type": "module",
+	"keywords": [
+		"vue3-player",
+		"video-player",
+		"web-player",
+		"hls",
+		"customizable",
+		"internationalization",
+		"playlist"
+	]
 }

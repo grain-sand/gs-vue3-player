@@ -1,6 +1,6 @@
 # GsVue3Player
 
-A web player based on Vue3 and TS that can be fully customized through slots and styles!
+A fully customizable web player with styles, slots, events, internationalization, and more! Built with Vue3 and TS!
 
 [中文](README.zh-CN.md)
 
@@ -89,7 +89,7 @@ yarn add gs-vue3-player
   import {GsPlayer} from 'gs-vue3-player';
 </script>
 
-<style scoped>
+<style lang="scss">
   @use "gs-vue3-player/lib/style.scss";
   @use "gs-vue3-player/lib/variables.scss" as *;
   @include variables('.custom-player');

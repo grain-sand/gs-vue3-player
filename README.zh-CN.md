@@ -1,6 +1,6 @@
 # GsVue3Player
 
-一个基于Vue3和TS的可通过插槽、样式完全自定义的网页播放器！
+一个可完全自定义的网页播放器！包括样式、插槽、事件、国际化等！基于Vue3和TS！
 
 [English](README.md)
 
@@ -89,7 +89,7 @@ yarn add gs-vue3-player
   import {GsPlayer} from 'gs-vue3-player';
 </script>
 
-<style scoped>
+<style lang="scss">
   @use "gs-vue3-player/lib/style.scss";
   @use "gs-vue3-player/lib/variables.scss" as *;
   @include variables('.custom-player');
