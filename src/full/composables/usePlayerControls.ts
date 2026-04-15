@@ -7,13 +7,7 @@ interface UsePlayerControlsOptions {
 	props: IGsPlayerProps;
 	currentPlaybackMode: { value: PlaybackMode };
 	currentIndex: { value: number };
-	isPlaying: { value: boolean };
-	playbackRate: { value: number };
 	isWebFullscreen: { value: boolean };
-	setCurrentTime: (time: number) => void;
-	setDuration: (duration: number) => void;
-	setError: (error: boolean) => void;
-	setIsPlaying: (playing: boolean) => void;
 }
 
 export function usePlayerControls({
@@ -22,11 +16,7 @@ export function usePlayerControls({
 	                                  props,
 	                                  currentPlaybackMode,
 	                                  currentIndex,
-	                                  playbackRate,
 	                                  isWebFullscreen,
-	                                  setCurrentTime,
-	                                  setDuration,
-	                                  setError,
                                   }: UsePlayerControlsOptions) {
 	// 播放控制
 	const togglePlay = async () => {
@@ -35,7 +25,7 @@ export function usePlayerControls({
 
 	const playSource = async (src: PlayerSource) => {
 		await playerRef.value?.play(src);
-		playerRef.value.el.playbackRate = playbackRate.value;
+		playerRef.value.el.playbackRate = playerRef.value.rate;
 	}
 
 	const setSrc = (src: number | PlayerSource) => {
@@ -130,6 +120,8 @@ export function usePlayerControls({
 
 	// 处理播放结束
 	const handleEnded = () => {
+		const el = playerRef.value?.el
+		const muted = el?.muted
 		switch (currentPlaybackMode.value) {
 			case 'sequence':
 				// 检查是否有下一个视频
@@ -162,11 +154,13 @@ export function usePlayerControls({
 				switchToNextInPlaylist();
 				break;
 		}
+		if(el) {
+			el.muted = muted;
+		}
 	};
 
 	// 其他设置
 	const setPlaybackRate = (rate: number) => {
-		playbackRate.value = rate;
 		if (playerRef.value?.el) playerRef.value.el.playbackRate = rate;
 	};
 
@@ -228,16 +222,8 @@ export function usePlayerControls({
 		{deep: true}
 	);
 
-	// 事件处理
-	const handleError = () => setError(true);
-	const handleTimeUpdate = (e: Event) => setCurrentTime((e.target as HTMLVideoElement).currentTime);
-	const handleLoadedMetadata = (e: Event) => setDuration((e.target as HTMLVideoElement).duration);
-
 	return {
 		// Methods
-		handleError,
-		handleTimeUpdate,
-		handleLoadedMetadata,
 		handleEnded,
 		togglePlay,
 		play,

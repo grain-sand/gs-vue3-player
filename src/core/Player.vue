@@ -1,5 +1,15 @@
 <template>
-  <video ref="videoRef" v-bind="$attrs" @volumechange="volumeChange"></video>
+  <video
+      ref="videoRef"
+      v-bind="$attrs"
+      @volumechange="volumeChange"
+      @ratechange="rateChange"
+      @error="error = videoRef.error"
+      @play="playing = true"
+      @pause="playing = false"
+      @timeupdate="time = videoRef.currentTime"
+      @loadedmetadata="duration = videoRef.duration"
+  ></video>
 </template>
 
 <script setup lang="ts">
@@ -34,11 +44,24 @@ const videoRef = ref<HTMLVideoElement>();
 const hlsInstance = shallowRef<Hls>();
 const muted = ref(false);
 const volume = ref(0);
+const rate = ref(1);
+const error = ref<MediaError>()
+const playing = ref(false)
+const duration = ref(0)
+const time = ref(0)
+
+let isFirstSetSrc = true;
+
 
 onMounted(() => {
   muted.value = videoRef.value?.muted
   volume.value = videoRef.value?.volume
+  rateChange()
 })
+
+function rateChange() {
+  rate.value = videoRef.value?.playbackRate
+}
 
 function volumeChange() {
   if (muted.value !== videoRef.value?.muted) {
@@ -76,9 +99,14 @@ function setSrc(src: PlayerSource) {
   destroyHls();
 
   const video = videoRef.value;
-  const {type, src: typedSrc, poster} = parseVideoSource(src);
+  const autoplay = video.autoplay;
+  const rotate = video.playbackRate
+  const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
-  video.poster = poster || ''
+  video.poster = poster
+  if (poster) {
+    video.style.backgroundImage = `url(${poster})`
+  }
 
   if (type === 'hls') {
     if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
@@ -94,6 +122,14 @@ function setSrc(src: PlayerSource) {
   } else {
     video.src = srcStr;
   }
+  video.poster = poster
+  if (isFirstSetSrc) {
+    isFirstSetSrc = false;
+  } else {
+    video.autoplay = autoplay
+    video.playbackRate = rotate;
+  }
+
   // @ts-ignore
   emit('srcChange', src as any);
 }
@@ -138,17 +174,20 @@ defineExpose<IPlayerExpose>({
   get muted() {
     return muted.value
   },
-  get paused() {
-    return videoRef.value?.paused
-  },
   get time() {
-    return videoRef.value?.currentTime
+    return time.value
   },
   get duration() {
-    return videoRef.value?.duration
+    return duration.value
   },
   get rate() {
-    return videoRef.value?.playbackRate
+    return rate.value
+  },
+  get playing() {
+    return playing.value
+  },
+  get error() {
+    return error.value;
   },
   async togglePlay() {
     const {value: el} = videoRef;

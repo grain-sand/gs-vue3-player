@@ -16,7 +16,7 @@
     <hr/>
     volume: {{ playerRef?.volume }}<br/>
     muted: {{ playerRef?.muted }}<br/>
-    paused: {{ playerRef?.paused }}<br/>
+    playing: {{ playerRef?.playing }}<br/>
     time: {{ playerRef?.time }}<br/>
     duration: {{ playerRef?.duration }}<br/>
     rate: {{ playerRef?.rate }}<br/>
@@ -30,7 +30,6 @@ import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
 import {copyObject} from "gs-base";
 
-let index = 0;
 const playerRef = ref<IGsPlayerExpose>()
 
 const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
@@ -38,14 +37,6 @@ const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
   data: i
 }))
 
-
-function getUrl() {
-  return videoList[(index + 1) % videoList.length]
-}
-
-function getPreUrl() {
-  return videoList[(index + videoList.length - 1) % videoList.length]
-}
 
 const src = ref(videoList[0])
 const next = ref(null)
@@ -63,7 +54,7 @@ function eventChange(name: string, data: any) {
 }
 
 function switchToNextSrc() {
-  playerRef.value.play(2);
+  playerRef.value.setVolume(.1)
 }
 
 </script>

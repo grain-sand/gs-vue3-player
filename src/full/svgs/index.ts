@@ -42,5 +42,6 @@ export {
 	WebFullscreenSvg,
 	FullscreenSvg,
 	PipSvg,
-	PlayOverlaySvg
+	PlayOverlaySvg,
+	MuteSvg
 };

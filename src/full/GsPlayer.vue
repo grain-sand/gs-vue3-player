@@ -14,25 +14,21 @@
           :hls-config="hlsConfig"
           :quality="quality"
           :use-browser-hls="useBrowserHls"
-          @error="handleError"
-          @play="isPlaying = true"
-          @pause="isPlaying = false"
-          @timeupdate="handleTimeUpdate"
-          @loadedmetadata="handleLoadedMetadata"
           @ended="handleEnded"
           v-bind="$attrs"
           @src-change="$event.index = currentIndex; emit('srcChange', $event)"
       />
 
       <!-- 播放覆盖层 -->
-      <div v-if="!isPlaying && controlsVisibility.playOverlay" class="gs-player-play-overlay">
+      <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay" class="gs-player-play-overlay">
         <div class="gs-play-overlay-button">
-          <PlayOverlaySvg/>
+          <PlayOverlaySvg v-if="!playerRef?.playing"/>
+          <MuteSvg v-else-if="playerRef?.muted"/>
         </div>
       </div>
 
       <!-- 错误信息 -->
-      <div v-if="showError && error" class="gs-player-error">
+      <div v-if="showError && playerRef?.error" class="gs-player-error">
         <ErrorSvg class="gs-icon-spin"/>
         <span>{{ props.i18n.errorMessage }}</span>
       </div>
@@ -98,7 +94,7 @@ import {
   PlaybackMode
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
-import {ErrorSvg, PlayOverlaySvg} from './svgs';
+import {ErrorSvg, PlayOverlaySvg, MuteSvg} from './svgs';
 import {
   GsFullscreenControl,
   GsNavButton,
@@ -131,16 +127,11 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
 const emit = defineEmits<IGsPlayerEmits>();
 
 // Refs
-const playerRef = ref() as { value: IPlayerExpose };
+const playerRef = ref<IPlayerExpose>();
 const playerContainerRef = ref<HTMLDivElement>();
 
 // State
-const error = ref(false);
-const isPlaying = ref(false);
 const isWebFullscreen = ref(false);
-const currentTime = ref(0);
-const duration = ref(0);
-const playbackRate = ref(1);
 const currentPlaybackMode = ref(props.playbackMode || 'sequence');
 const currentIndex = ref(0);
 
@@ -161,7 +152,7 @@ const controlsVisibility = computed(() => {
   };
 });
 
-const progress = computed(() => duration.value ? (currentTime.value / duration.value) * 100 : 0);
+const progress = computed(() => playerRef.value?.duration ? (playerRef.value.time / playerRef.value.duration) * 100 : 0);
 
 // 可用的播放模式
 const availablePlaybackModes = computed<Array<{
@@ -188,30 +179,23 @@ const availablePlaybackModes = computed<Array<{
 // 插槽属性
 const progressSlotProps: any = computed(() => ({
   progress: progress.value,
-  currentTime: currentTime.value,
-  duration: duration.value
+  currentTime: playerRef.value?.time || 0,
+  duration: playerRef.value?.duration || 0
 }));
 
 const slotProps: any = computed(() => ({
   ...progressSlotProps.value,
-  isPlaying: isPlaying.value,
+  isPlaying: playerRef.value?.playing || false,
   isWebFullscreen: isWebFullscreen.value,
-  playbackRate: playbackRate.value,
+  playbackRate: playerRef.value?.rate || 1,
   controlsVisibility: controlsVisibility.value
 }));
 
-// 状态设置函数
-const setCurrentTime = (time: number) => currentTime.value = time;
-const setDuration = (newDuration: number) => duration.value = newDuration;
-const setError = (newError: boolean) => error.value = newError;
-const setIsPlaying = (playing: boolean) => isPlaying.value = playing;
+
 
 // 使用控制逻辑
 const {
   // Methods
-  handleError,
-  handleTimeUpdate,
-  handleLoadedMetadata,
   handleEnded,
   togglePlay,
   play,
@@ -234,13 +218,7 @@ const {
   props,
   currentPlaybackMode,
   currentIndex,
-  isPlaying,
-  playbackRate,
-  isWebFullscreen,
-  setCurrentTime,
-  setDuration,
-  setError,
-  setIsPlaying
+  isWebFullscreen
 });
 
 // 计算播放器标题
@@ -282,22 +260,22 @@ const setPlaybackRate = (rate: number) => {
 provide(PlayerInjectKey, {
   // 状态
   get error() {
-    return error.value;
+    return playerRef.value?.error || false;
   },
   get isPlaying() {
-    return isPlaying.value;
+    return playerRef.value?.playing || false;
   },
   get isWebFullscreen() {
     return isWebFullscreen.value;
   },
   get currentTime() {
-    return currentTime.value;
+    return playerRef.value?.time || 0;
   },
   get duration() {
-    return duration.value;
+    return playerRef.value?.duration || 0;
   },
   get playbackRate() {
-    return playbackRate.value;
+    return playerRef.value?.rate || 1;
   },
   get currentPlaybackMode() {
     return currentPlaybackMode.value;
@@ -341,9 +319,6 @@ provide(PlayerInjectKey, {
     return props.webFullscreenTarget;
   },
   // 方法
-  handleError,
-  handleTimeUpdate,
-  handleLoadedMetadata,
   handleEnded,
   togglePlay,
   play,
@@ -392,8 +367,9 @@ const handleKeydown = (e: KeyboardEvent) => {
         playPre();
       } else {
         // 向上调整播放速度
-        if (playbackRate.value < Math.max(...props.playbackRates)) {
-          const currentRateIndex = props.playbackRates.indexOf(playbackRate.value);
+        const currentRate = playerRef.value?.rate || 1;
+        if (currentRate < Math.max(...props.playbackRates)) {
+          const currentRateIndex = props.playbackRates.indexOf(currentRate);
           if (currentRateIndex < props.playbackRates.length - 1) {
             setPlaybackRate(props.playbackRates[currentRateIndex + 1]);
           }
@@ -406,8 +382,9 @@ const handleKeydown = (e: KeyboardEvent) => {
         playNext();
       } else {
         // 向下调整播放速度
-        if (playbackRate.value > Math.min(...props.playbackRates)) {
-          const currentRateIndex = props.playbackRates.indexOf(playbackRate.value);
+        const currentRate = playerRef.value?.rate || 1;
+        if (currentRate > Math.min(...props.playbackRates)) {
+          const currentRateIndex = props.playbackRates.indexOf(currentRate);
           if (currentRateIndex > 0) {
             setPlaybackRate(props.playbackRates[currentRateIndex - 1]);
           }
@@ -459,9 +436,7 @@ onMounted(() => {
   }
 });
 
-// 移除键盘事件监听
 onBeforeUnmount(() => {
-  // 移除普通键盘事件监听
   if (keyboardEventTarget) {
     keyboardEventTarget.removeEventListener('keydown', handleKeydown);
   }
@@ -479,9 +454,6 @@ defineExpose<IGsPlayerExpose>({
   get muted() {
     return playerRef.value.muted
   },
-  get paused() {
-    return playerRef.value?.paused
-  },
   get time() {
     return playerRef.value?.time
   },
@@ -490,6 +462,12 @@ defineExpose<IGsPlayerExpose>({
   },
   get rate() {
     return playerRef.value?.rate
+  },
+  get playing() {
+    return playerRef.value?.playing
+  },
+  get error() {
+    return playerRef.value?.error;
   },
   play, pause, togglePlay, unmute, setVolume: originalSetVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
 });

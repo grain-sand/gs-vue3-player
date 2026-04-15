@@ -27,13 +27,15 @@ export interface IPlayerExpose {
 
 	readonly muted: boolean
 
-	readonly paused: boolean
-
 	readonly time: number
 
 	readonly duration: number
 
 	readonly rate: number
+
+	readonly playing: boolean
+
+	readonly error?: MediaError
 
 	play(src?: PlayerSource): Promise<void>
 
