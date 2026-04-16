@@ -100,6 +100,7 @@ import {
   GsVolumeControl
 } from './components';
 import {PlayerInjectKey} from './types/PlayerInject';
+import {INavControlsExpose} from "./types/INavControlsExpose";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -121,7 +122,7 @@ const emit = defineEmits<IGsPlayerEmits>();
 // Refs
 const playerRef = ref<IPlayerExpose>();
 const playerContainerRef = ref<HTMLDivElement>();
-const navControlsRef = ref<any>();
+const navControlsRef = ref<INavControlsExpose>();
 
 // State
 const isWebFullscreen = ref(false);
@@ -271,7 +272,7 @@ watch(() => props.playlist,
 // 计算播放器标题
 const playerTitle = computed(() => {
   const hasPlaylist = props.playlist && props.playlist.length > 0;
-  const currentIdx = navControlsRef.value?.currentIndex?.value || 0;
+  const currentIdx = navControlsRef.value?.index || 0;
   const currentSource: any = hasPlaylist && currentIdx >= 0 && currentIdx < props.playlist.length
       ? props.playlist[currentIdx]
       : props.src;
@@ -517,6 +518,9 @@ defineExpose<IGsPlayerExpose>({
   },
   get error() {
     return playerRef.value?.error;
+  },
+  get index() {
+    return navControlsRef.value?.index;
   },
   play, pause, togglePlay, unmute, setVolume, setRate: setPlaybackRate, fullscreen, webFullscreen,
   playPre: () => navControlsRef.value?.playPre(),

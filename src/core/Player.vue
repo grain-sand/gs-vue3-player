@@ -116,7 +116,6 @@ function setSrc(src: PlayerSource) {
 
   const video = videoRef.value;
   const autoplay = video.autoplay;
-  const rotate = video.playbackRate
   const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster
@@ -143,7 +142,7 @@ function setSrc(src: PlayerSource) {
     isFirstSetSrc = false;
   } else {
     video.autoplay = autoplay
-    video.playbackRate = rotate;
+    video.playbackRate = rate.value;
   }
 
   // @ts-ignore

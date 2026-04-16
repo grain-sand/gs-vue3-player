@@ -52,7 +52,13 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 
 	/** 播放器实例 */
-	player: HTMLVideoElement;
+	readonly player: HTMLVideoElement;
+
+	/**
+	 * 当前播放的视频索引
+	 */
+	readonly index: number;
+
 
 	/**
 	 * 播放视频

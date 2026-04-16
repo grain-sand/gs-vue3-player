@@ -20,6 +20,7 @@
     time: {{ playerRef?.time }}<br/>
     duration: {{ playerRef?.duration }}<br/>
     rate: {{ playerRef?.rate }}<br/>
+    index: {{ playerRef?.index }}<br/>
   </div>
 </template>
 

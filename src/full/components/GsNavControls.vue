@@ -37,12 +37,13 @@ import type {PlayerSource} from '../../types';
 
 
 import {PlayerInject, PlayerInjectKey} from '../types/PlayerInject';
+import {INavControlsExpose} from "../types/INavControlsExpose";
 
 const player = inject<PlayerInject>(PlayerInjectKey)!;
 // Props
 
 // 状态
-const currentIndex = ref(0);
+const index = ref(0);
 
 // 监听播放器ended事件
 onMounted(() => {
@@ -64,7 +65,7 @@ const playSource = async (src: PlayerSource) => {
   await player.playerRef.value?.play(src);
   // noinspection TypeScriptValidateTypes
   player.emit('srcChange', {
-    index: currentIndex.value,
+    index: index.value,
     src
   })
 };
@@ -73,37 +74,37 @@ const playSource = async (src: PlayerSource) => {
 const switchToNextInPlaylist = () => {
   if (!player.playlist || player.playlist.length === 0) return;
 
-  let nextIndex = currentIndex.value;
+  let nextIndex = index.value;
   if (player.currentMode === 'shuffle') {
     // 随机播放，确保不重复当前索引
     do {
       nextIndex = Math.floor(Math.random() * player.playlist.length);
-    } while (nextIndex === currentIndex.value && player.playlist.length > 1);
+    } while (nextIndex === index.value && player.playlist.length > 1);
   } else {
-    nextIndex = (currentIndex.value + 1) % player.playlist.length;
+    nextIndex = (index.value + 1) % player.playlist.length;
   }
 
-  currentIndex.value = nextIndex;
+  index.value = nextIndex;
   playSource(player.playlist[nextIndex]);
 };
 
 // 导航控制
 const playPre = async () => {
-  let {value: i} = currentIndex
+  let {value: i} = index
   const pre = i > 0 ? i - 1 : player.playlist?.length - 1;
   const source = player.preSrc || player.playlist?.[pre];
   if (source) {
-    currentIndex.value = pre;
+    index.value = pre;
     await playSource(source);
   }
 };
 
 const playNext = async () => {
   const {playlist} = player;
-  const next = (currentIndex.value + 1 + playlist?.length) % playlist?.length
+  const next = (index.value + 1 + playlist?.length) % playlist?.length
   const source = player.nextSrc || playlist?.[next];
   if (source) {
-    currentIndex.value = next;
+    index.value = next;
     await playSource(source);
   }
 };
@@ -120,7 +121,7 @@ const handleEnded = () => {
         playNext();
       } else if (player.playlist && player.playlist.length > 0) {
         // 如果是播放列表的最后一个视频，则停止播放
-        if (currentIndex.value < player.playlist.length - 1) {
+        if (index.value < player.playlist.length - 1) {
           switchToNextInPlaylist();
         } else {
           player.playerRef.value?.pause();
@@ -153,14 +154,17 @@ const handleEnded = () => {
 const alwaysShowNav = computed(() => player.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(player.currentMode));
 
 // 计算属性
-const hasPreSource = computed(() => player.preSrc || player.playlist?.[currentIndex.value - 1])
+const hasPreSource = computed(() => player.preSrc || player.playlist?.[index.value - 1])
 
-const hasNextSource = computed(() => player.nextSrc || player.playlist?.[currentIndex.value + 1])
+const hasNextSource = computed(() => player.nextSrc || player.playlist?.[index.value + 1])
 
 // 暴露方法给父组件
-defineExpose({
+defineExpose<INavControlsExpose>({
   playPre,
   playNext,
-  handleEnded
+  handleEnded,
+  get index() {
+    return index.value;
+  }
 });
 </script>
