@@ -103,7 +103,7 @@ import {
   GsTimeDisplay,
   GsVolumeControl
 } from './components';
-import {PlayerInjectKey} from './types/PlayerInject';
+import {PlayerInjectKey} from './types/IPlayerInject';
 import {INavControlsExpose} from "./types/INavControlsExpose";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -333,24 +333,7 @@ provide(PlayerInjectKey, {
     return availableModes.value;
   },
   // Props
-  get playlist() {
-    return props.playlist;
-  },
-  get preSrc() {
-    return props.preSrc;
-  },
-  get nextSrc() {
-    return props.nextSrc;
-  },
-  get i18n() {
-    return props.i18n;
-  },
-  get rates() {
-    return props.rates;
-  },
-  get fullscreenButtonMode() {
-    return props.fullscreenButtonMode;
-  },
+  props,
   //
   emit,
   // 方法

@@ -4,7 +4,7 @@
       v-if="player.controlsVisibility.play"
       class="gs-btn"
       @click.stop="player.togglePlay"
-      :title="player.i18n.titles.play"
+      :title="player.props.i18n.titles.play"
   >
     <component :is="PlayStateIcons[(player.playerRef.value?.playing || false).toString()]"/>
   </div>
@@ -13,7 +13,7 @@
       v-if="player.controlsVisibility.pre && (alwaysShowNav || hasPreSource)"
       class="gs-btn"
       @click.stop="playPre"
-      :title="player.i18n.titles.pre"
+      :title="player.props.i18n.titles.pre"
   >
     <PreSvg/>
   </div>
@@ -23,7 +23,7 @@
       v-if="player.controlsVisibility.next && (alwaysShowNav || hasNextSource)"
       class="gs-btn"
       @click.stop="playNext"
-      :title="player.i18n.titles.next"
+      :title="player.props.i18n.titles.next"
   >
     <NextSvg/>
   </div>
@@ -36,10 +36,10 @@ import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 import type {PlayerSource} from '../../types';
 
 
-import {PlayerInject, PlayerInjectKey} from '../types/PlayerInject';
+import {IPlayerInject, PlayerInjectKey} from '../types/IPlayerInject';
 import {INavControlsExpose} from "../types/INavControlsExpose";
 
-const player = inject<PlayerInject>(PlayerInjectKey)!;
+const player = inject<IPlayerInject>(PlayerInjectKey)!;
 // Props
 
 // 状态
@@ -72,27 +72,27 @@ const playSource = async (src: PlayerSource) => {
 
 // 播放列表管理
 const switchToNextInPlaylist = () => {
-  if (!player.playlist || player.playlist.length === 0) return;
+  if (!player.props.playlist || player.props.playlist.length === 0) return;
 
   let nextIndex = index.value;
   if (player.currentMode === 'shuffle') {
     // 随机播放，确保不重复当前索引
     do {
-      nextIndex = Math.floor(Math.random() * player.playlist.length);
-    } while (nextIndex === index.value && player.playlist.length > 1);
+      nextIndex = Math.floor(Math.random() * player.props.playlist.length);
+    } while (nextIndex === index.value && player.props.playlist.length > 1);
   } else {
-    nextIndex = (index.value + 1) % player.playlist.length;
+    nextIndex = (index.value + 1) % player.props.playlist.length;
   }
 
   index.value = nextIndex;
-  playSource(player.playlist[nextIndex]);
+  playSource(player.props.playlist[nextIndex]);
 };
 
 // 导航控制
 const playPre = async () => {
   let {value: i} = index
-  const pre = i > 0 ? i - 1 : player.playlist?.length - 1;
-  const source = player.preSrc || player.playlist?.[pre];
+  const pre = i > 0 ? i - 1 : player.props.playlist?.length - 1;
+  const source = player.props.preSrc || player.props.playlist?.[pre];
   if (source) {
     index.value = pre;
     await playSource(source);
@@ -100,9 +100,9 @@ const playPre = async () => {
 };
 
 const playNext = async () => {
-  const {playlist} = player;
+  const {playlist} = player.props;
   const next = (index.value + 1 + playlist?.length) % playlist?.length
-  const source = player.nextSrc || playlist?.[next];
+  const source = player.props.nextSrc || playlist?.[next];
   if (source) {
     index.value = next;
     await playSource(source);
@@ -117,11 +117,11 @@ const handleEnded = () => {
   switch (player.currentMode) {
     case 'sequence':
       // 检查是否有下一个视频
-      if (player.nextSrc) {
+      if (player.props.nextSrc) {
         playNext();
-      } else if (player.playlist && player.playlist.length > 0) {
+      } else if (player.props.playlist && player.props.playlist.length > 0) {
         // 如果是播放列表的最后一个视频，则停止播放
-        if (index.value < player.playlist.length - 1) {
+        if (index.value < player.props.playlist.length - 1) {
           switchToNextInPlaylist();
         } else {
           player.playerRef.value?.pause();
@@ -137,7 +137,7 @@ const handleEnded = () => {
       break;
     case 'loop':
       // 重新播放当前视频
-      player.playerRef.value?.el?.play();
+      player.playerRef.value?.el?.play().catch(console.error);
       break;
     case 'loopAll':
       switchToNextInPlaylist();
@@ -151,12 +151,12 @@ const handleEnded = () => {
   }
 };
 
-const alwaysShowNav = computed(() => player.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(player.currentMode));
+const alwaysShowNav = computed(() => player.props.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(player.currentMode));
 
 // 计算属性
-const hasPreSource = computed(() => player.preSrc || player.playlist?.[index.value - 1])
+const hasPreSource = computed(() => player.props.preSrc || player.props.playlist?.[index.value - 1])
 
-const hasNextSource = computed(() => player.nextSrc || player.playlist?.[index.value + 1])
+const hasNextSource = computed(() => player.props.nextSrc || player.props.playlist?.[index.value + 1])
 
 // 暴露方法给父组件
 defineExpose<INavControlsExpose>({

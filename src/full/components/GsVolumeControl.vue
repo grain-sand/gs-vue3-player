@@ -1,7 +1,7 @@
 <template>
   <div v-if="player.controlsVisibility.volume" class="gs-btn gs-dropdown-host" @click.stop="toggleMute"
        @mouseenter="bindWheel" @mouseleave="unbindWheel"
-       :title="isMuted || volume === 0 ? player.i18n.titles.mute : player.i18n.titles.volume">
+       :title="isMuted || volume === 0 ? player.props.i18n.titles.mute : player.props.i18n.titles.volume">
     <component :is="VolumeStateIcons[isMuted.toString()]"
                style="transform: scale(0.95);"/>
 
@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import {inject, computed} from 'vue';
 import {VolumeStateIcons} from '../../svgs';
-import {PlayerInjectKey} from '../types/PlayerInject';
+import {PlayerInjectKey} from '../types/IPlayerInject';
 
-import type {PlayerInject} from '../types/PlayerInject';
+import type {IPlayerInject} from '../types/IPlayerInject';
 
-const player = inject<PlayerInject>(PlayerInjectKey)!;
+const player = inject<IPlayerInject>(PlayerInjectKey)!;
 
 // 计算属性：从playerRef获取音量和静音状态
 const volume = computed(() => player.playerRef.value?.volume || 0);

@@ -1,6 +1,6 @@
 <template>
   <div v-if="player.controlsVisibility.play" class="gs-btn gs-dropdown-host"
-       :title="player.i18n.playbackModes[player.currentMode]">
+       :title="player.props.i18n.playbackModes[player.currentMode]">
     <component :is="PlaybackModeIcons[player.currentMode]"
                :style="{ transform: `scale(0.${player.currentMode === 'disabled' ? '73' : '82' })` }"/>
     <div class="gs-dropdown">
@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { PlaybackModeIcons } from '../../svgs';
-import { PlayerInjectKey } from '../types/PlayerInject';
+import { PlayerInjectKey } from '../types/IPlayerInject';
 
-import type { PlayerInject } from '../types/PlayerInject';
+import type { IPlayerInject } from '../types/IPlayerInject';
 
-const player = inject<PlayerInject>(PlayerInjectKey)!;
+const player = inject<IPlayerInject>(PlayerInjectKey)!;
 </script>
