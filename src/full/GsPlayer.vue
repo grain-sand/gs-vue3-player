@@ -375,13 +375,10 @@ provide(PlayerInjectKey, {
   //
   emit,
   // 方法
-  handleEnded: () => navControlsRef.value?.handleEnded(),
   togglePlay,
   play,
   pause,
   unmute,
-  playNext: () => navControlsRef.value?.playNext(),
-  playPre: () => navControlsRef.value?.playPre(),
   setPlaybackMode,
   setPlaybackRate,
   setVolume,
