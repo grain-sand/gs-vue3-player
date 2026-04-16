@@ -37,10 +37,11 @@ yarn add gs-vue3-player
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :keyboardTarget=".gs-player"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
-      @modeChange="handlePlaybackModeChange"
-      @playbackRateChange="handlePlaybackRateChange"
+      @modeChange="handleModeChange"
+      @rateChange="handleRateChange"
   />
 </template>
 
@@ -65,11 +66,11 @@ yarn add gs-vue3-player
     console.log('音量已更改:', volume);
   };
 
-  const handlePlaybackModeChange = (mode: string) => {
+  const handleModeChange = (mode: string) => {
     console.log('播放模式已更改:', mode);
   };
 
-  const handlePlaybackRateChange = (rate: number) => {
+  const handleRateChange = (rate: number) => {
     console.log('播放速度已更改:', rate);
   };
 </script>
@@ -225,10 +226,10 @@ yarn add gs-vue3-player
 |----------------------|----------------------|------------------------------------------------------------------------------|-----------|
 | src                  | PlayerSource         | undefined                                                                    | 视频源       |
 | playlist             | PlayerSource[]       | []                                                                           | 播放列表      |
-| playbackMode         | PlaybackMode         | 'sequence'                                                                   | 播放模式      |
-| playbackRates        | number[]             | [0.5, 0.8, 1.0, 1.2, 1.5, 2.0]                                               | 播放速度      |
-| visibleControls      | ControlType[]        | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress'] | 可见控件      |
-| hiddenControls       | ControlType[]        | []                                                                           | 隐藏控件      |
+| mode                 | PlaybackMode         | 'sequence'                                                                   | 播放模式      |
+| rates                | number[]             | [0.8, 1.0, 1.2, 1.5, 2.0, 3.0]                                              | 播放速度      |
+| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] | 可见控件      |
+| hiddenItems          | ControlItemType[]    | []                                                                           | 隐藏控件      |
 | showControls         | boolean              | true                                                                         | 显示控件      |
 | showError            | boolean              | true                                                                         | 显示错误信息    |
 | handleClick          | boolean              | true                                                                         | 处理播放器点击   |
@@ -239,21 +240,18 @@ yarn add gs-vue3-player
 | quality              | object               | undefined                                                                    | 画质配置      |
 | useBrowserHls        | boolean              | false                                                                        | 使用浏览器 HLS |
 | i18n                 | II18n                | zhCN                                                                         | 国际化配置     |
+| keyboardTarget       | string  HTMLElement  false | '.gs-player'                                                           | 键盘事件目标    |
+| preSrc               | PlayerSource         | undefined                                                                    | 上一个视频源    |
+| nextSrc              | PlayerSource         | undefined                                                                    | 下一个视频源    |
 
 ## 事件
 
 | 事件                 | 描述         | 参数                |
 |--------------------|------------|-------------------|
-| srcChange          | 视频源更改时触发   | src: PlayerSource |
+| srcChange          | 视频源更改时触发   | src: INavPlayerSource |
 | volumeChange       | 音量更改时触发    | volume: number    |
-| playbackModeChange | 播放模式更改时触发  | mode: string      |
-| playbackRateChange | 播放速度更改时触发  | rate: number      |
-| error              | 发生错误时触发    | error: Error      |
-| play               | 视频开始播放时触发  | -                 |
-| pause              | 视频暂停时触发    | -                 |
-| timeupdate         | 时间更新时触发    | event: Event      |
-| loadedmetadata     | 元数据加载完成时触发 | event: Event      |
-| ended              | 视频结束时触发    | -                 |
+| rateChange         | 播放速度更改时触发  | rate: number      |
+| modeChange         | 播放模式更改时触发  | mode: string      |
 
 ## 列表与导航
 
@@ -262,3 +260,34 @@ yarn add gs-vue3-player
 | footer   | 底部插槽  | slotProps         |
 | progress | 进度条插槽 | progressSlotProps |
 | controls | 控件插槽  | slotProps         |
+
+## 暴露的属性和方法
+
+### 属性
+
+> 说明：所有属性均为响应式且实时更新，您可以直接监听这些属性的变化。
+
+| 属性          | 类型                 | 描述                 |
+|-------------------|----------------------|-----------------------------|
+| player            | HTMLVideoElement     | 视频元素实例              |
+| volume            | number               | 当前音量              |
+| muted             | boolean              | 静音状态                 |
+| time              | number               | 当前播放时间       |
+| duration          | number               | 视频时长              |
+| rate              | number               | 播放速度               |
+| playing           | boolean              | 播放状态              |
+| error             | MediaError           | 错误信息           |
+| index             | number               | 当前播放列表索引      |
+
+### 方法
+
+| 方法            | 描述                 | 参数                  |
+|-------------------|-----------------------------|-----------------------------|
+| play              | 播放视频                  | src?: number  PlayerSource |
+| playPre           | 播放上一个视频         | -                           |
+| playNext          | 播放下一个视频             | -                           |
+| setSrc            | 设置视频源            | src: number  PlayerSource |
+| setVolume         | 设置音量                  | volume: number              |
+| setRate           | 设置播放速度           | rate: number                |
+| fullscreen        | 切换全屏           | -                           |
+| webFullscreen     | 切换网页全屏       | -                           |

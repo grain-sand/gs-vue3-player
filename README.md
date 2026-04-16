@@ -37,9 +37,10 @@ yarn add gs-vue3-player
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :keyboardTarget=".gs-player"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
-      @modeChange="handlePlaybackModeChange"
+      @modeChange="handleModeChange"
       @playbackRateChange="handlePlaybackRateChange"
   />
 </template>
@@ -65,7 +66,7 @@ yarn add gs-vue3-player
     console.log('Volume changed:', volume);
   };
 
-  const handlePlaybackModeChange = (mode: string) => {
+  const handleModeChange = (mode: string) => {
     console.log('Playback mode changed:', mode);
   };
 
@@ -225,10 +226,10 @@ yarn add gs-vue3-player
 |----------------------|----------------------|------------------------------------------------------------------------------|-----------------------------|
 | src                  | PlayerSource         | undefined                                                                    | Video source                |
 | playlist             | PlayerSource[]       | []                                                                           | Playlist                    |
-| playbackMode         | PlaybackMode         | 'sequence'                                                                   | Playback mode               |
-| playbackRates        | number[]             | [0.5, 0.8, 1.0, 1.2, 1.5, 2.0]                                               | Playback rates              |
-| visibleControls      | ControlType[]        | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress'] | Visible controls            |
-| hiddenControls       | ControlType[]        | []                                                                           | Hidden controls             |
+| mode                 | PlaybackMode         | 'sequence'                                                                   | Playback mode               |
+| rates                | number[]             | [0.8, 1.0, 1.2, 1.5, 2.0, 3.0]                                              | Playback rates              |
+| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] | Visible controls            |
+| hiddenItems          | ControlItemType[]    | []                                                                           | Hidden controls             |
 | showControls         | boolean              | true                                                                         | Show controls               |
 | showError            | boolean              | true                                                                         | Show error message          |
 | handleClick          | boolean              | true                                                                         | Handle player click         |
@@ -239,21 +240,18 @@ yarn add gs-vue3-player
 | quality              | object               | undefined                                                                    | Quality config              |
 | useBrowserHls        | boolean              | false                                                                        | Use browser HLS             |
 | i18n                 | II18n                | zhCN                                                                         | Internationalization config |
+| keyboardTarget       | string  HTMLElement  false | '.gs-player'                                                           | Keyboard event target       |
+| preSrc               | PlayerSource         | undefined                                                                    | Previous video source       |
+| nextSrc              | PlayerSource         | undefined                                                                    | Next video source           |
 
 ## Events
 
 | Event              | Description                        | Parameters        |
 |--------------------|------------------------------------|-------------------|
-| srcChange          | Emitted when source changes        | src: PlayerSource |
+| srcChange          | Emitted when source changes        | src: INavPlayerSource |
 | volumeChange       | Emitted when volume changes        | volume: number    |
-| playbackModeChange | Emitted when playback mode changes | mode: string      |
-| playbackRateChange | Emitted when playback rate changes | rate: number      |
-| error              | Emitted when error occurs          | error: Error      |
-| play               | Emitted when video starts playing  | -                 |
-| pause              | Emitted when video pauses          | -                 |
-| timeupdate         | Emitted when time updates          | event: Event      |
-| loadedmetadata     | Emitted when metadata is loaded    | event: Event      |
-| ended              | Emitted when video ends            | -                 |
+| rateChange         | Emitted when playback rate changes | rate: number      |
+| modeChange         | Emitted when playback mode changes | mode: string      |
 
 ## List and Navigation
 
@@ -262,3 +260,34 @@ yarn add gs-vue3-player
 | footer   | Footer slot       | slotProps         |
 | progress | Progress bar slot | progressSlotProps |
 | controls | Controls slot     | slotProps         |
+
+## Expose
+
+### Properties
+
+> Note: All properties are reactive and updated in real-time. You can directly watch them for changes.
+
+| Property          | Type                 | Description                 |
+|-------------------|----------------------|-----------------------------|
+| player            | HTMLVideoElement     | Video element instance      |
+| volume            | number               | Current volume              |
+| muted             | boolean              | Mute status                 |
+| time              | number               | Current playback time       |
+| duration          | number               | Video duration              |
+| rate              | number               | Playback rate               |
+| playing           | boolean              | Playing status              |
+| error             | MediaError           | Error information           |
+| index             | number               | Current playlist index      |
+
+### Methods
+
+| Method            | Description                 | Parameters                  |
+|-------------------|-----------------------------|-----------------------------|
+| play              | Play video                  | src?: number  PlayerSource |
+| playPre           | Play previous video         | -                           |
+| playNext          | Play next video             | -                           |
+| setSrc            | Set video source            | src: number  PlayerSource |
+| setVolume         | Set volume                  | volume: number              |
+| setRate           | Set playback rate           | rate: number                |
+| fullscreen        | Toggle fullscreen           | -                           |
+| webFullscreen     | Toggle web fullscreen       | -                           |
