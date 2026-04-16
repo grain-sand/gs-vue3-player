@@ -18,22 +18,10 @@
 
 <script setup lang="ts">
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
-import Hls, {HlsConfig} from 'hls.js';
-import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from '../types';
-import {PlayerSource} from "../types";
+import Hls from 'hls.js';
+import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, PlayerSource} from '../types';
 import {getStringSource, parseVideoSource} from "../util";
 
-const defaultHlsConfig: Partial<HlsConfig> = Object.freeze({
-  maxBufferLength: 1,        // 几乎不缓冲未来
-  maxMaxBufferLength: 2,
-  maxBufferBackLength: 0,    // 不保留已播内容
-  lowLatencyMode: false,      // 关闭低延迟（低延迟会多预载）
-  capLevelToPlayerSize: true, // 限制视频质量（根据播放器大小调整）
-  autoStartLoad: true,
-  maxLoadingDelay: 0.1,
-  minBufferLength: 1,
-  startLevel: -1,
-})
 const props = defineProps<IPlayerProps>();
 
 // Emits
@@ -128,7 +116,7 @@ function setSrc(src: PlayerSource) {
     if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = srcStr;
     } else if (Hls.isSupported()) {
-      const hls = new Hls({...defaultHlsConfig, ...props.hlsConfig});
+      const hls = new Hls({...DefaultHlsConfig, ...props.hlsConfig});
       hls.loadSource(srcStr);
       hls.attachMedia(video);
       hlsInstance.value = hls;
