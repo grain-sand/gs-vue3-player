@@ -48,14 +48,8 @@
           <slot name="controls" v-bind="slotProps">
             <!-- 控制面板 -->
             <div class="gs-controls" :title="playerTitle">
-              <!-- 播放/暂停 -->
-              <GsPlayButton/>
-
-              <!-- 上一个 -->
-              <GsNavButton type="pre"/>
-
-              <!-- 下一个 -->
-              <GsNavButton type="next"/>
+              <!-- 导航按钮组 -->
+              <GsNavControls/>
 
               <!-- 时间显示 -->
               <GsTimeDisplay/>
@@ -99,9 +93,8 @@ import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg, MuteSvg, PlayOverlaySvg} from '../svgs';
 import {
   GsFullscreenControl,
+  GsNavControls,
   GsModeControl,
-  GsNavButton,
-  GsPlayButton,
   GsProgressBar,
   GsSpeedControl,
   GsTimeDisplay,
