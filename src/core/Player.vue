@@ -49,7 +49,6 @@ const playing = ref(false)
 const duration = ref(0)
 const time = ref(0)
 
-let isFirstSetSrc = true;
 let isFirstLoadedmetadata = true;
 
 
@@ -65,14 +64,16 @@ function loadedmetadata() {
   duration.value = videoRef.value.duration
   if (isFirstLoadedmetadata) {
     isFirstLoadedmetadata = false;
-    watch(() => props.rate, (r = 1.0) => {videoRef.value.playbackRate = r}, {immediate: true})
+    watch(() => props.rate, (r = 1.0) => {
+      videoRef.value.playbackRate = r
+    }, {immediate: true})
   }
 }
 
 function rateChange() {
   const old = rate.value;
   rate.value = videoRef.value?.playbackRate
-  if(rate.value!==old) {
+  if (rate.value !== old) {
     // @ts-ignore
     emit('rateChange', rate.value)
   }
@@ -138,12 +139,8 @@ function setSrc(src: PlayerSource) {
     video.src = srcStr;
   }
   video.poster = poster
-  if (isFirstSetSrc) {
-    isFirstSetSrc = false;
-  } else {
-    video.autoplay = autoplay
-    video.playbackRate = rate.value;
-  }
+  video.autoplay = autoplay
+  video.playbackRate = rate.value;
 
   // @ts-ignore
   emit('srcChange', src as any);

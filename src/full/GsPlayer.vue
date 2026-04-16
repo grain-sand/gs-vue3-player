@@ -14,7 +14,11 @@
           :quality="quality"
           :use-browser-hls="useBrowserHls"
           :rate="rate"
+          :src="src"
           :volume="volume"
+          :autoplay="autoplay"
+          :showControls = 'false'
+          :muted="muted"
           @volume-change="emit('volumeChange', $event)"
           @rate-change="emit('rateChange', $event)"
       />
@@ -37,7 +41,7 @@
       <!-- 默认插槽 -->
       <slot name="footer" v-bind="slotProps">
         <!-- 底部控制区域 -->
-        <footer v-if="showControls" class="gs-player-footer" @dblclick.stop @click.stop>
+        <footer v-if="props.showControls" class="gs-player-footer" @dblclick.stop @click.stop>
           <!-- 进度条插槽 -->
           <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
             <!-- 进度条 -->
@@ -128,7 +132,16 @@ const navControlsRef = ref<INavControlsExpose>();
 const isWebFullscreen = ref(false);
 const currentMode = ref(props.mode || 'sequence');
 
-const fullTarget = computed(() => props.webFullscreenTarget);
+const fullTarget = computed(() => props.webFullscreenTarget||document.body);
+
+const src = computed(() => props.src || props.playlist?.[0]);
+
+watch(src, (newSrc) => {
+  if (newSrc) {
+    // @ts-ignore
+    emit('srcChange', {src: newSrc, index: 0});
+  }
+}, {immediate: true})
 
 // 计算属性：避免模板中频繁调用方法
 const controlsVisibility = computed(() => {
@@ -475,13 +488,6 @@ onMounted(() => {
       }
       keyboardEventTarget.addEventListener('keydown', handleKeydown);
     }
-  }
-
-  const src = props.src || props.playlist?.[0];
-  if (src) {
-    playerRef.value.setSrc(src)
-    // @ts-ignore
-    emit('srcChange', {src, index: 0});
   }
 
 });

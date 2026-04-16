@@ -28,7 +28,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	handleClick?: boolean;
 	/** 是否处理播放器双击，默认为true，用于 在常规状态切换到网页全屏，在任意全屏状态都是退出全屏 */
 	handleDblClick?: boolean;
-	/** 可改变速度的数字数组，默认为 [0.5, 0.8, 1, 1.2, 1.5, 2] */
+	/** 可改变速度的数字数组，默认为 [0.8, 1, 1.2, 1.5, 2.0, 3.0] */
 	rates?: number[];
 	/** 需要显示的按钮，默认为全部显示 */
 	visibleItems?: ControlItemType[];
