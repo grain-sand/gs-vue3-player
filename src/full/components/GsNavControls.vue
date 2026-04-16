@@ -6,7 +6,7 @@
       @click.stop="player.togglePlay"
       :title="player.i18n.titles.play"
   >
-    <component :is="PlayStateIcons[player.isPlaying.toString()]"/>
+    <component :is="PlayStateIcons[(player.playerRef.value?.playing || false).toString()]"/>
   </div>
   <!-- 上一个按钮 -->
   <div

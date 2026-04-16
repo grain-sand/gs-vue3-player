@@ -43,7 +43,7 @@ const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
 };
 
 const handleProgressClick = (e: MouseEvent) => {
-  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * player.duration;
+  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * (player.playerRef.value?.duration || 0);
   if (player.playerRef.value?.el) {
     player.playerRef.value.el.currentTime = newTime;
   }
@@ -53,7 +53,7 @@ const handleProgressMouseMove = (e: MouseEvent) => {
   const ratio = getProgressRatio(e, e.currentTarget as HTMLElement);
   showProgressTooltip.value = true;
   tooltipPosition.value = clamp(ratio * 100, 5, 95);
-  tooltipTime.value = ratio * player.duration;
+  tooltipTime.value = ratio * (player.playerRef.value?.duration || 0);
 };
 
 const handleProgressMouseLeave = () => (showProgressTooltip.value = false);

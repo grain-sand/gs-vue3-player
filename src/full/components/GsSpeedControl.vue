@@ -1,12 +1,12 @@
 <template>
   <div v-if="player.controlsVisibility.speed" class="gs-btn gs-dropdown-host" :title="player.i18n.titles.speed">
-    <span class="gs-text-btn">{{ player.playbackRate.toFixed(1) }}</span>
+    <span class="gs-text-btn">{{ (player.playerRef.value?.rate || 1).toFixed(1) }}</span>
     <div class="gs-dropdown">
       <div
           v-for="rate in player.rates"
           :key="rate"
           class="gs-dropdown-item"
-          :class="{ active: rate === player.playbackRate }"
+          :class="{ active: rate === (player.playerRef.value?.rate || 1) }"
           @click.stop="player.setPlaybackRate(rate)"
       >
         {{ rate.toFixed(1) }}

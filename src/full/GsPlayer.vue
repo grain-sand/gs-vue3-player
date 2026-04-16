@@ -315,26 +315,11 @@ const setPlaybackMode = (mode: string) => {
 // 提供依赖项给子组件
 provide(PlayerInjectKey, {
   // 状态
-  get error() {
-    return playerRef.value?.error || false;
-  },
-  get isPlaying() {
-    return playerRef.value?.playing || false;
-  },
-  get isWebFullscreen() {
-    return isWebFullscreen.value;
-  },
-  get currentTime() {
-    return playerRef.value?.time || 0;
-  },
-  get duration() {
-    return playerRef.value?.duration || 0;
-  },
-  get playbackRate() {
-    return playerRef.value?.rate || 1;
-  },
   get currentMode() {
     return currentMode.value;
+  },
+  get currentIndex() {
+    return navControlsRef.value?.index || 0;
   },
 
   // 计算属性
@@ -348,9 +333,6 @@ provide(PlayerInjectKey, {
     return availableModes.value;
   },
   // Props
-  get src() {
-    return props.src;
-  },
   get playlist() {
     return props.playlist;
   },
@@ -369,9 +351,6 @@ provide(PlayerInjectKey, {
   get fullscreenButtonMode() {
     return props.fullscreenButtonMode;
   },
-  get webFullscreenTarget() {
-    return props.webFullscreenTarget;
-  },
   //
   emit,
   // 方法
@@ -385,8 +364,6 @@ provide(PlayerInjectKey, {
   fullscreen,
   webFullscreen,
   pip,
-  handlePlayerClick,
-  handlePlayerDblClick,
   // Refs
   playerRef
 });

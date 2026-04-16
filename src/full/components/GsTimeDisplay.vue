@@ -13,7 +13,7 @@ import {formatTime} from "../../util";
 const player = inject<PlayerInject>(PlayerInjectKey)!;
 
 const time = computed(() => {
-  return `${formatTime(player.currentTime)}/${formatTime(player.duration)}`;
+  return `${formatTime(player.playerRef.value?.time || 0)}/${formatTime(player.playerRef.value?.duration || 0)}`;
 });
 
 const title = computed(() => {
