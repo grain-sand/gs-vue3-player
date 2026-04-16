@@ -15,14 +15,13 @@
           :use-browser-hls="useBrowserHls"
           :rate="rate"
           :volume="volume"
-          @volume-change = "emit('volumeChange', $event)"
-          @rate-change = "emit('rateChange', $event)"
-          @ended="handleEnded"
-          @src-change="$event.index = currentIndex; emit('srcChange', $event)"
+          @volume-change="emit('volumeChange', $event)"
+          @rate-change="emit('rateChange', $event)"
       />
 
       <!-- 播放覆盖层 -->
-      <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay" class="gs-player-play-overlay">
+      <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
+           class="gs-player-play-overlay">
         <div class="gs-play-overlay-button">
           <PlayOverlaySvg v-if="!playerRef?.playing"/>
           <MuteSvg v-else-if="playerRef?.muted"/>
@@ -49,7 +48,20 @@
             <!-- 控制面板 -->
             <div class="gs-controls" :title="playerTitle">
               <!-- 导航按钮组 -->
-              <GsNavControls/>
+              <GsNavControls
+                  ref="navControlsRef"
+                  :src="props.src"
+                  :playlist="props.playlist"
+                  :preSrc="props.preSrc"
+                  :nextSrc="props.nextSrc"
+                  :i18n="props.i18n"
+                  :rates="props.rates"
+                  :mode="currentMode"
+                  :controlsVisibility="controlsVisibility"
+                  :isPlaying="playerRef?.playing || false"
+                  :playerRef="{ value: playerRef }"
+                  :togglePlay="togglePlay"
+              />
 
               <!-- 时间显示 -->
               <GsTimeDisplay/>
@@ -122,11 +134,11 @@ const emit = defineEmits<IGsPlayerEmits>();
 // Refs
 const playerRef = ref<IPlayerExpose>();
 const playerContainerRef = ref<HTMLDivElement>();
+const navControlsRef = ref<any>();
 
 // State
 const isWebFullscreen = ref(false);
 const currentMode = ref(props.mode || 'sequence');
-const currentIndex = ref(0);
 
 const fullTarget = computed(() => props.webFullscreenTarget);
 
@@ -187,45 +199,13 @@ const slotProps: any = computed(() => ({
 }));
 
 
-
 // 播放控制
 const togglePlay = async () => {
   await playerRef.value?.togglePlay();
 };
 
-const playSource = async (src: any) => {
-  await playerRef.value?.play(src);
-};
-
-const setSrc = (src: number | any) => {
-  if (!src && src !== 0) return;
-  if (typeof src === 'number' && props.playlist?.length) {
-    // 处理索引播放
-    const index = Math.max(0, Math.min(src, props.playlist.length - 1));
-    currentIndex.value = index;
-    playerRef.value?.setSrc(props.playlist[index]);
-  } else {
-    if (props.playlist?.length) {
-      // 处理非数字源，查找索引
-      const index = props.playlist.findIndex((item: any) => item === src || item.src === src);
-      if (index !== -1) {
-        currentIndex.value = index;
-      } else {
-        // 源不存在，将当前索引-1
-        currentIndex.value = Math.max(-1, currentIndex.value - 1);
-      }
-    }
-    if (typeof src !== 'number') {
-      playerRef.value?.setSrc(src);
-    }
-  }
-};
-
 const play = async (src?: number | any) => {
-  if(src) {
-    setSrc(src);
-  }
-  await playerRef.value?.play();
+  await playerRef.value?.play(src);
 };
 
 const pause = async () => {
@@ -234,101 +214,9 @@ const pause = async () => {
 
 const unmute = async () => await playerRef.value?.unmute();
 
-const playNext = async () => {
-  if (props.nextSrc) {
-    await playSource(props.nextSrc);
-  } else if (props.playlist && props.playlist.length > 0) {
-    switchToNextInPlaylist();
-  }
-};
-
-const playPre = async () => {
-  if (props.preSrc) {
-    await playSource(props.preSrc);
-  } else if (props.playlist && props.playlist.length > 0) {
-    switchToPreInPlaylist();
-  }
-};
-
 // 播放模式控制
 const originalSetPlaybackMode = (mode: PlaybackMode) => {
   currentMode.value = mode;
-};
-
-// 播放列表管理
-const switchToNextInPlaylist = () => {
-  if (!props.playlist || props.playlist.length === 0) return;
-
-  let nextIndex = currentIndex.value;
-  if (currentMode.value === 'shuffle') {
-    // 随机播放，确保不重复当前索引
-    do {
-      nextIndex = Math.floor(Math.random() * props.playlist.length);
-    } while (nextIndex === currentIndex.value && props.playlist.length > 1);
-  } else {
-    nextIndex = (currentIndex.value + 1) % props.playlist.length;
-  }
-
-  currentIndex.value = nextIndex;
-  playSource(props.playlist[nextIndex]);
-};
-
-const switchToPreInPlaylist = () => {
-  if (!props.playlist || props.playlist.length === 0) return;
-
-  let preIndex = currentIndex.value;
-  if (currentMode.value === 'shuffle') {
-    // 随机播放，确保不重复当前索引
-    do {
-      preIndex = Math.floor(Math.random() * props.playlist.length);
-    } while (preIndex === currentIndex.value && props.playlist.length > 1);
-  } else {
-    preIndex = (currentIndex.value - 1 + props.playlist.length) % props.playlist.length;
-  }
-
-  currentIndex.value = preIndex;
-  playSource(props.playlist[preIndex]);
-};
-
-// 处理播放结束
-const handleEnded = () => {
-  const el = playerRef.value?.el;
-  const muted = el?.muted;
-  switch (currentMode.value) {
-    case 'sequence':
-      // 检查是否有下一个视频
-      if (props.nextSrc) {
-        playNext();
-      } else if (props.playlist && props.playlist.length > 0) {
-        // 如果是播放列表的最后一个视频，则停止播放
-        if (currentIndex.value < props.playlist.length - 1) {
-          switchToNextInPlaylist();
-        } else {
-          pause();
-        }
-      } else {
-        // 没有下一个视频，停止播放
-        pause();
-      }
-      break;
-    case 'disabled':
-      // 停止播放
-      pause();
-      break;
-    case 'loop':
-      // 重新播放当前视频
-      playerRef.value?.el?.play();
-      break;
-    case 'loopAll':
-      switchToNextInPlaylist();
-      break;
-    case 'shuffle':
-      switchToNextInPlaylist();
-      break;
-  }
-  if(el) {
-    el.muted = muted;
-  }
 };
 
 // 其他设置
@@ -382,35 +270,34 @@ const handlePlayerDblClick = () => {
 };
 
 // 监听 playlist 变化
-watch(
-  () => props.playlist,
-  (newPlaylist) => {
-    if (newPlaylist && newPlaylist.length > 0) {
-      // 如果没有设置 src，则使用 playlist 中的第一个视频
-      if (!props.src) {
-        playSource(newPlaylist[0]);
+watch(() => props.playlist,
+    (newPlaylist) => {
+      if (newPlaylist && newPlaylist.length > 0) {
+        // 如果没有设置 src，则使用 playlist 中的第一个视频
+        if (!props.src) {
+          playerRef.value?.play(newPlaylist[0]);
+        }
       }
     }
-  },
-  {deep: true}
 );
 
 // 计算播放器标题
 const playerTitle = computed(() => {
   const hasPlaylist = props.playlist && props.playlist.length > 0;
-  const currentSource: any = hasPlaylist && currentIndex.value >= 0 && currentIndex.value < props.playlist.length
-      ? props.playlist[currentIndex.value]
+  const currentIdx = navControlsRef.value?.currentIndex?.value || 0;
+  const currentSource: any = hasPlaylist && currentIdx >= 0 && currentIdx < props.playlist.length
+      ? props.playlist[currentIdx]
       : props.src;
   const hasTitle = currentSource && typeof currentSource === 'object' && currentSource.title;
 
   if (hasPlaylist && hasTitle) {
-    const currentPosition = currentIndex.value + 1;
+    const currentPosition = currentIdx + 1;
     const totalCount = props.playlist.length;
     return `${currentSource.title} ( ${currentPosition}/${totalCount} )`;
   } else if (hasTitle) {
     return currentSource.title;
   } else if (hasPlaylist) {
-    const currentPosition = currentIndex.value + 1;
+    const currentPosition = currentIdx + 1;
     const totalCount = props.playlist.length;
     return `${currentPosition}/${totalCount}`;
   }
@@ -421,7 +308,7 @@ const playerTitle = computed(() => {
 const setPlaybackMode = (mode: string) => {
   originalSetPlaybackMode(mode as any);
   // @ts-ignore
-  emit('playbackModeChange', mode as any);
+  emit('modeChange', mode as any);
 };
 
 // 提供依赖项给子组件
@@ -448,9 +335,7 @@ provide(PlayerInjectKey, {
   get currentPlaybackMode() {
     return currentMode.value;
   },
-  get currentIndex() {
-    return currentIndex.value;
-  },
+
   // 计算属性
   get controlsVisibility() {
     return controlsVisibility.value;
@@ -487,13 +372,13 @@ provide(PlayerInjectKey, {
     return props.webFullscreenTarget;
   },
   // 方法
-  handleEnded,
+  handleEnded: () => navControlsRef.value?.handleEnded(),
   togglePlay,
   play,
   pause,
   unmute,
-  playNext,
-  playPre,
+  playNext: () => navControlsRef.value?.playNext(),
+  playPre: () => navControlsRef.value?.playPre(),
   setPlaybackMode,
   setPlaybackRate,
   setVolume,
@@ -502,7 +387,6 @@ provide(PlayerInjectKey, {
   pip,
   handlePlayerClick,
   handlePlayerDblClick,
-  setSrc,
   // Refs
   playerRef
 });
@@ -532,7 +416,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     case 'ArrowUp':
       if (e.ctrlKey) {
         // Ctrl+上：上一个
-        playPre();
+        navControlsRef.value?.playPre();
       } else {
         // 向上调整播放速度
         const currentRate = playerRef.value?.rate || 1;
@@ -547,7 +431,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     case 'ArrowDown':
       if (e.ctrlKey) {
         // Ctrl+下：下一个
-        playNext();
+        navControlsRef.value?.playNext();
       } else {
         // 向下调整播放速度
         const currentRate = playerRef.value?.rate || 1;
@@ -604,7 +488,7 @@ onMounted(() => {
   }
 
   const src = props.src || props.playlist?.[0];
-  if(src) {
+  if (src) {
     playerRef.value.setSrc(src)
   }
 
@@ -643,6 +527,9 @@ defineExpose<IGsPlayerExpose>({
   get error() {
     return playerRef.value?.error;
   },
-  play, pause, togglePlay, unmute, setVolume, setRate: setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
+  play, pause, togglePlay, unmute, setVolume, setRate: setPlaybackRate, fullscreen, webFullscreen,
+  playPre: () => navControlsRef.value?.playPre(),
+  playNext: () => navControlsRef.value?.playNext(),
+  setSrc: (src: any) => playerRef.value?.setSrc(src),
 });
 </script>

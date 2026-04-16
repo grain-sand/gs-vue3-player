@@ -1,5 +1,5 @@
 import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from './IPlayerProps';
-import type {PlayerSource} from './IPlayerSource';
+import type {INavPlayerSource, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
@@ -81,6 +81,7 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 }
 
-export interface IGsPlayerEmits extends IPlayerEmits {
+export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {
 	modeChange: (mode: string) => void
+	srcChange: (src: INavPlayerSource) => void
 }

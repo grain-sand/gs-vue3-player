@@ -38,3 +38,8 @@ export interface IQualitiesPlayerSource<D = any> extends ITypedPlayerSource<D, A
 
 // 输入类型
 export type PlayerSource<D = any> = string | IStringPlayerSource<D> | IQualitiesPlayerSource<D>;
+
+export interface INavPlayerSource<T extends PlayerSource = PlayerSource> {
+	index: number;
+	src: T;
+}
