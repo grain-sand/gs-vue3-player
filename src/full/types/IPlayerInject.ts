@@ -9,11 +9,6 @@ export interface IPlayerInject {
 	currentIndex: number;
 	// 计算属性
 	controlsVisibility: Record<ControlItemType, boolean>;
-	progress: number;
-	availableModes: Array<{
-		value: PlaybackMode;
-		text: string;
-	}>;
 	// Props
 	props: IGsPlayerProps;
 	// 方法
@@ -21,14 +16,13 @@ export interface IPlayerInject {
 	play: (src?: any) => Promise<void>;
 	pause: () => Promise<void>;
 	unmute: () => Promise<void>;
-	setPlaybackMode: (mode: string) => void;
-	setPlaybackRate: (rate: number) => void;
+	setMode: (mode: string) => void;
+	setRate: (rate: number) => void;
 	setVolume: (volume: number) => void;
-	fullscreen: () => void;
-	webFullscreen: () => void;
-	pip: () => void;
 	// Refs
 	playerRef: { value: IPlayerExpose | undefined };
+
+	isWebFullscreen: { value: boolean };
 
 	emit: (e: string, ...arg: any) => void;
 }

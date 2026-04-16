@@ -7,7 +7,7 @@
           :key="rate"
           class="gs-dropdown-item"
           :class="{ active: rate === (player.playerRef.value?.rate || 1) }"
-          @click.stop="player.setPlaybackRate(rate)"
+          @click.stop="player.setRate(rate)"
       >
         {{ rate.toFixed(1) }}
       </div>

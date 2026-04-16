@@ -48,7 +48,7 @@ export interface IControlsSlotProps extends IProgressSlotProps {
 	/** 设置音量 */
 	setVolume: (volume: number) => void;
 	/** 设置播放速度 */
-	setPlaybackRate: (rate: number) => void;
+	setRate: (rate: number) => void;
 	/** 切换到上一个输入源 */
 	switchToPreSrc: () => void;
 	/** 切换到下一个输入源 */

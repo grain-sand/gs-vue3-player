@@ -2,8 +2,8 @@
   <div class="gs-progress-container" @click.stop="handleProgressClick" @mousemove="handleProgressMouseMove"
        @mouseleave="handleProgressMouseLeave">
     <div class="gs-progress-track">
-      <div class="gs-progress-fill" :style="{ width: `${player.progress}%` }"></div>
-      <div class="gs-progress-handle" :style="{ left: `${player.progress}%` }"></div>
+      <div class="gs-progress-fill" :style="{ width: `${progress}%` }"></div>
+      <div class="gs-progress-handle" :style="{ left: `${progress}%` }"></div>
       <!-- 时间提示 -->
       <div v-show="showProgressTooltip" class="gs-progress-tooltip" :style="{ left: `${tooltipPosition}%` }">
         {{ formatTime(tooltipTime) }}
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import {inject, ref} from 'vue';
+import {computed, inject, ref} from 'vue';
 import {PlayerInjectKey} from '../types/IPlayerInject';
 
 import type { IPlayerInject } from '../types/IPlayerInject';
@@ -24,6 +24,9 @@ const player = inject<IPlayerInject>(PlayerInjectKey)!;
 const showProgressTooltip = ref(false);
 const tooltipPosition = ref(0);
 const tooltipTime = ref(0);
+
+// 进度计算
+const progress = computed(() => player.playerRef.value?.duration ? (player.playerRef.value.time / player.playerRef.value.duration) * 100 : 0);
 
 // 工具函数：限制范围
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));

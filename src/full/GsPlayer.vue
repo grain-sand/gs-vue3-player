@@ -17,7 +17,7 @@
           :src="src"
           :volume="volume"
           :autoplay="autoplay"
-          :showControls = 'false'
+          :showControls='false'
           :muted="muted"
           @volume-change="emit('volumeChange', $event)"
           @rate-change="emit('rateChange', $event)"
@@ -103,7 +103,7 @@ import {
   GsTimeDisplay,
   GsVolumeControl
 } from './components';
-import {PlayerInjectKey} from './types/IPlayerInject';
+import {IPlayerInject, PlayerInjectKey} from './types/IPlayerInject';
 import {INavControlsExpose} from "./types/INavControlsExpose";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -132,7 +132,7 @@ const navControlsRef = ref<INavControlsExpose>();
 const isWebFullscreen = ref(false);
 const currentMode = ref(props.mode || 'sequence');
 
-const fullTarget = computed(() => props.webFullscreenTarget||document.body);
+const fullTarget = computed(() => props.webFullscreenTarget || document.body);
 
 const src = computed(() => props.src || props.playlist?.[0]);
 
@@ -160,33 +160,9 @@ const controlsVisibility = computed(() => {
   };
 });
 
-const progress = computed(() => playerRef.value?.duration ? (playerRef.value.time / playerRef.value.duration) * 100 : 0);
-
-// 可用的播放模式
-const availableModes = computed<Array<{
-  value: PlaybackMode;
-  text: string
-}>>(() => {
-  const modes: Array<{ value: PlaybackMode; text: string }> = [
-    {value: 'sequence', text: props.i18n.playbackModes.sequence},
-    {value: 'disabled', text: props.i18n.playbackModes.disabled},
-    {value: 'loop', text: props.i18n.playbackModes.loop}
-  ];
-
-  // 如果设置了列表，添加全部循环和随机播放
-  if (props.playlist && props.playlist.length > 0) {
-    modes.push(
-        {value: 'loopAll', text: props.i18n.playbackModes.loopAll},
-        {value: 'shuffle', text: props.i18n.playbackModes.shuffle}
-    );
-  }
-
-  return modes;
-});
-
 // 插槽属性
 const progressSlotProps: any = computed(() => ({
-  progress: progress.value,
+  progress: playerRef.value?.duration ? (playerRef.value.time / playerRef.value.duration) * 100 : 0,
   currentTime: playerRef.value?.time || 0,
   duration: playerRef.value?.duration || 0
 }));
@@ -201,56 +177,21 @@ const slotProps: any = computed(() => ({
 
 
 // 播放控制
-const togglePlay = async () => {
-  await playerRef.value?.togglePlay();
-};
+const togglePlay = () => playerRef.value?.togglePlay()
 
-const play = async (src?: number | any) => {
-  await playerRef.value?.play(src);
-};
+const play = (src?: number | any) => playerRef.value?.play(src);
 
-const pause = async () => {
-  await playerRef.value?.pause();
-};
+const pause = () => playerRef.value?.pause();
 
-const unmute = async () => await playerRef.value?.unmute();
-
-// 播放模式控制
-const originalSetPlaybackMode = (mode: PlaybackMode) => {
-  currentMode.value = mode;
-};
+const unmute = () => playerRef.value?.unmute();
 
 // 其他设置
-const setPlaybackRate = (rate: number) => {
+const setRate = (rate: number) => {
   if (playerRef.value?.el) playerRef.value.el.playbackRate = rate;
 };
 
-const setVolume = (volume: number) => {
-  playerRef.value?.setVolume(volume);
-};
+const setVolume = (volume: number) => playerRef.value?.setVolume(volume)
 
-const fullscreen = () => {
-  const el = playerContainerRef?.value || document.querySelector('.gs-player');
-  if (!document.fullscreenElement && el) el.requestFullscreen().catch(console.error);
-  else if (document.exitFullscreen) document.exitFullscreen();
-};
-
-const webFullscreen = () => (isWebFullscreen.value = !isWebFullscreen.value);
-
-const pip = async () => {
-  const video = playerRef.value?.el;
-  if (!video) return;
-
-  try {
-    if (document.pictureInPictureElement) {
-      await document.exitPictureInPicture();
-    } else {
-      await video.requestPictureInPicture();
-    }
-  } catch (error) {
-    console.error('Error toggling Picture-in-Picture:', error);
-  }
-};
 
 const handlePlayerClick = async () => {
   if (!props.handleClick || !playerRef.value?.el) return;
@@ -266,8 +207,9 @@ const handlePlayerClick = async () => {
 const handlePlayerDblClick = () => {
   if (!props.handleDblClick) return;
   if (document.fullscreenElement) document.exitFullscreen();
-  else if (isWebFullscreen.value) isWebFullscreen.value = false;
-  else webFullscreen();
+  else {
+    isWebFullscreen.value = !isWebFullscreen.value;
+  }
 };
 
 // 监听 playlist 变化
@@ -306,14 +248,14 @@ const playerTitle = computed(() => {
 });
 
 // 包装方法，触发事件
-const setPlaybackMode = (mode: string) => {
-  originalSetPlaybackMode(mode as any);
+const setMode = (mode: string) => {
+  currentMode.value = mode as PlaybackMode;
   // @ts-ignore
   emit('modeChange', mode as any);
 };
 
 // 提供依赖项给子组件
-provide(PlayerInjectKey, {
+provide<IPlayerInject>(PlayerInjectKey, {
   // 状态
   get currentMode() {
     return currentMode.value;
@@ -321,32 +263,23 @@ provide(PlayerInjectKey, {
   get currentIndex() {
     return navControlsRef.value?.index || 0;
   },
-
   // 计算属性
   get controlsVisibility() {
     return controlsVisibility.value;
   },
-  get progress() {
-    return progress.value;
-  },
-  get availableModes() {
-    return availableModes.value;
-  },
   // Props
   props,
   //
+  isWebFullscreen,
   emit,
   // 方法
   togglePlay,
   play,
   pause,
   unmute,
-  setPlaybackMode,
-  setPlaybackRate,
+  setMode,
+  setRate,
   setVolume,
-  fullscreen,
-  webFullscreen,
-  pip,
   // Refs
   playerRef
 });
@@ -383,7 +316,7 @@ const handleKeydown = (e: KeyboardEvent) => {
         if (currentRate < Math.max(...props.rates)) {
           const currentRateIndex = props.rates.indexOf(currentRate);
           if (currentRateIndex < props.rates.length - 1) {
-            setPlaybackRate(props.rates[currentRateIndex + 1]);
+            setRate(props.rates[currentRateIndex + 1]);
           }
         }
       }
@@ -398,7 +331,7 @@ const handleKeydown = (e: KeyboardEvent) => {
         if (currentRate > Math.min(...props.rates)) {
           const currentRateIndex = props.rates.indexOf(currentRate);
           if (currentRateIndex > 0) {
-            setPlaybackRate(props.rates[currentRateIndex - 1]);
+            setRate(props.rates[currentRateIndex - 1]);
           }
         }
       }
@@ -485,7 +418,16 @@ defineExpose<IGsPlayerExpose>({
   get index() {
     return navControlsRef.value?.index;
   },
-  play, pause, togglePlay, unmute, setVolume, setRate: setPlaybackRate, fullscreen, webFullscreen,
+  play, pause, togglePlay, unmute, setVolume, setRate: setRate,
+  fullscreen: () => {
+    const el = playerContainerRef?.value || document.querySelector('.gs-player');
+    if (!document.fullscreenElement && el) el.requestFullscreen().catch(console.error);
+    else if (document.exitFullscreen) document.exitFullscreen();
+  },
+  webFullscreen: () => {
+    const el = playerContainerRef?.value || document.querySelector('.gs-player');
+    if (el) el.classList.toggle('web-fullscreen');
+  },
   playPre: () => navControlsRef.value?.playPre(),
   playNext: () => navControlsRef.value?.playNext(),
   setSrc: (src: any) => playerRef.value?.setSrc(src),
