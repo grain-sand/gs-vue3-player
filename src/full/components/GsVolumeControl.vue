@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import {inject, computed} from 'vue';
-import {VolumeStateIcons} from '../svgs';
+import {VolumeStateIcons} from '../../svgs';
 import {PlayerInjectKey} from '../types/PlayerInject';
 
 import type {PlayerInject} from '../types/PlayerInject';

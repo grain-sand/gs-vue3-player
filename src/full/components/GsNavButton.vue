@@ -11,8 +11,8 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue';
-import { PreSvg } from '../svgs';
-import { NextSvg } from '../svgs';
+import { PreSvg } from '../../svgs';
+import { NextSvg } from '../../svgs';
 import { PlayerInjectKey } from '../types/PlayerInject';
 
 interface Props {

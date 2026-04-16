@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { inject, ref, onMounted } from 'vue';
-import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../svgs';
+import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../../svgs';
 import { PlayerInjectKey } from '../types/PlayerInject';
 
 import type { PlayerInject } from '../types/PlayerInject';

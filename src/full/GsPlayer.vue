@@ -94,7 +94,7 @@ import {
   PlaybackMode
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
-import {ErrorSvg, PlayOverlaySvg, MuteSvg} from './svgs';
+import {ErrorSvg, PlayOverlaySvg, MuteSvg} from '../svgs';
 import {
   GsFullscreenControl,
   GsNavButton,

@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
-import { PlayStateIcons } from '../svgs';
+import { PlayStateIcons } from '../../svgs';
 import { PlayerInjectKey } from '../types/PlayerInject';
 
 import type { PlayerInject } from '../types/PlayerInject';
