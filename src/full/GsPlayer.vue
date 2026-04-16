@@ -179,7 +179,7 @@ const slotProps: any = computed(() => ({
 // 播放控制
 const togglePlay = () => playerRef.value?.togglePlay()
 
-const play = (src?: number | any) => playerRef.value?.play(src);
+const play = (src?: number | any) => navControlsRef.value?.play(src);
 
 const pause = () => playerRef.value?.pause();
 

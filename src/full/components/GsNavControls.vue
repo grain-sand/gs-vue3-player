@@ -33,7 +33,7 @@
 import {computed, inject, onBeforeUnmount, onMounted, ref} from 'vue';
 import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 
-import type {PlayerSource} from '../../types';
+import type {IGsPlayerExpose, PlayerSource} from '../../types';
 
 
 import {IPlayerInject, PlayerInjectKey} from '../types/IPlayerInject';
@@ -60,12 +60,34 @@ onBeforeUnmount(() => {
   }
 });
 
+const play: IGsPlayerExpose['play'] = async (src) => {
+  if (!src && src !== 0) return;
+  const {playlist} = player.props;
+  if (typeof src === "number") {
+    const source = playlist?.[src];
+    if (source) {
+      index.value = src;
+      await playSource(source);
+    }
+  } else {
+    const i = playlist?.findIndex(s => s === src)
+    if (i > -1) {
+      index.value = i;
+      await playSource(src);
+    } else if (playlist?.length) {
+      let {value: v} = index
+      index.value = v > 0 ? v - 1 : playlist.length - 1;
+      await playSource(src, -1);
+    }
+  }
+}
+
 // 播放源控制
-const playSource = async (src: PlayerSource) => {
+const playSource = async (src: PlayerSource, i = index.value) => {
   await player.playerRef.value?.play(src);
   // noinspection TypeScriptValidateTypes
   player.emit('srcChange', {
-    index: index.value,
+    index: i,
     src
   })
 };
@@ -160,6 +182,7 @@ const hasNextSource = computed(() => player.props.nextSrc || player.props.playli
 
 // 暴露方法给父组件
 defineExpose<INavControlsExpose>({
+  play,
   playPre,
   playNext,
   handleEnded,
