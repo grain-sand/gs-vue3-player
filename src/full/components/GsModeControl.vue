@@ -1,14 +1,14 @@
 <template>
   <div v-if="player.controlsVisibility.play" class="gs-btn gs-dropdown-host"
-       :title="player.i18n.playbackModes[player.currentPlaybackMode]">
-    <component :is="PlaybackModeIcons[player.currentPlaybackMode]"
-               :style="{ transform: `scale(0.${player.currentPlaybackMode === 'disabled' ? '73' : '82' })` }"/>
+       :title="player.i18n.playbackModes[player.currentMode]">
+    <component :is="PlaybackModeIcons[player.currentMode]"
+               :style="{ transform: `scale(0.${player.currentMode === 'disabled' ? '73' : '82' })` }"/>
     <div class="gs-dropdown">
       <div
-          v-for="mode in player.availablePlaybackModes"
+          v-for="mode in player.availableModes"
           :key="mode.value"
           class="gs-dropdown-item"
-          :class="{ active: mode.value === player.currentPlaybackMode }"
+          :class="{ active: mode.value === player.currentMode }"
           @click.stop="player.setPlaybackMode(mode.value)"
           :title="mode.text"
       >

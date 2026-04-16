@@ -48,20 +48,7 @@
             <!-- 控制面板 -->
             <div class="gs-controls" :title="playerTitle">
               <!-- 导航按钮组 -->
-              <GsNavControls
-                  ref="navControlsRef"
-                  :src="props.src"
-                  :playlist="props.playlist"
-                  :preSrc="props.preSrc"
-                  :nextSrc="props.nextSrc"
-                  :i18n="props.i18n"
-                  :rates="props.rates"
-                  :mode="currentMode"
-                  :controlsVisibility="controlsVisibility"
-                  :isPlaying="playerRef?.playing || false"
-                  :playerRef="{ value: playerRef }"
-                  :togglePlay="togglePlay"
-              />
+              <GsNavControls ref="navControlsRef"/>
 
               <!-- 时间显示 -->
               <GsTimeDisplay/>
@@ -162,7 +149,7 @@ const controlsVisibility = computed(() => {
 const progress = computed(() => playerRef.value?.duration ? (playerRef.value.time / playerRef.value.duration) * 100 : 0);
 
 // 可用的播放模式
-const availablePlaybackModes = computed<Array<{
+const availableModes = computed<Array<{
   value: PlaybackMode;
   text: string
 }>>(() => {
@@ -332,7 +319,7 @@ provide(PlayerInjectKey, {
   get playbackRate() {
     return playerRef.value?.rate || 1;
   },
-  get currentPlaybackMode() {
+  get currentMode() {
     return currentMode.value;
   },
 
@@ -343,8 +330,8 @@ provide(PlayerInjectKey, {
   get progress() {
     return progress.value;
   },
-  get availablePlaybackModes() {
-    return availablePlaybackModes.value;
+  get availableModes() {
+    return availableModes.value;
   },
   // Props
   get src() {
@@ -371,6 +358,8 @@ provide(PlayerInjectKey, {
   get webFullscreenTarget() {
     return props.webFullscreenTarget;
   },
+  //
+  emit,
   // 方法
   handleEnded: () => navControlsRef.value?.handleEnded(),
   togglePlay,
@@ -490,6 +479,8 @@ onMounted(() => {
   const src = props.src || props.playlist?.[0];
   if (src) {
     playerRef.value.setSrc(src)
+    // @ts-ignore
+    emit('srcChange', {src, index: 0});
   }
 
 });

@@ -1,76 +1,59 @@
 <template>
   <!-- 播放/暂停按钮 -->
   <div
-      v-if="controlsVisibility.play"
+      v-if="player.controlsVisibility.play"
       class="gs-btn"
-      @click.stop="togglePlay"
-      :title="i18n.titles.play"
+      @click.stop="player.togglePlay"
+      :title="player.i18n.titles.play"
   >
-    <component :is="PlayStateIcons[isPlaying.toString()]"/>
+    <component :is="PlayStateIcons[player.isPlaying.toString()]"/>
   </div>
   <!-- 上一个按钮 -->
   <div
-      v-if="controlsVisibility.pre && (alwaysShowNav || preSource)"
+      v-if="player.controlsVisibility.pre && (alwaysShowNav || hasPreSource)"
       class="gs-btn"
       @click.stop="playPre"
-      :title="i18n.titles.pre"
+      :title="player.i18n.titles.pre"
   >
     <PreSvg/>
   </div>
 
   <!-- 下一个按钮 -->
   <div
-      v-if="controlsVisibility.next && (alwaysShowNav || nextSource)"
+      v-if="player.controlsVisibility.next && (alwaysShowNav || hasNextSource)"
       class="gs-btn"
       @click.stop="playNext"
-      :title="i18n.titles.next"
+      :title="player.i18n.titles.next"
   >
     <NextSvg/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onBeforeUnmount, ref} from 'vue';
-import {PreSvg, NextSvg, PlayStateIcons} from '../../svgs';
+import {computed, inject, onBeforeUnmount, onMounted, ref} from 'vue';
+import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 
-import type {PlayerSource, PlaybackMode, ControlItemType, II18n} from '../../types';
+import type {PlayerSource} from '../../types';
 
+
+import {PlayerInject, PlayerInjectKey} from '../types/PlayerInject';
+
+const player = inject<PlayerInject>(PlayerInjectKey)!;
 // Props
-const props = defineProps<{
-  src?: PlayerSource;
-  playlist?: PlayerSource[];
-  preSrc?: PlayerSource;
-  nextSrc?: PlayerSource;
-  i18n: II18n;
-  rates: number[];
-  mode: PlaybackMode;
-  controlsVisibility: Record<ControlItemType, boolean>;
-  isPlaying: boolean;
-  playerRef: {
-    value: {
-      el: HTMLVideoElement;
-      play: (src?: any) => Promise<void>;
-      pause: () => Promise<void>;
-      playing: boolean
-    } | undefined
-  };
-  togglePlay: () => void;
-}>();
 
 // 状态
 const currentIndex = ref(0);
-const currentMode = ref<PlaybackMode>(props.mode || 'sequence');
 
 // 监听播放器ended事件
 onMounted(() => {
-  const el = props.playerRef.value?.el;
+  const el = player.playerRef.value?.el;
   if (el) {
     el.addEventListener('ended', handleEnded);
   }
 });
 
 onBeforeUnmount(() => {
-  const el = props.playerRef.value?.el;
+  const el = player.playerRef.value?.el;
   if (el) {
     el.removeEventListener('ended', handleEnded);
   }
@@ -78,81 +61,82 @@ onBeforeUnmount(() => {
 
 // 播放源控制
 const playSource = async (src: PlayerSource) => {
-  await props.playerRef.value?.play(src);
+  await player.playerRef.value?.play(src);
+  // noinspection TypeScriptValidateTypes
+  player.emit('srcChange', {
+    index: currentIndex.value,
+    src
+  })
 };
 
 // 播放列表管理
 const switchToNextInPlaylist = () => {
-  if (!props.playlist || props.playlist.length === 0) return;
+  if (!player.playlist || player.playlist.length === 0) return;
 
   let nextIndex = currentIndex.value;
-  if (currentMode.value === 'shuffle') {
+  if (player.currentMode === 'shuffle') {
     // 随机播放，确保不重复当前索引
     do {
-      nextIndex = Math.floor(Math.random() * props.playlist.length);
-    } while (nextIndex === currentIndex.value && props.playlist.length > 1);
+      nextIndex = Math.floor(Math.random() * player.playlist.length);
+    } while (nextIndex === currentIndex.value && player.playlist.length > 1);
   } else {
-    nextIndex = (currentIndex.value + 1) % props.playlist.length;
+    nextIndex = (currentIndex.value + 1) % player.playlist.length;
   }
 
   currentIndex.value = nextIndex;
-  playSource(props.playlist[nextIndex]);
+  playSource(player.playlist[nextIndex]);
 };
 
 // 导航控制
 const playPre = async () => {
-  if (preSource.value) {
-    await playSource(preSource.value);
-    if (props.playlist.length) {
-      let {value: i} = currentIndex
-      if (i > 0) {
-        i--;
-      } else {
-        i = props.playlist.length - 1;
-      }
-      currentIndex.value = i;
-    }
+  let {value: i} = currentIndex
+  const pre = i > 0 ? i - 1 : player.playlist?.length - 1;
+  const source = player.preSrc || player.playlist?.[pre];
+  if (source) {
+    currentIndex.value = pre;
+    await playSource(source);
   }
 };
 
 const playNext = async () => {
-  if (nextSource.value) {
-    await playSource(nextSource.value);
-    if (props.playlist.length) {
-      currentIndex.value = (currentIndex.value + 1 + props.playlist.length) % props.playlist.length;
-    }
+  const {playlist} = player;
+  const next = (currentIndex.value + 1 + playlist?.length) % playlist?.length
+  const source = player.nextSrc || playlist?.[next];
+  if (source) {
+    currentIndex.value = next;
+    await playSource(source);
   }
 };
 
 // 处理播放结束
 const handleEnded = () => {
-  const el = props.playerRef.value?.el;
+  const el = player.playerRef.value?.el;
   const muted = el?.muted;
 
-  switch (currentMode.value) {
+  switch (player.currentMode) {
     case 'sequence':
       // 检查是否有下一个视频
-      if (props.nextSrc) {
+      if (player.nextSrc) {
         playNext();
-      } else if (props.playlist && props.playlist.length > 0) {
+      } else if (player.playlist && player.playlist.length > 0) {
         // 如果是播放列表的最后一个视频，则停止播放
-        if (currentIndex.value < props.playlist.length - 1) {
+        if (currentIndex.value < player.playlist.length - 1) {
           switchToNextInPlaylist();
         } else {
-          props.playerRef.value?.pause();
+          player.playerRef.value?.pause();
         }
       } else {
         // 没有下一个视频，停止播放
-        props.playerRef.value?.pause();
+        player.playerRef.value?.pause();
       }
       break;
     case 'disabled':
       // 停止播放
-      props.playerRef.value?.pause();
+      player.playerRef.value?.pause();
       break;
     case 'loop':
       // 重新播放当前视频
-      props.playerRef.value?.el?.play();
+      player.playerRef.value?.el?.play();
       break;
     case 'loopAll':
       switchToNextInPlaylist();
@@ -166,16 +150,12 @@ const handleEnded = () => {
   }
 };
 
-const alwaysShowNav = computed(() => props.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(currentMode.value));
+const alwaysShowNav = computed(() => player.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(player.currentMode));
 
 // 计算属性
-const preSource = computed(() => {
-  return props.preSrc || props.playlist?.[currentIndex.value - 1];
-});
+const hasPreSource = computed(() => player.preSrc || player.playlist?.[currentIndex.value - 1])
 
-const nextSource = computed(() => {
-  return props.nextSrc || props.playlist?.[currentIndex.value + 1];
-});
+const hasNextSource = computed(() => player.nextSrc || player.playlist?.[currentIndex.value + 1])
 
 // 暴露方法给父组件
 defineExpose({
