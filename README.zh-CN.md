@@ -34,12 +34,12 @@ yarn add gs-vue3-player
   <GsPlayer
       :src="videoSrc"
       :playlist="playlist"
-      :playbackMode="playbackMode"
-      :playbackRates="[0.5, 1.0, 1.5, 2.0]"
-      :visibleControls="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :mode="playbackMode"
+      :rates="[0.5, 1.0, 1.5, 2.0]"
+      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
-      @playbackModeChange="handlePlaybackModeChange"
+      @modeChange="handlePlaybackModeChange"
       @playbackRateChange="handlePlaybackRateChange"
   />
 </template>
@@ -111,41 +111,29 @@ yarn add gs-vue3-player
 </template>
 
 <script setup lang="ts">
-  import {GsPlayer} from 'gs-vue3-player';
+  import {GsPlayer, II18n} from 'gs-vue3-player';
   import 'gs-vue3-player/lib/main.css';
 
-  const customI18n = {
-    titles: {
-      play: '播放',
-      pause: '暂停',
-      mute: '静音',
-      volume: '音量',
-      fullscreen: '全屏',
-      webFullscreen: '网页全屏',
-      speed: '播放速度',
-      quality: '画质',
-      error: '播放出错',
-    },
+  const customI18n: II18n = {
+    errorMessage: '请求错误',
     playbackModes: {
       sequence: '顺序播放',
       disabled: '禁用',
       loop: '单个循环',
       loopAll: '全部循环',
-      shuffle: '随机播放',
+      shuffle: '随机播放'
     },
-    error: {
-      noSource: '请添加播放地址',
-      loadingFailed: '加载失败',
-      networkError: '网络错误',
-    },
-    speed: {
-      0.5: '0.5x',
-      0.8: '0.8x',
-      1: '1x',
-      1.2: '1.2x',
-      1.5: '1.5x',
-      2: '2x',
-    },
+    titles: {
+      play: '播放/暂停',
+      pre: '上一个',
+      next: '下一个',
+      volume: '音量',
+      mute: '静音',
+      speed: '播放速度',
+      fullscreen: '全屏',
+      webFullscreen: '网页全屏',
+      pip: '弹出窗口'
+    }
   };
 </script>
 ```

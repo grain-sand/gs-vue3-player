@@ -34,12 +34,12 @@ yarn add gs-vue3-player
   <GsPlayer
       :src="videoSrc"
       :playlist="playlist"
-      :playbackMode="playbackMode"
-      :playbackRates="[0.5, 1.0, 1.5, 2.0]"
-      :visibleControls="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :mode="playbackMode"
+      :rates="[0.5, 1.0, 1.5, 2.0]"
+      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
-      @playbackModeChange="handlePlaybackModeChange"
+      @modeChange="handlePlaybackModeChange"
       @playbackRateChange="handlePlaybackRateChange"
   />
 </template>
@@ -111,41 +111,29 @@ yarn add gs-vue3-player
 </template>
 
 <script setup lang="ts">
-  import {GsPlayer} from 'gs-vue3-player';
+  import {GsPlayer, II18n} from 'gs-vue3-player';
   import 'gs-vue3-player/lib/main.css';
 
-  const customI18n = {
+  const customI18n : II18n = {
+    errorMessage: 'Request Error',
+    playbackModes: {
+      sequence: 'Play Sequence',
+      disabled: 'Disabled',
+      loop: 'Loop Current',
+      loopAll: 'Loop All',
+      shuffle: 'Shuffle'
+    },
     titles: {
-      play: 'Play',
-      pause: 'Pause',
-      mute: 'Mute',
+      play: 'Play/Pause',
+      pre: 'Previous',
+      next: 'Next',
       volume: 'Volume',
+      mute: 'Mute',
+      speed: 'Playback Speed',
       fullscreen: 'Fullscreen',
       webFullscreen: 'Web Fullscreen',
-      speed: 'Playback Speed',
-      quality: 'Quality',
-      error: 'Error',
-    },
-    playbackModes: {
-      sequence: 'Sequence',
-      disabled: 'Disabled',
-      loop: 'Loop',
-      loopAll: 'Loop All',
-      shuffle: 'Shuffle',
-    },
-    error: {
-      noSource: 'Please add a video source',
-      loadingFailed: 'Loading failed',
-      networkError: 'Network error',
-    },
-    speed: {
-      0.5: '0.5x',
-      0.8: '0.8x',
-      1: '1x',
-      1.2: '1.2x',
-      1.5: '1.5x',
-      2: '2x',
-    },
+      pip: 'Picture-in-Picture'
+    }
   };
 </script>
 ```

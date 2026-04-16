@@ -1,9 +1,9 @@
 import {VNode} from "vue";
 
 /** 按钮类型 */
-export const ControlTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
+export const ControlItemTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
 /** 按钮类型联合类型 */
-export type ControlType = (typeof ControlTypes)[number];
+export type ControlItemType = (typeof ControlItemTypes)[number];
 
 /** 进度条插槽接口 */
 export interface IProgressSlotProps {
@@ -34,7 +34,7 @@ export interface IControlsSlotProps extends IProgressSlotProps {
 	/** 音量 */
 	volume: number;
 	/** 控制按钮可见性 */
-	controlsVisibility: Record<ControlType, boolean>;
+	controlsVisibility: Record<ControlItemType, boolean>;
 	/** 切换播放/暂停 */
 	togglePlay: () => Promise<void>;
 	/** 播放 */

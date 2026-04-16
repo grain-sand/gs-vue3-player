@@ -3,7 +3,7 @@
     <span class="gs-text-btn">{{ player.playbackRate.toFixed(1) }}</span>
     <div class="gs-dropdown">
       <div
-          v-for="rate in player.playbackRates"
+          v-for="rate in player.rates"
           :key="rate"
           class="gs-dropdown-item"
           :class="{ active: rate === player.playbackRate }"

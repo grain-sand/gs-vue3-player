@@ -1,14 +1,18 @@
 <template>
+  <!--suppress HtmlUnknownAttribute -->
   <video
       ref="videoRef"
-      v-bind="$attrs"
+      :autoplay="autoplay"
+      :controls="controls"
+      :muted="props.muted"
+      :volume="props.volume"
       @volumechange="volumeChange"
       @ratechange="rateChange"
       @error="error = videoRef.error"
       @play="playing = true"
       @pause="playing = false"
       @timeupdate="time = videoRef.currentTime"
-      @loadedmetadata="duration = videoRef.duration"
+      @loadedmetadata="loadedmetadata"
   ></video>
 </template>
 
@@ -30,11 +34,6 @@ const defaultHlsConfig: Partial<HlsConfig> = Object.freeze({
   minBufferLength: 1,
   startLevel: -1,
 })
-defineOptions({
-  name: 'Player',
-  inheritAttrs: false // 禁用默认继承，手动让 video 标签接管
-});
-
 const props = defineProps<IPlayerProps>();
 
 // Emits
@@ -51,16 +50,32 @@ const duration = ref(0)
 const time = ref(0)
 
 let isFirstSetSrc = true;
+let isFirstLoadedmetadata = true;
 
 
 onMounted(() => {
-  muted.value = videoRef.value?.muted
-  volume.value = videoRef.value?.volume
-  rateChange()
+  if (videoRef.value) {
+    muted.value = videoRef.value.muted
+    volume.value = videoRef.value.volume
+  }
+  setSrc(props.src)
 })
 
+function loadedmetadata() {
+  duration.value = videoRef.value.duration
+  if (isFirstLoadedmetadata) {
+    isFirstLoadedmetadata = false;
+    watch(() => props.rate, (r = 1.0) => {videoRef.value.playbackRate = r}, {immediate: true})
+  }
+}
+
 function rateChange() {
+  const old = rate.value;
   rate.value = videoRef.value?.playbackRate
+  if(rate.value!==old) {
+    // @ts-ignore
+    emit('rateChange', rate.value)
+  }
 }
 
 function volumeChange() {
@@ -79,6 +94,7 @@ function volumeChange() {
 
 const destroyHls = () => {
   if (hlsInstance.value) {
+    hlsInstance.value.detachMedia()
     hlsInstance.value.destroy();
     hlsInstance.value = undefined;
   }
@@ -104,9 +120,9 @@ function setSrc(src: PlayerSource) {
   const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster
-  if (poster) {
-    video.style.backgroundImage = `url(${poster})`
-  }
+  // if (poster) {
+  //   video.style.backgroundImage = `url(${poster})`
+  // }
 
   if (type === 'hls') {
     if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
@@ -136,8 +152,6 @@ function setSrc(src: PlayerSource) {
 
 watch(() => props.src, setSrc);
 
-onMounted(() => setSrc(props.src));
-
 onBeforeUnmount(destroyHls);
 
 function setVolume(volume: number) {
@@ -161,6 +175,7 @@ async function play() {
   } catch {
     el.muted = true
     await el?.play()
+    el.muted = false
   }
 }
 

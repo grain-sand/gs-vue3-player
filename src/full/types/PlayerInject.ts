@@ -1,5 +1,5 @@
 import type {IPlayerExpose, PlayerSource} from '../../types';
-import type {ControlType} from '../../types';
+import type {ControlItemType} from '../../types';
 import type {FullscreenButtonMode, PlaybackMode} from '../../types';
 import type {II18n} from '../../types';
 
@@ -17,7 +17,7 @@ export interface PlayerInject {
   currentPlaybackMode: PlaybackMode;
   currentIndex: number;
   // 计算属性
-  controlsVisibility: Record<ControlType, boolean>;
+  controlsVisibility: Record<ControlItemType, boolean>;
   progress: number;
   availablePlaybackModes: Array<{
     value: PlaybackMode;
@@ -29,7 +29,7 @@ export interface PlayerInject {
   preSrc?: PlayerSource;
   nextSrc?: PlayerSource;
   i18n: II18n;
-  playbackRates: number[];
+  rates: number[];
   fullscreenButtonMode: FullscreenButtonMode;
   webFullscreenTarget: string;
   // 方法

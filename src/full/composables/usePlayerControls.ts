@@ -25,7 +25,6 @@ export function usePlayerControls({
 
 	const playSource = async (src: PlayerSource) => {
 		await playerRef.value?.play(src);
-		playerRef.value.el.playbackRate = playerRef.value.rate;
 	}
 
 	const setSrc = (src: number | PlayerSource) => {

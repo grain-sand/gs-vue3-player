@@ -1,5 +1,5 @@
 <template>
-  <Teleport :to="webFullscreenTarget" :disabled="!isWebFullscreen">
+  <Teleport :to="fullTarget" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
@@ -10,12 +10,14 @@
       <!-- @vue-ignore-->
       <Player
           ref="playerRef"
-          :src="src || playlist?.[0]"
           :hls-config="hlsConfig"
           :quality="quality"
           :use-browser-hls="useBrowserHls"
+          :rate="rate"
+          :volume="volume"
+          @volume-change = "emit('volumeChange', $event)"
+          @rate-change = "emit('rateChange', $event)"
           @ended="handleEnded"
-          v-bind="$attrs"
           @src-change="$event.index = currentIndex; emit('srcChange', $event)"
       />
 
@@ -69,7 +71,7 @@
               <GsVolumeControl/>
 
               <!-- 播放模式 -->
-              <GsPlaybackModeControl/>
+              <GsModeControl/>
 
               <!-- 全屏控制 -->
               <GsFullscreenControl/>
@@ -85,7 +87,7 @@
 import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
-  ControlType,
+  ControlItemType,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
@@ -98,7 +100,7 @@ import {ErrorSvg, PlayOverlaySvg, MuteSvg} from '../svgs';
 import {
   GsFullscreenControl,
   GsNavButton,
-  GsPlaybackModeControl,
+  GsModeControl,
   GsPlayButton,
   GsProgressBar,
   GsSpeedControl,
@@ -113,13 +115,12 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showError: true,
   handleClick: true,
   handleDblClick: true,
-  playbackRates: () => [0.8, 1.0, 1.2, 1.5, 2.0, 3.0],
-  visibleControls: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
-  hiddenControls: () => [],
-  webFullscreenTarget: 'body',
+  rates: () => [0.8, 1.0, 1.2, 1.5, 2.0, 3.0],
+  visibleItems: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
+  hiddenItems: () => [],
   fullscreenButtonMode: 'submenu',
   playlist: () => [],
-  playbackMode: 'sequence',
+  mode: 'sequence',
   i18n: () => zhCN,
   keyboardTarget: '.gs-player',
 });
@@ -132,13 +133,15 @@ const playerContainerRef = ref<HTMLDivElement>();
 
 // State
 const isWebFullscreen = ref(false);
-const currentPlaybackMode = ref(props.playbackMode || 'sequence');
+const currentMode = ref(props.mode || 'sequence');
 const currentIndex = ref(0);
+
+const fullTarget = computed(() => props.webFullscreenTarget);
 
 // 计算属性：避免模板中频繁调用方法
 const controlsVisibility = computed(() => {
-  const isVisible = (name: ControlType) =>
-      !props.hiddenControls.includes(name) && props.visibleControls.includes(name);
+  const isVisible = (name: ControlItemType) =>
+      !props.hiddenItems.includes(name) && props.visibleItems.includes(name);
   return {
     play: isVisible('play'),
     pre: isVisible('pre'),
@@ -204,8 +207,8 @@ const {
   playNext,
   playPre,
   setPlaybackMode: originalSetPlaybackMode,
-  setPlaybackRate: originalSetPlaybackRate,
-  setVolume: originalSetVolume,
+  setPlaybackRate,
+  setVolume,
   fullscreen,
   webFullscreen,
   pip,
@@ -216,7 +219,7 @@ const {
   playerRef,
   playerContainerRef,
   props,
-  currentPlaybackMode,
+  currentPlaybackMode: currentMode,
   currentIndex,
   isWebFullscreen
 });
@@ -250,12 +253,6 @@ const setPlaybackMode = (mode: string) => {
   emit('playbackModeChange', mode as any);
 };
 
-const setPlaybackRate = (rate: number) => {
-  originalSetPlaybackRate(rate);
-  // @ts-ignore
-  emit('playbackRateChange', rate as any);
-};
-
 // 提供依赖项给子组件
 provide(PlayerInjectKey, {
   // 状态
@@ -278,7 +275,7 @@ provide(PlayerInjectKey, {
     return playerRef.value?.rate || 1;
   },
   get currentPlaybackMode() {
-    return currentPlaybackMode.value;
+    return currentMode.value;
   },
   get currentIndex() {
     return currentIndex.value;
@@ -309,8 +306,8 @@ provide(PlayerInjectKey, {
   get i18n() {
     return props.i18n;
   },
-  get playbackRates() {
-    return props.playbackRates;
+  get rates() {
+    return props.rates;
   },
   get fullscreenButtonMode() {
     return props.fullscreenButtonMode;
@@ -328,7 +325,7 @@ provide(PlayerInjectKey, {
   playPre,
   setPlaybackMode,
   setPlaybackRate,
-  setVolume: originalSetVolume,
+  setVolume,
   fullscreen,
   webFullscreen,
   pip,
@@ -368,10 +365,10 @@ const handleKeydown = (e: KeyboardEvent) => {
       } else {
         // 向上调整播放速度
         const currentRate = playerRef.value?.rate || 1;
-        if (currentRate < Math.max(...props.playbackRates)) {
-          const currentRateIndex = props.playbackRates.indexOf(currentRate);
-          if (currentRateIndex < props.playbackRates.length - 1) {
-            setPlaybackRate(props.playbackRates[currentRateIndex + 1]);
+        if (currentRate < Math.max(...props.rates)) {
+          const currentRateIndex = props.rates.indexOf(currentRate);
+          if (currentRateIndex < props.rates.length - 1) {
+            setPlaybackRate(props.rates[currentRateIndex + 1]);
           }
         }
       }
@@ -383,10 +380,10 @@ const handleKeydown = (e: KeyboardEvent) => {
       } else {
         // 向下调整播放速度
         const currentRate = playerRef.value?.rate || 1;
-        if (currentRate > Math.min(...props.playbackRates)) {
-          const currentRateIndex = props.playbackRates.indexOf(currentRate);
+        if (currentRate > Math.min(...props.rates)) {
+          const currentRateIndex = props.rates.indexOf(currentRate);
           if (currentRateIndex > 0) {
-            setPlaybackRate(props.playbackRates[currentRateIndex - 1]);
+            setPlaybackRate(props.rates[currentRateIndex - 1]);
           }
         }
       }
@@ -434,6 +431,12 @@ onMounted(() => {
       keyboardEventTarget.addEventListener('keydown', handleKeydown);
     }
   }
+
+  const src = props.src || props.playlist?.[0];
+  if(src) {
+    playerRef.value.setSrc(src)
+  }
+
 });
 
 onBeforeUnmount(() => {
@@ -469,6 +472,6 @@ defineExpose<IGsPlayerExpose>({
   get error() {
     return playerRef.value?.error;
   },
-  play, pause, togglePlay, unmute, setVolume: originalSetVolume, setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
+  play, pause, togglePlay, unmute, setVolume, setRate: setPlaybackRate, fullscreen, webFullscreen, setSrc, playNext, playPre,
 });
 </script>

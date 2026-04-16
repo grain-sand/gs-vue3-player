@@ -2,13 +2,13 @@
   <div class="TestFullApp">
     <gs-player
         ref="playerRef"
-        width="640"
         :volume="0.5"
         @srcChange="srcChange($event)"
         :playlist="videoList"
+        :rate="2.0"
         @volumeChange="eventChange('volumeChange',$event)"
-        @playbackModeChange="eventChange('playbackModeChange',$event)"
-        @playbackRateChange="eventChange('playbackRateChange',$event)"
+        @modeChange="eventChange('playbackModeChange',$event)"
+        @rate-change="eventChange('ratechange',$event)"
         @mutedChange="eventChange('mutedChange',$event)"
     >
     </gs-player>
@@ -39,8 +39,6 @@ const videoList: IStringPlayerSource[] = videos.map((item, i) => ({
 
 
 const src = ref(videoList[0])
-const next = ref(null)
-const pre = ref(null)
 
 function srcChange(nextSrc: IStringPlayerSource<number>) {
   console.log(copyObject(nextSrc));
