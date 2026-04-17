@@ -25,7 +25,7 @@
 
       <!-- 播放覆盖层 -->
       <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
-           class="gs-player-play-overlay">
+           class="gs-player-play-overlay" :class="{muted:playerRef?.muted,paused:!playerRef?.playing}">
         <div class="gs-play-overlay-button">
           <PlayOverlaySvg v-if="!playerRef?.playing"/>
           <MuteSvg v-else-if="playerRef?.muted"/>

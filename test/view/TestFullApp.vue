@@ -5,8 +5,6 @@
         :volume="0.5"
         @srcChange="srcChange($event)"
         :playlist="videoList"
-        autoplay
-        muted
         @volumeChange="eventChange('volumeChange',$event)"
         @modeChange="eventChange('playbackModeChange',$event)"
         @rate-change="eventChange('ratechange',$event)"
