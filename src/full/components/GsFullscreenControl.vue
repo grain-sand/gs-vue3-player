@@ -26,17 +26,18 @@
 </template>
 
 <script setup lang="ts">
-import {inject, ref, onMounted} from 'vue';
+import {inject, ref, onMounted, computed} from 'vue';
 import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../../svgs';
-import {PlayerInjectKey} from '../types/IPlayerInject';
+import {PlayerInjectKey} from '../types/IGsPlayerInject';
 
-import type {IPlayerInject} from '../types/IPlayerInject';
+import type {IGsPlayerInject} from '../types/IGsPlayerInject';
 import {IGsFullscreenControlExpose} from "../types/ControlsExposes";
 import {wait} from "gs-base/timer";
 
-const player = inject<IPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 
 const isPipSupported = ref(false);
+const isAnyFullscreen = () => player.isWebFullscreen.value || !!document.fullscreenElement;
 
 onMounted(() => {
   isPipSupported.value = document.pictureInPictureEnabled;
@@ -52,29 +53,26 @@ async function toBestQuality() {
 }
 
 function fullscreen() {
-  const el = player.playerRef.value?.el;
-  if (!el || document.fullscreenElement) return;
-  el.requestFullscreen().then(toBestQuality).catch(err => {
+  if (document.fullscreenElement) return;
+  player.containerRef.value.requestFullscreen().then(toBestQuality).catch(err => {
     console.error('Error attempting to enable fullscreen:', err);
   });
 }
 
 function exitFullscreen() {
-  player.isWebFullscreen.value = false
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(err => {
       console.error('Error attempting to exit fullscreen:', err);
     });
+  } else {
+    player.isWebFullscreen.value = false
   }
+  player.playerRef.value?.autoQualityHls();
 }
 
 function toggleFullscreen() {
-  const el = player.playerRef.value?.el;
-  if (!el) return;
   if (document.fullscreenElement) {
-    document.exitFullscreen().catch(err => {
-      console.error('Error attempting to exit fullscreen:', err);
-    });
+    exitFullscreen()
   } else fullscreen()
 }
 
@@ -84,9 +82,8 @@ function webFullscreen() {
 }
 
 function toggleWebFullscreen() {
-  const {isWebFullscreen: wf} = player;
-  if (wf.value) {
-    wf.value = false;
+  if (isAnyFullscreen()) {
+    exitFullscreen()
   } else webFullscreen()
 }
 
@@ -108,7 +105,7 @@ async function pip() {
 
 defineExpose<IGsFullscreenControlExpose>({
   get isAnyFullscreen() {
-    return player.isWebFullscreen.value || !!document.fullscreenElement;
+    return isAnyFullscreen();
   },
   fullscreen,
   webFullscreen,

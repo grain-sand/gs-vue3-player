@@ -87,6 +87,16 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 	toBestQuality(reference?: Partial<IVideoQuality>, now?: boolean): void
 
+
+	setMode: (mode: PlaybackMode) => void;
+
+
+	readonly isAnyFullscreen: boolean;
+	/**
+	 * 退出任意全屏模式
+	 */
+	exitFullscreen(): void;
+
 }
 
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {

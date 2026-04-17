@@ -60,6 +60,8 @@ export interface IPlayerExpose {
 
 	toBestQuality(reference: Partial<IVideoQuality>, now?: boolean): void
 
+	autoQualityHls(): void
+
 }
 
 export interface IPlayerEmits {

@@ -20,7 +20,14 @@
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import Hls from 'hls.js';
 import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, IVideoQuality, PlayerSource} from '../types';
-import {getStringSource, parseVideoSource} from "../util";
+import {
+  findClosestHlsLevel,
+  findClosestQuality,
+  getStringSource,
+  parseVideoSource,
+  selectSmallerQuality,
+  switchHlsQuality
+} from "../util";
 
 const props = defineProps<IPlayerProps>();
 
@@ -161,8 +168,86 @@ async function play() {
   }
 }
 
-function toBestQuality(reference: IVideoQuality) {
+function toBestQuality(reference: IVideoQuality, now: boolean = false) {
+  // 检查参考尺寸是否存在
+  if (!reference.width && !reference.height) {
+    return;
+  }
 
+  const video = videoRef.value;
+  if (!video) return;
+
+  // 获取当前播放源
+  const currentSrc = props.src;
+  if (!currentSrc) return;
+
+  const {type, src: typedSrc} = parseVideoSource(currentSrc);
+
+  if (type === 'hls' && hls.value) {
+    // HLS 质量切换
+    let bestLevel = -1;
+
+    if (reference.width) {
+      const widthLevel = findClosestHlsLevel(hls.value, reference.width, 'width');
+      if (widthLevel !== -1) {
+        bestLevel = widthLevel;
+      }
+    }
+
+    if (reference.height) {
+      const heightLevel = findClosestHlsLevel(hls.value, reference.height, 'height');
+      if (heightLevel !== -1) {
+        if (bestLevel === -1) {
+          bestLevel = heightLevel;
+        } else {
+          // 从两个结果中选择较小的质量
+          const widthLevelInfo = hls.value.levels[bestLevel];
+          const heightLevelInfo = hls.value.levels[heightLevel];
+
+          if (widthLevelInfo && heightLevelInfo) {
+            const widthArea = widthLevelInfo.width * (widthLevelInfo.height || widthLevelInfo.width);
+            const heightArea = heightLevelInfo.width * (heightLevelInfo.height || heightLevelInfo.width);
+
+            if (heightArea < widthArea) {
+              bestLevel = heightLevel;
+            }
+          }
+        }
+      }
+    }
+
+    if (bestLevel !== -1) {
+      switchHlsQuality(hls.value, bestLevel, now);
+    }
+  } else if (Array.isArray(typedSrc)) {
+    // 非 HLS 质量切换（使用质量列表）
+    let bestQualityByWidth = null;
+    let bestQualityByHeight = null;
+
+    if (reference.width) {
+      bestQualityByWidth = findClosestQuality(typedSrc, reference.width, 'width');
+    }
+
+    if (reference.height) {
+      bestQualityByHeight = findClosestQuality(typedSrc, reference.height, 'height');
+    }
+
+    const bestQuality = selectSmallerQuality(bestQualityByWidth, bestQualityByHeight);
+
+    if (bestQuality) {
+      // 保持当前播放时间
+      const currentTime = video.currentTime;
+
+      // 检查是否与当前URL一致
+      const currentUrl = video.currentSrc;
+      if (bestQuality.url !== currentUrl) {
+        // 重新加载URL
+        video.src = bestQuality.url;
+        video.currentTime = currentTime;
+        video.play();
+      }
+    }
+  }
 }
 
 defineExpose<IPlayerExpose>({
@@ -226,7 +311,12 @@ defineExpose<IPlayerExpose>({
   async unmute() {
     videoRef.value.muted = false
   },
-  toBestQuality
+  toBestQuality,
+  autoQualityHls() {
+    if (hls.value) {
+      hls.value.nextLevel = -1;
+    }
+  }
 })
 
 </script>

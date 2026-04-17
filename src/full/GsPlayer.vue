@@ -3,7 +3,7 @@
     <div
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
-        ref="playerContainerRef"
+        ref="containerRef"
         @click="handlePlayerClick"
         @dblclick="handlePlayerDblClick"
     >
@@ -89,21 +89,22 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose, IVideoQuality,
+  IPlayerExpose,
+  IVideoQuality,
   PlaybackMode
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg, MuteSvg, PlayOverlaySvg} from '../svgs';
 import {
   GsFullscreenControl,
-  GsNavControls,
   GsModeControl,
+  GsNavControls,
   GsProgressBar,
   GsSpeedControl,
   GsTimeDisplay,
   GsVolumeControl
 } from './components';
-import {IPlayerInject, PlayerInjectKey} from './types/IPlayerInject';
+import {IGsPlayerInject, PlayerInjectKey} from './types/IGsPlayerInject';
 import {IGsFullscreenControlExpose, INavControlsExpose} from "./types/ControlsExposes";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -125,7 +126,7 @@ const emit = defineEmits<IGsPlayerEmits>();
 
 // Refs
 const playerRef = ref<IPlayerExpose>();
-const playerContainerRef = ref<HTMLDivElement>();
+const containerRef = ref<HTMLDivElement>();
 const navControlsRef = ref<INavControlsExpose>();
 const fullscreenControlRef = ref<IGsFullscreenControlExpose>();
 
@@ -209,7 +210,6 @@ const handlePlayerDblClick = () => {
   if (!props.handleDblClick) return;
 
   const {value: ctrl} = fullscreenControlRef
-  if (document.fullscreenElement) document.exitFullscreen();
   if (ctrl.isAnyFullscreen) {
     ctrl.exitFullscreen()
   } else ctrl.webFullscreen()
@@ -259,7 +259,7 @@ const setMode = (mode: string) => {
 
 function toBestQuality(reference?: IVideoQuality) {
   if (!reference) {
-    const {value: c} = playerContainerRef
+    const {value: c} = containerRef
     reference = {
       width: c.clientWidth,
       height: c.clientHeight,
@@ -268,14 +268,17 @@ function toBestQuality(reference?: IVideoQuality) {
   playerRef.value?.toBestQuality(reference)
 }
 
+const commonExpose = Object.freeze({play, pause, togglePlay, unmute, setVolume, setRate,toBestQuality,setMode})
+
 // 提供依赖项给子组件
-provide<IPlayerInject>(PlayerInjectKey, {
+provide<IGsPlayerInject>(PlayerInjectKey, {
+  ...commonExpose,
+  get index() {
+    return navControlsRef.value?.index;
+  },
   // 状态
   get currentMode() {
     return currentMode.value;
-  },
-  get currentIndex() {
-    return navControlsRef.value?.index || 0;
   },
   // 计算属性
   get controlsVisibility() {
@@ -287,16 +290,9 @@ provide<IPlayerInject>(PlayerInjectKey, {
   isWebFullscreen,
   emit,
   // 方法
-  togglePlay,
-  play,
-  pause,
-  unmute,
-  setMode,
-  setRate,
-  toBestQuality,
   // Refs
-  setVolume,
-  playerRef
+  playerRef,
+  containerRef
 });
 
 // 键盘事件处理
@@ -375,14 +371,14 @@ onMounted(() => {
       keyboardEventTarget = document.querySelector(props.keyboardTarget);
       // 如果没有找到元素，默认使用播放器容器
       if (!keyboardEventTarget && props.keyboardTarget === '.gs-player') {
-        keyboardEventTarget = playerContainerRef.value;
+        keyboardEventTarget = containerRef.value;
       }
     } else if (props.keyboardTarget instanceof HTMLElement) {
       // 如果是HTMLElement，直接使用
       keyboardEventTarget = props.keyboardTarget;
     } else {
       // 默认使用播放器容器
-      keyboardEventTarget = playerContainerRef.value;
+      keyboardEventTarget = containerRef.value;
     }
 
     // 如果找到目标元素，添加事件监听器
@@ -406,6 +402,10 @@ onBeforeUnmount(() => {
 defineSlots<IGsPlayerSlots>()
 
 defineExpose<IGsPlayerExpose>({
+  ...commonExpose,
+  get index() {
+    return navControlsRef.value?.index;
+  },
   get player() {
     return playerRef.value?.el;
   },
@@ -442,19 +442,17 @@ defineExpose<IGsPlayerExpose>({
   get error() {
     return playerRef.value?.error;
   },
-  get index() {
-    return navControlsRef.value?.index;
-  },
-  play, pause, togglePlay, unmute, setVolume, setRate,
-  get fullscreen() {
-    return fullscreenControlRef.value?.fullscreen
-  },
-  get webFullscreen() {
-    return fullscreenControlRef.value?.webFullscreen
-  },
+  fullscreen: () => fullscreenControlRef.value?.fullscreen,
+  webFullscreen: () => fullscreenControlRef.value?.webFullscreen,
   playPre: () => navControlsRef.value?.playPre(),
   playNext: () => navControlsRef.value?.playNext(),
-  setSrc: (src: any) => playerRef.value?.setSrc(src),
-  toBestQuality
+  get setSrc() {
+    return navControlsRef.value?.setSrc;
+  },
+  get isAnyFullscreen() {
+    return fullscreenControlRef.value?.isAnyFullscreen
+  },
+  exitFullscreen: () => fullscreenControlRef.value?.exitFullscreen,
+  autoQualityHls: () => playerRef.value?.autoQualityHls(),
 });
 </script>
