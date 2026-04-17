@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
-import { PlayerInjectKey } from '../types/IPlayerInject';
+import { PlayerInjectKey } from '../types/IGsPlayerInject';
 
-import type { IPlayerInject } from '../types/IPlayerInject';
+import type { IGsPlayerInject } from '../types/IGsPlayerInject';
 
-const player = inject<IPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 </script>

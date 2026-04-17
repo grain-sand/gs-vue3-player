@@ -89,21 +89,22 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose, IVideoQuality,
+  IPlayerExpose,
+  IVideoQuality,
   PlaybackMode
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg, MuteSvg, PlayOverlaySvg} from '../svgs';
 import {
   GsFullscreenControl,
-  GsNavControls,
   GsModeControl,
+  GsNavControls,
   GsProgressBar,
   GsSpeedControl,
   GsTimeDisplay,
   GsVolumeControl
 } from './components';
-import {IPlayerInject, PlayerInjectKey} from './types/IPlayerInject';
+import {IGsPlayerInject, PlayerInjectKey} from './types/IGsPlayerInject';
 import {IGsFullscreenControlExpose, INavControlsExpose} from "./types/ControlsExposes";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -268,14 +269,17 @@ function toBestQuality(reference?: IVideoQuality) {
   playerRef.value?.toBestQuality(reference)
 }
 
+const commonExpose = Object.freeze({play, pause, togglePlay, unmute, setVolume, setRate,toBestQuality,setMode})
+
 // 提供依赖项给子组件
-provide<IPlayerInject>(PlayerInjectKey, {
+provide<IGsPlayerInject>(PlayerInjectKey, {
+  ...commonExpose,
+  get index() {
+    return navControlsRef.value?.index;
+  },
   // 状态
   get currentMode() {
     return currentMode.value;
-  },
-  get currentIndex() {
-    return navControlsRef.value?.index || 0;
   },
   // 计算属性
   get controlsVisibility() {
@@ -287,15 +291,7 @@ provide<IPlayerInject>(PlayerInjectKey, {
   isWebFullscreen,
   emit,
   // 方法
-  togglePlay,
-  play,
-  pause,
-  unmute,
-  setMode,
-  setRate,
-  toBestQuality,
   // Refs
-  setVolume,
   playerRef
 });
 
@@ -406,6 +402,10 @@ onBeforeUnmount(() => {
 defineSlots<IGsPlayerSlots>()
 
 defineExpose<IGsPlayerExpose>({
+  ...commonExpose,
+  get index() {
+    return navControlsRef.value?.index;
+  },
   get player() {
     return playerRef.value?.el;
   },
@@ -442,19 +442,16 @@ defineExpose<IGsPlayerExpose>({
   get error() {
     return playerRef.value?.error;
   },
-  get index() {
-    return navControlsRef.value?.index;
-  },
-  play, pause, togglePlay, unmute, setVolume, setRate,
-  get fullscreen() {
-    return fullscreenControlRef.value?.fullscreen
-  },
-  get webFullscreen() {
-    return fullscreenControlRef.value?.webFullscreen
-  },
+  fullscreen: () => fullscreenControlRef.value?.fullscreen,
+  webFullscreen: () => fullscreenControlRef.value?.webFullscreen,
   playPre: () => navControlsRef.value?.playPre(),
   playNext: () => navControlsRef.value?.playNext(),
-  setSrc: (src: any) => playerRef.value?.setSrc(src),
-  toBestQuality
+  get setSrc() {
+    return navControlsRef.value?.setSrc;
+  },
+  get isAnyFullscreen() {
+    return fullscreenControlRef.value?.isAnyFullscreen
+  },
+  exitFullscreen: () => fullscreenControlRef.value?.exitFullscreen
 });
 </script>

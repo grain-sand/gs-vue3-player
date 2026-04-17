@@ -28,13 +28,13 @@
 <script setup lang="ts">
 import {inject, ref, onMounted} from 'vue';
 import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../../svgs';
-import {PlayerInjectKey} from '../types/IPlayerInject';
+import {PlayerInjectKey} from '../types/IGsPlayerInject';
 
-import type {IPlayerInject} from '../types/IPlayerInject';
+import type {IGsPlayerInject} from '../types/IGsPlayerInject';
 import {IGsFullscreenControlExpose} from "../types/ControlsExposes";
 import {wait} from "gs-base/timer";
 
-const player = inject<IPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 
 const isPipSupported = ref(false);
 
@@ -45,7 +45,7 @@ onMounted(() => {
 async function toBestQuality() {
   try {
     await wait(10)
-    player.toBestQuality();
+      player.toBestQuality();
   } catch (e) {
     console.log(e)
   }

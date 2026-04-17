@@ -36,10 +36,10 @@ import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 import type {IGsPlayerExpose, PlayerSource} from '../../types';
 
 
-import {IPlayerInject, PlayerInjectKey} from '../types/IPlayerInject';
+import {IGsPlayerInject, PlayerInjectKey} from '../types/IGsPlayerInject';
 import {INavControlsExpose} from "../types/ControlsExposes";
 
-const player = inject<IPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 // Props
 
 // 状态
@@ -78,6 +78,28 @@ const play: IGsPlayerExpose['play'] = async (src) => {
       let {value: v} = index
       index.value = v > 0 ? v - 1 : playlist.length - 1;
       await playSource(src, -1);
+    }
+  }
+}
+
+function setSrc(src: number | PlayerSource) {
+  if (!src && src !== 0) return;
+  const {playlist} = player.props;
+  if (typeof src === "number") {
+    const source = playlist?.[src];
+    if (source) {
+      index.value = src;
+      player.playerRef.value?.setSrc(source);
+    }
+  } else {
+    const i = playlist?.findIndex(s => s === src)
+    if (i > -1) {
+      index.value = i;
+      player.playerRef.value?.setSrc(src);
+    } else if (playlist?.length) {
+      let {value: v} = index
+      index.value = v > 0 ? v - 1 : playlist.length - 1;
+      player.playerRef.value?.setSrc(src);
     }
   }
 }
@@ -188,6 +210,7 @@ defineExpose<INavControlsExpose>({
   handleEnded,
   get index() {
     return index.value;
-  }
+  },
+  setSrc
 });
 </script>

@@ -1,20 +1,17 @@
-import type {ControlItemType, IGsPlayerProps, IPlayerExpose, PlaybackMode} from '../../types';
+import type {ControlItemType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode} from '../../types';
 
 /**
  * 播放器依赖注入接口
  */
-export interface IPlayerInject extends Pick<IGsPlayerProps, 'pause' | 'setVolume' | 'toBestQuality' | 'setRate' | 'unmute' | 'play'> {
+export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" | 'togglePlay' | 'play' | 'pause' | 'unmute' | 'setRate' | 'setVolume'|'setMode'> {
 	// 状态
 	currentMode: PlaybackMode;
-	currentIndex: number;
+	index: number;
 	// 计算属性
 	controlsVisibility: Record<ControlItemType, boolean>;
 	// Props
 	props: IGsPlayerProps;
-	// 方法
-	togglePlay: () => Promise<void>;
 
-	setMode: (mode: string) => void;
 	// Refs
 	playerRef: { value: IPlayerExpose | undefined };
 
