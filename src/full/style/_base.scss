@@ -8,9 +8,15 @@
   user-select: none;
   display: flex;
   flex-direction: column;
-  padding-bottom: var(--gs-progress-min-h);
+  padding-bottom: calc(var(--gs-progress-min-h) / 2);
   align-items: center;
   justify-content: center;
+  &,& *{
+	box-sizing: border-box;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	text-size-adjust: none;
+  }
 
   video {
 	max-width: 100%;
@@ -39,7 +45,7 @@
 	}
 
 	.gs-progress-container {
-	  transform: translateY(46px);
+	  transform: translateY(45.5px);
 	  transition-delay: var(--gs-progress-out-delay);
 	}
   }

@@ -1,7 +1,6 @@
 /* 进度条 */
 .gs-progress-container {
   cursor: pointer;
-  transform: translateY(2px);
   position: relative;
   transition: var(--gs-transition);
   z-index: 9;
