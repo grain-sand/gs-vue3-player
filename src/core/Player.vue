@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import Hls from 'hls.js';
-import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, PlayerSource} from '../types';
+import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, IVideoQuality, PlayerSource} from '../types';
 import {getStringSource, parseVideoSource} from "../util";
 
 const props = defineProps<IPlayerProps>();
@@ -161,6 +161,10 @@ async function play() {
   }
 }
 
+function toBestQuality(reference: IVideoQuality) {
+
+}
+
 defineExpose<IPlayerExpose>({
   get el() {
     return videoRef.value
@@ -222,6 +226,7 @@ defineExpose<IPlayerExpose>({
   async unmute() {
     videoRef.value.muted = false
   },
+  toBestQuality
 })
 
 </script>

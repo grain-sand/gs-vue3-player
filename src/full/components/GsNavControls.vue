@@ -37,7 +37,7 @@ import type {IGsPlayerExpose, PlayerSource} from '../../types';
 
 
 import {IPlayerInject, PlayerInjectKey} from '../types/IPlayerInject';
-import {INavControlsExpose} from "../types/INavControlsExpose";
+import {INavControlsExpose} from "../types/ControlsExposes";
 
 const player = inject<IPlayerInject>(PlayerInjectKey)!;
 // Props

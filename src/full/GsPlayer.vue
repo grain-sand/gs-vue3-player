@@ -71,7 +71,7 @@
               <GsModeControl/>
 
               <!-- 全屏控制 -->
-              <GsFullscreenControl/>
+              <GsFullscreenControl ref="fullscreenControlRef"/>
             </div>
           </slot>
         </footer>
@@ -89,7 +89,7 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose,
+  IPlayerExpose, IVideoQuality,
   PlaybackMode
 } from '../types';
 import {zhCN} from "./i18n/zhCN";
@@ -104,7 +104,7 @@ import {
   GsVolumeControl
 } from './components';
 import {IPlayerInject, PlayerInjectKey} from './types/IPlayerInject';
-import {INavControlsExpose} from "./types/INavControlsExpose";
+import {IGsFullscreenControlExpose, INavControlsExpose} from "./types/ControlsExposes";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -127,6 +127,7 @@ const emit = defineEmits<IGsPlayerEmits>();
 const playerRef = ref<IPlayerExpose>();
 const playerContainerRef = ref<HTMLDivElement>();
 const navControlsRef = ref<INavControlsExpose>();
+const fullscreenControlRef = ref<IGsFullscreenControlExpose>();
 
 // State
 const isWebFullscreen = ref(false);
@@ -206,10 +207,12 @@ const handlePlayerClick = async () => {
 
 const handlePlayerDblClick = () => {
   if (!props.handleDblClick) return;
+
+  const {value: ctrl} = fullscreenControlRef
   if (document.fullscreenElement) document.exitFullscreen();
-  else {
-    isWebFullscreen.value = !isWebFullscreen.value;
-  }
+  if (ctrl.isAnyFullscreen) {
+    ctrl.exitFullscreen()
+  } else ctrl.webFullscreen()
 };
 
 // 监听 playlist 变化
@@ -254,6 +257,17 @@ const setMode = (mode: string) => {
   emit('modeChange', mode as any);
 };
 
+function toBestQuality(reference?: IVideoQuality) {
+  if (!reference) {
+    const {value: c} = playerContainerRef
+    reference = {
+      width: c.clientWidth,
+      height: c.clientHeight,
+    }
+  }
+  playerRef.value?.toBestQuality(reference)
+}
+
 // 提供依赖项给子组件
 provide<IPlayerInject>(PlayerInjectKey, {
   // 状态
@@ -279,8 +293,9 @@ provide<IPlayerInject>(PlayerInjectKey, {
   unmute,
   setMode,
   setRate,
-  setVolume,
+  toBestQuality,
   // Refs
+  setVolume,
   playerRef
 });
 
@@ -431,17 +446,15 @@ defineExpose<IGsPlayerExpose>({
     return navControlsRef.value?.index;
   },
   play, pause, togglePlay, unmute, setVolume, setRate,
-  fullscreen: () => {
-    const el = playerContainerRef?.value || document.querySelector('.gs-player');
-    if (!document.fullscreenElement && el) el.requestFullscreen().catch(console.error);
-    else if (document.exitFullscreen) document.exitFullscreen();
+  get fullscreen() {
+    return fullscreenControlRef.value?.fullscreen
   },
-  webFullscreen: () => {
-    const el = playerContainerRef?.value || document.querySelector('.gs-player');
-    if (el) el.classList.toggle('web-fullscreen');
+  get webFullscreen() {
+    return fullscreenControlRef.value?.webFullscreen
   },
   playPre: () => navControlsRef.value?.playPre(),
   playNext: () => navControlsRef.value?.playNext(),
   setSrc: (src: any) => playerRef.value?.setSrc(src),
+  toBestQuality
 });
 </script>

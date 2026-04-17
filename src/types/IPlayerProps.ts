@@ -58,6 +58,8 @@ export interface IPlayerExpose {
 
 	unmute(): Promise<void>
 
+	toBestQuality(reference: Partial<IVideoQuality>, now?: boolean): void
+
 }
 
 export interface IPlayerEmits {

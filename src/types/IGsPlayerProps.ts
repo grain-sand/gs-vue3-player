@@ -1,5 +1,5 @@
 import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from './IPlayerProps';
-import type {INavPlayerSource, PlayerSource} from './IPlayerSource';
+import type {INavPlayerSource, IVideoQuality, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
@@ -48,7 +48,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	keyboardTarget?: string | HTMLElement | false;
 }
 
-export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc'> {
+export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc' | 'toBestQuality'> {
 
 
 	/** 播放器实例 */
@@ -84,6 +84,8 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 	/** 网页全屏 */
 	webFullscreen(): void;
+
+	toBestQuality(reference?: Partial<IVideoQuality>, now?: boolean): void
 
 }
 

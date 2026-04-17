@@ -3,7 +3,7 @@ import type {ControlItemType, IGsPlayerProps, IPlayerExpose, PlaybackMode} from 
 /**
  * 播放器依赖注入接口
  */
-export interface IPlayerInject {
+export interface IPlayerInject extends Pick<IGsPlayerProps, 'pause' | 'setVolume' | 'toBestQuality' | 'setRate' | 'unmute' | 'play'> {
 	// 状态
 	currentMode: PlaybackMode;
 	currentIndex: number;
@@ -13,12 +13,8 @@ export interface IPlayerInject {
 	props: IGsPlayerProps;
 	// 方法
 	togglePlay: () => Promise<void>;
-	play: (src?: any) => Promise<void>;
-	pause: () => Promise<void>;
-	unmute: () => Promise<void>;
+
 	setMode: (mode: string) => void;
-	setRate: (rate: number) => void;
-	setVolume: (volume: number) => void;
 	// Refs
 	playerRef: { value: IPlayerExpose | undefined };
 

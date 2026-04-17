@@ -6,11 +6,11 @@
     <PipSvg style="transform: scale(0.8);"/>
   </div>
   <div v-if="player.controlsVisibility.fullscreen" class="gs-btn gs-dropdown-host"
-       @click.stop="player.isWebFullscreen.value=!player.isWebFullscreen.value"
+       @click.stop="toggleWebFullscreen"
        :title="player.props.i18n.titles.webFullscreen">
     <WebFullscreenSvg style="transform: scale(0.8);"/>
     <div class="gs-dropdown" v-if="player.props.fullscreenButtonMode === 'submenu'">
-      <div class="gs-dropdown-item" @click.stop="fullscreen" :title="player.props.i18n.titles.fullscreen">
+      <div class="gs-dropdown-item" @click.stop="toggleFullscreen" :title="player.props.i18n.titles.fullscreen">
         <FullscreenSvg style="transform: scale(0.8);"/>
       </div>
       <div v-if="isPipSupported" class="gs-dropdown-item" @click.stop="pip" :title="player.props.i18n.titles.pip">
@@ -20,7 +20,7 @@
   </div>
   <!-- 全屏按钮 - 控制面板模式 -->
   <div v-if="player.props.fullscreenButtonMode === 'control' && player.controlsVisibility.fullscreen" class="gs-btn"
-       @click.stop="fullscreen" :title="player.props.i18n.titles.fullscreen">
+       @click.stop="toggleFullscreen" :title="player.props.i18n.titles.fullscreen">
     <FullscreenSvg style="transform: scale(0.8);"/>
   </div>
 </template>
@@ -31,6 +31,8 @@ import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../../svgs';
 import {PlayerInjectKey} from '../types/IPlayerInject';
 
 import type {IPlayerInject} from '../types/IPlayerInject';
+import {IGsFullscreenControlExpose} from "../types/ControlsExposes";
+import {wait} from "gs-base/timer";
 
 const player = inject<IPlayerInject>(PlayerInjectKey)!;
 
@@ -40,23 +42,56 @@ onMounted(() => {
   isPipSupported.value = document.pictureInPictureEnabled;
 });
 
-const fullscreen = () => {
-  const el = player.playerRef.value?.el;
-  if (!el) return;
+async function toBestQuality() {
+  try {
+    await wait(10)
+    player.toBestQuality();
+  } catch (e) {
+    console.log(e)
+  }
+}
 
-  if (!document.fullscreenElement) {
-    el.requestFullscreen().catch(err => {
-      console.error('Error attempting to enable fullscreen:', err);
-    });
-  } else {
+function fullscreen() {
+  const el = player.playerRef.value?.el;
+  if (!el || document.fullscreenElement) return;
+  el.requestFullscreen().then(toBestQuality).catch(err => {
+    console.error('Error attempting to enable fullscreen:', err);
+  });
+}
+
+function exitFullscreen() {
+  player.isWebFullscreen.value = false
+  if (document.fullscreenElement) {
     document.exitFullscreen().catch(err => {
       console.error('Error attempting to exit fullscreen:', err);
     });
   }
-};
+}
+
+function toggleFullscreen() {
+  const el = player.playerRef.value?.el;
+  if (!el) return;
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(err => {
+      console.error('Error attempting to exit fullscreen:', err);
+    });
+  } else fullscreen()
+}
+
+function webFullscreen() {
+  player.isWebFullscreen.value = true;
+  toBestQuality()
+}
+
+function toggleWebFullscreen() {
+  const {isWebFullscreen: wf} = player;
+  if (wf.value) {
+    wf.value = false;
+  } else webFullscreen()
+}
 
 
-const pip = async () => {
+async function pip() {
   const video = player.playerRef.value?.el;
   if (!video) return;
 
@@ -69,5 +104,17 @@ const pip = async () => {
   } catch (error) {
     console.error('Error toggling Picture-in-Picture:', error);
   }
-};
+}
+
+defineExpose<IGsFullscreenControlExpose>({
+  get isAnyFullscreen() {
+    return player.isWebFullscreen.value || !!document.fullscreenElement;
+  },
+  fullscreen,
+  webFullscreen,
+  toggleWebFullscreen,
+  toggleFullscreen,
+  exitFullscreen
+})
+
 </script>
