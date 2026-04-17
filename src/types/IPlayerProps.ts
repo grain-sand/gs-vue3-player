@@ -32,15 +32,15 @@ export interface IPlayerExpose {
 
 	readonly el: HTMLVideoElement
 
-	readonly volume: number
+	volume: number
 
-	readonly muted: boolean
+	muted: boolean
 
-	readonly time: number
+	time: number
 
 	readonly duration: number
 
-	readonly rate: number
+	rate: number
 
 	readonly playing: boolean
 

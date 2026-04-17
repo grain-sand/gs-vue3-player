@@ -187,7 +187,7 @@ const unmute = () => playerRef.value?.unmute();
 
 // 其他设置
 const setRate = (rate: number) => {
-  if (playerRef.value?.el) playerRef.value.el.playbackRate = rate;
+  if (playerRef.value?.el) playerRef.value.rate = rate;
 };
 
 const setVolume = (volume: number) => playerRef.value?.setVolume(volume)
@@ -296,14 +296,14 @@ const handleKeydown = (e: KeyboardEvent) => {
       // 向左调整进度（默认5秒）
       if (playerRef.value?.el) {
         const step = e.ctrlKey ? 15 : 5;
-        playerRef.value.el.currentTime = Math.max(0, playerRef.value.el.currentTime - step);
+        playerRef.value.time = Math.max(0, playerRef.value.time - step);
       }
       break;
     case 'ArrowRight':
       // 向右调整进度（默认5秒）
       if (playerRef.value?.el) {
         const step = e.ctrlKey ? 15 : 5;
-        playerRef.value.el.currentTime = Math.min(playerRef.value.el.duration || 0, playerRef.value.el.currentTime + step);
+        playerRef.value.time = Math.min(playerRef.value.el.duration || 0, playerRef.value.time + step);
       }
       break;
     case 'ArrowUp':
@@ -397,17 +397,29 @@ defineExpose<IGsPlayerExpose>({
   get volume() {
     return playerRef.value.volume
   },
+  set volume(v) {
+    playerRef.value.volume = v
+  },
   get muted() {
     return playerRef.value.muted
   },
+  set muted(v) {
+    playerRef.value.muted = v
+  },
   get time() {
     return playerRef.value?.time
+  },
+  set time(v) {
+    playerRef.value.time = v;
   },
   get duration() {
     return playerRef.value?.duration
   },
   get rate() {
     return playerRef.value?.rate
+  },
+  set rate(v) {
+    playerRef.value.rate = v
   },
   get playing() {
     return playerRef.value?.playing
@@ -418,7 +430,7 @@ defineExpose<IGsPlayerExpose>({
   get index() {
     return navControlsRef.value?.index;
   },
-  play, pause, togglePlay, unmute, setVolume, setRate: setRate,
+  play, pause, togglePlay, unmute, setVolume, setRate,
   fullscreen: () => {
     const el = playerContainerRef?.value || document.querySelector('.gs-player');
     if (!document.fullscreenElement && el) el.requestFullscreen().catch(console.error);

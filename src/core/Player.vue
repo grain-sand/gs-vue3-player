@@ -170,14 +170,26 @@ defineExpose<IPlayerExpose>({
   get volume() {
     return volume.value
   },
+  set volume(v) {
+    setVolume(v)
+  },
   get muted() {
     return muted.value
+  },
+  set muted(v) {
+    videoRef.value.muted = v
   },
   get time() {
     return time.value
   },
+  set time(v) {
+    videoRef.value.currentTime = v;
+  },
   get duration() {
     return duration.value
+  },
+  set rate(v) {
+    videoRef.value.playbackRate = v
   },
   get rate() {
     return rate.value

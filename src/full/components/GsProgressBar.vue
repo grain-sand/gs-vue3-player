@@ -48,7 +48,7 @@ const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
 const handleProgressClick = (e: MouseEvent) => {
   const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * (player.playerRef.value?.duration || 0);
   if (player.playerRef.value?.el) {
-    player.playerRef.value.el.currentTime = newTime;
+    player.playerRef.value.time = newTime;
   }
 };
 
