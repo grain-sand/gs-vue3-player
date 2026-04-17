@@ -15,6 +15,7 @@ import WebFullscreenSvg from './web-fullscreen.svg';
 import FullscreenSvg from './fullscreen.svg';
 import PipSvg from './pip.svg';
 import {PlaybackMode} from "../types";
+import TrashSvg from './trash.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, any> = {
@@ -43,5 +44,6 @@ export {
 	FullscreenSvg,
 	PipSvg,
 	PlayOverlaySvg,
-	MuteSvg
+	MuteSvg,
+	TrashSvg
 };
