@@ -1,5 +1,5 @@
 import {ITypedPlayerSource, PlayerSource, PlayerSourceType} from "../types";
-import {isString} from "gs-base";
+import {isString} from "gs-base/types";
 
 export function parseVideoSource(source: PlayerSource): ITypedPlayerSource<any, any> {
 	if (isString(source)) {

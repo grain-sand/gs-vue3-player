@@ -20,7 +20,7 @@
 		"test:full-ui": "vitest full-ui"
 	},
 	"dependencies": {
-		"gs-base": "^0.1.20",
+		"gs-base": "^0.1.21",
 		"hls.js": "^1.6.15",
 		"vue": "^3.5.32"
 	},

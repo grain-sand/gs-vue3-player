@@ -28,7 +28,7 @@ const props = defineProps<IPlayerProps>();
 const emit = defineEmits<IPlayerEmits>();
 
 const videoRef = ref<HTMLVideoElement>();
-const hlsInstance = shallowRef<Hls>();
+const hls = shallowRef<Hls>();
 const muted = ref(false);
 const volume = ref(0);
 const rate = ref(1);
@@ -82,10 +82,10 @@ function volumeChange() {
 
 
 const destroyHls = () => {
-  if (hlsInstance.value) {
-    hlsInstance.value.detachMedia()
-    hlsInstance.value.destroy();
-    hlsInstance.value = undefined;
+  if (hls.value) {
+    hls.value.detachMedia()
+    hls.value.destroy();
+    hls.value = undefined;
   }
 };
 
@@ -108,18 +108,15 @@ function setSrc(src: PlayerSource) {
   const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster
-  // if (poster) {
-  //   video.style.backgroundImage = `url(${poster})`
-  // }
 
   if (type === 'hls') {
     if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = srcStr;
     } else if (Hls.isSupported()) {
-      const hls = new Hls({...DefaultHlsConfig, ...props.hlsConfig});
-      hls.loadSource(srcStr);
-      hls.attachMedia(video);
-      hlsInstance.value = hls;
+      const newHls = new Hls({...DefaultHlsConfig, ...props.hlsConfig});
+      newHls.loadSource(srcStr);
+      newHls.attachMedia(video);
+      hls.value = newHls;
     } else {
       throw new Error('Browser not supported hls')
     }
@@ -129,6 +126,7 @@ function setSrc(src: PlayerSource) {
   video.poster = poster
   video.autoplay = autoplay
   video.playbackRate = rate.value;
+
 
   // @ts-ignore
   emit('srcChange', src as any);
