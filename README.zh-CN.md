@@ -291,3 +291,4 @@ yarn add gs-vue3-player
 | setRate           | 设置播放速度           | rate: number                |
 | fullscreen        | 切换全屏           | -                           |
 | webFullscreen     | 切换网页全屏       | -                           |
+| toBestQuality     | 切换到最佳质量      | reference: { width?: number, height?: number }, now?: boolean |
