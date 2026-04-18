@@ -14,11 +14,11 @@
 
 <script setup lang="ts">
 import {computed, inject, ref} from 'vue';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
+import {PlayerInjectKey} from '../types/IPlayerInject';
 
-import type { IGsPlayerInject } from '../types/IGsPlayerInject';
+import type { IPlayerInject } from '../types/IPlayerInject';
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const player = inject<IPlayerInject>(PlayerInjectKey)!;
 
 // 状态
 const showProgressTooltip = ref(false);

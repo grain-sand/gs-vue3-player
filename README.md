@@ -291,4 +291,3 @@ yarn add gs-vue3-player
 | setRate           | Set playback rate           | rate: number                |
 | fullscreen        | Toggle fullscreen           | -                           |
 | webFullscreen     | Toggle web fullscreen       | -                           |
-| toBestQuality     | Switch to best quality      | reference: { width?: number, height?: number }, now?: boolean |

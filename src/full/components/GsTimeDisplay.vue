@@ -6,11 +6,11 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import type {IGsPlayerInject} from '../types/IGsPlayerInject';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
+import type {IPlayerInject} from '../types/IPlayerInject';
+import {PlayerInjectKey} from '../types/IPlayerInject';
 import {formatTime} from "../../util";
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const player = inject<IPlayerInject>(PlayerInjectKey)!;
 
 const time = computed(() => {
   return `${formatTime(player.playerRef.value?.time || 0)}/${formatTime(player.playerRef.value?.duration || 0)}`;
@@ -18,7 +18,7 @@ const time = computed(() => {
 
 const title = computed(() => {
   if (player.props.playlist && player.props.playlist.length > 0) {
-    const currentPosition = player.index + 1;
+    const currentPosition = player.currentIndex + 1;
     const totalCount = player.props.playlist.length;
     return `${currentPosition}/${totalCount}`;
   }
