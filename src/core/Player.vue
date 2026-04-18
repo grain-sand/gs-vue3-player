@@ -122,7 +122,6 @@ function setSrc(src: PlayerSource) {
     video.removeAttribute('poster')
     video.removeAttribute('src')
     video.load()
-    console.log('un set src')
     return;
   }
 

@@ -1,5 +1,5 @@
-import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from './IPlayerProps';
-import type {IVideoQuality, PlayerSource} from './IPlayerSource';
+import type {IPlayerEmits, IPlayerProps} from './IPlayerProps';
+import type {PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
@@ -48,55 +48,8 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	keyboardTarget?: string | HTMLElement | false;
 }
 
-export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc' | 'toBestQuality'> {
-
-
-	/** 播放器实例 */
-	readonly player: HTMLVideoElement;
-
-	readonly playlist: PlayerSource[]
-
-	/**
-	 * 当前播放的视频索引
-	 */
-	readonly index: number;
-	setMode: (mode: PlaybackMode) => void;
-	readonly isAnyFullscreen: boolean;
-
-	/**
-	 * 播放视频
-	 * @param src 视频地址 或 索引 ( 仅当设置了列表字段时生效 )
-	 */
-	play(src?: number | PlayerSource): Promise<void>
-
-	playPre(): Promise<void>
-
-	playNext(): Promise<void>
-
-	setSrc(src: number | PlayerSource): void;
-
-	/** 设置音量 */
-	setVolume(volume: number): void;
-
-	/** 设置播放速度 */
-	setRate(rate: number): void;
-
-	/** 全屏 */
-	fullscreen(): void;
-
-	/** 网页全屏 */
-	webFullscreen(): void;
-
-	toBestQuality(reference?: Partial<IVideoQuality>, now?: boolean): void
-
-	/**
-	 * 退出任意全屏模式
-	 */
-	exitFullscreen(): void;
-
-}
-
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {
 	modeChange: (mode: string) => void
 	srcChange: (src: PlayerSource) => void
+	srcRemove: (src: PlayerSource) => void
 }

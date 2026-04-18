@@ -218,6 +218,9 @@ const handleEnded = () => {
           playlist.value.splice(currentIndex, 1);
           wrapperMap.delete(deletedItem.data);
 
+          // @ts-ignore
+          gsPlayer.emit('srcRemove', deletedItem.data);
+
           // 如果还有视频，播放下一个
           if (playlist.value.length) {
             const nextIndex = currentIndex < playlist.value.length ? currentIndex : 0;
