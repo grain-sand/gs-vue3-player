@@ -42,6 +42,8 @@ export interface IPlayerExpose {
 
 	rate: number
 
+	src: PlayerSource
+
 	readonly playing: boolean
 
 	readonly error?: MediaError

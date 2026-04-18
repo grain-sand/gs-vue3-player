@@ -43,6 +43,7 @@ const error = ref<MediaError>()
 const playing = ref(false)
 const duration = ref(0)
 const time = ref(0)
+const innerSrc = ref<PlayerSource>()
 
 let isFirstLoadedmetadata = true;
 
@@ -105,12 +106,23 @@ function getQuality() {
 
 // 初始化播放器逻辑
 function setSrc(src: PlayerSource) {
-  if (!src || !videoRef.value) {
+  if (innerSrc.value === src) {
     return;
   }
-  destroyHls();
+  innerSrc.value = src;
 
+  // @ts-ignore
+  setTimeout(emit('srcChange', src as any), 10);
+  destroyHls();
   const video = videoRef.value;
+  if (!video) {
+    return;
+  }
+  if (!src) {
+    video.poster = video.src = ' ;'
+    return;
+  }
+
   const autoplay = video.autoplay;
   const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
@@ -133,10 +145,6 @@ function setSrc(src: PlayerSource) {
   video.poster = poster
   video.autoplay = autoplay
   video.playbackRate = rate.value;
-
-
-  // @ts-ignore
-  emit('srcChange', src as any);
 }
 
 watch(() => props.src, setSrc);
@@ -178,7 +186,7 @@ function toBestQuality(reference: IVideoQuality, now: boolean = false) {
   if (!video) return;
 
   // 获取当前播放源
-  const currentSrc = props.src;
+  const {value: currentSrc} = innerSrc;
   if (!currentSrc) return;
 
   const {type, src: typedSrc} = parseVideoSource(currentSrc);
@@ -286,6 +294,12 @@ defineExpose<IPlayerExpose>({
   },
   get error() {
     return error.value;
+  },
+  get src() {
+    return innerSrc.value
+  },
+  set src(v) {
+    setSrc(v)
   },
   async togglePlay() {
     const {value: el} = videoRef;

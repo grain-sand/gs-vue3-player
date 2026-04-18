@@ -268,7 +268,7 @@ function toBestQuality(reference?: IVideoQuality) {
   playerRef.value?.toBestQuality(reference)
 }
 
-const commonExpose = Object.freeze({play, pause, togglePlay, unmute, setVolume, setRate,toBestQuality,setMode})
+const commonExpose = Object.freeze({play, pause, togglePlay, unmute, setVolume, setRate, toBestQuality, setMode})
 
 // 提供依赖项给子组件
 provide<IGsPlayerInject>(PlayerInjectKey, {
@@ -403,6 +403,12 @@ defineSlots<IGsPlayerSlots>()
 
 defineExpose<IGsPlayerExpose>({
   ...commonExpose,
+  get src() {
+    return playerRef.value?.src
+  },
+  set src(v) {
+    playerRef.value?.setSrc(v)
+  },
   get index() {
     return navControlsRef.value?.index;
   },

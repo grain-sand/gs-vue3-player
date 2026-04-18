@@ -3,7 +3,6 @@
     <gs-player
         ref="playerRef"
         :volume="0.5"
-        @srcChange="srcChange($event)"
         :playlist="videoList"
         @volumeChange="eventChange('volumeChange',$event)"
         @modeChange="eventChange('playbackModeChange',$event)"
@@ -20,6 +19,7 @@
     duration: {{ playerRef?.duration }}<br/>
     rate: {{ playerRef?.rate }}<br/>
     index: {{ playerRef?.index }}<br/>
+    src: {{ playerRef?.src }}<br/>
   </div>
 </template>
 
@@ -28,7 +28,6 @@ import '../../src/full/style/main.scss'
 import {ref} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringPlayerSource} from "../../src";
-import {copyObject} from "gs-base";
 
 const playerRef = ref<IGsPlayerExpose>()
 
@@ -41,12 +40,6 @@ const oSrc = 'http://172.15.0.1/f:/e%E8%A7%86%E9%A2%91%E6%A1%8C%E9%9D%A2/%E7%9F%
 
 const src = ref(videoList[0])
 
-function srcChange(nextSrc: IStringPlayerSource<number>) {
-  console.log(copyObject(nextSrc));
-  // index = nextSrc.data;
-  // next.value = getUrl();
-  // pre.value = getPreUrl();
-}
 
 function eventChange(name: string, data: any) {
   console.log(name, data)
