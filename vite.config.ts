@@ -4,6 +4,8 @@ import svgPlugin from 'vite-svg-loader'
 
 export default defineConfig({
 	build: {
+		minify: false,
+		sourcemap: true,
 		lib: {
 			entry: {
 				'index': 'src/index.ts',

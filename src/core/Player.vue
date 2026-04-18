@@ -112,7 +112,7 @@ function setSrc(src: PlayerSource) {
   innerSrc.value = src;
 
   // @ts-ignore
-  setTimeout(emit('srcChange', src as any), 10);
+  setTimeout(() => emit('srcChange', src as any), 10);
   destroyHls();
   const video = videoRef.value;
   if (!video) {
@@ -127,11 +127,11 @@ function setSrc(src: PlayerSource) {
   const {type, src: typedSrc, poster = ''} = parseVideoSource(src);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster
-
+  const hlsSupped = Hls.isSupported();
   if (type === 'hls') {
-    if (props.useBrowserHls && video?.canPlayType('application/vnd.apple.mpegurl')) {
+    if (props.useBrowserHls && !hlsSupped && video?.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = srcStr;
-    } else if (Hls.isSupported()) {
+    } else if (hlsSupped) {
       const newHls = new Hls({...DefaultHlsConfig, ...props.hlsConfig});
       newHls.loadSource(srcStr);
       newHls.attachMedia(video);

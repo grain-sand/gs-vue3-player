@@ -1,36 +1,36 @@
 <template>
   <!-- 播放/暂停按钮 -->
   <div
-      v-if="player.controlsVisibility.play"
+      v-if="gsPlayer.controlsVisibility.play"
       class="gs-btn"
-      @click.stop="player.togglePlay"
-      :title="player.props.i18n.titles.play"
+      @click.stop="gsPlayer.togglePlay"
+      :title="gsPlayer.props.i18n.titles.play"
   >
-    <component :is="PlayStateIcons[(player.playerRef.value?.playing || false).toString()]"/>
+    <component :is="PlayStateIcons[(player?.playing || false).toString()]"/>
   </div>
   <!-- 上一个按钮 -->
   <div
-      v-if="player.controlsVisibility.pre && (alwaysShowNav || hasPreSource)"
+      v-if="gsPlayer.controlsVisibility.pre && (alwaysShowNav || hasPreSource)"
       class="gs-btn"
       @click.stop="playPre"
-      :title="player.props.i18n.titles.pre"
+      :title="gsPlayer.props.i18n.titles.pre"
   >
     <PreSvg/>
   </div>
 
   <!-- 下一个按钮 -->
   <div
-      v-if="player.controlsVisibility.next && (alwaysShowNav || hasNextSource)"
+      v-if="gsPlayer.controlsVisibility.next && (alwaysShowNav || hasNextSource)"
       class="gs-btn"
       @click.stop="playNext"
-      :title="player.props.i18n.titles.next"
+      :title="gsPlayer.props.i18n.titles.next"
   >
     <NextSvg/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, inject, onBeforeUnmount, onMounted, ref} from 'vue';
+import {computed, inject, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 
 import type {IGsPlayerExpose, PlayerSource} from '../../types';
@@ -38,150 +38,188 @@ import type {IGsPlayerExpose, PlayerSource} from '../../types';
 
 import {IGsPlayerInject, PlayerInjectKey} from '../types/IGsPlayerInject';
 import {INavControlsExpose} from "../types/ControlsExposes";
+import {SourceWrapper} from "../types/SourceWrapper";
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
-// Props
+const gsPlayer = inject<IGsPlayerInject>(PlayerInjectKey)!;
 
-// 状态
-const index = ref(0);
+const player = computed(() => gsPlayer.playerRef.value);
+
+const videoEl = computed(() => player.value?.el);
+
+const playlist = ref<SourceWrapper[]>([])
+
+let id = 0;
+
+const wrapperMap = new Map<PlayerSource, SourceWrapper>();
+
+watch(
+    () => [...(gsPlayer.props.playlist ?? [])],
+    (list) => {
+      playlist.value =
+          list?.map((src) => {
+            let wrapper = wrapperMap.get(src)
+            if (!wrapper) {
+              wrapper = new SourceWrapper(src as any, id++)
+              wrapperMap.set(src, wrapper)
+            }
+            return wrapper
+          }) || []
+      if (list.length) {
+        Array.from(wrapperMap.keys()).forEach(s => {
+          if (!list.indexOf(s)) {
+            wrapperMap.delete(s);
+          }
+        })
+      } else {
+        wrapperMap.clear()
+      }
+    },
+    {immediate: true})
+
+const index = computed(() => playlist.value.findIndex((item) => item.index === (player.value?.src as any)?.index));
 
 // 监听播放器ended事件
 onMounted(() => {
-  const el = player.playerRef.value?.el;
-  if (el) {
-    el.addEventListener('ended', handleEnded);
+  if (videoEl.value) {
+    videoEl.value.addEventListener('ended', handleEnded);
+  }
+  const {props: {src}} = gsPlayer
+  if (src) {
+    setSrc(src);
+  } else if (playlist.value.length) {
+    setSrc(playlist.value[0]);
   }
 });
 
 onBeforeUnmount(() => {
-  const el = player.playerRef.value?.el;
-  if (el) {
-    el.removeEventListener('ended', handleEnded);
+  if (videoEl.value) {
+    videoEl.value.removeEventListener('ended', handleEnded);
   }
 });
 
+function changeSource(src: undefined | number | PlayerSource, pos: number, play?: boolean) {
+
+}
+
 const play: IGsPlayerExpose['play'] = async (src) => {
   if (!src && src !== 0) return;
-  const {playlist} = player.props;
   if (typeof src === "number") {
-    const source = playlist?.[src];
+    const source = playlist.value[src];
     if (source) {
-      index.value = src;
       await playSource(source);
     }
-  } else {
-    const i = playlist?.findIndex(s => s === src)
-    if (i > -1) {
-      index.value = i;
-      await playSource(src);
-    } else if (playlist?.length) {
-      let {value: v} = index
-      index.value = v > 0 ? v - 1 : playlist.length - 1;
-      await playSource(src, -1);
+  } else if (src) {
+    const i = playlist.value.indexOf(src);
+    if (i < 0) {
+      playlist.value.splice(index.value, 0, src)
     }
+    await playSource(src);
   }
 }
 
 function setSrc(src: number | PlayerSource) {
   if (!src && src !== 0) return;
-  const {playlist} = player.props;
+  const {props: {playlist}, playerRef: {value: el}} = gsPlayer;
   if (typeof src === "number") {
     const source = playlist?.[src];
     if (source) {
-      index.value = src;
-      player.playerRef.value?.setSrc(source);
+      el.setSrc(source);
     }
-  } else {
-    const i = playlist?.findIndex(s => s === src)
-    if (i > -1) {
-      index.value = i;
-      player.playerRef.value?.setSrc(src);
-    } else if (playlist?.length) {
-      let {value: v} = index
-      index.value = v > 0 ? v - 1 : playlist.length - 1;
-      player.playerRef.value?.setSrc(src);
+  } else if (src) {
+    const i = playlist.indexOf(src);
+    if (i < 0) {
+      playlist.splice(index.value, 0, src)
     }
+    el.setSrc(src);
   }
 }
 
 // 播放源控制
-const playSource = async (src: PlayerSource, i = index.value) => {
-  await player.playerRef.value?.play(src);
+const playSource = async (src: SourceWrapper) => {
+  await player.value?.play(src);
   // noinspection TypeScriptValidateTypes
-  player.emit('srcChange', {
-    index: i,
-    src
-  })
+  gsPlayer.emit('srcChange', (src as any).data)
 };
 
 // 播放列表管理
 const switchToNextInPlaylist = () => {
-  if (!player.props.playlist || player.props.playlist.length === 0) return;
+  const {value: list} = playlist;
+  if (!list.length) return;
 
   let nextIndex = index.value;
-  if (player.currentMode === 'shuffle') {
+  if (gsPlayer.currentMode === 'shuffle') {
     // 随机播放，确保不重复当前索引
     do {
-      nextIndex = Math.floor(Math.random() * player.props.playlist.length);
-    } while (nextIndex === index.value && player.props.playlist.length > 1);
+      nextIndex = Math.floor(Math.random() * list.length);
+    } while (nextIndex === index.value && list.length > 1);
   } else {
-    nextIndex = (index.value + 1) % player.props.playlist.length;
+    nextIndex = (index.value + 1) % list.length;
   }
-
-  index.value = nextIndex;
-  playSource(player.props.playlist[nextIndex]);
+  playSource(list[nextIndex]);
 };
 
 // 导航控制
 const playPre = async () => {
   let {value: i} = index
-  const pre = i > 0 ? i - 1 : player.props.playlist?.length - 1;
-  const source = player.props.preSrc || player.props.playlist?.[pre];
+  const {value: list} = playlist;
+  let source: any = gsPlayer.props.preSrc;
   if (source) {
-    index.value = pre;
+    if (!(source instanceof SourceWrapper)) {
+      return new SourceWrapper(source, id++)
+    }
+  } else {
+    source = list[i > 0 ? i - 1 : list.length - 1];
+  }
+  if (source) {
     await playSource(source);
   }
 };
 
 const playNext = async () => {
-  const {playlist} = player.props;
-  const next = (index.value + 1 + playlist?.length) % playlist?.length
-  const source = player.props.nextSrc || playlist?.[next];
+  let {value: i} = index
+  const {value: list} = playlist;
+  let source: any = gsPlayer.props.preSrc;
   if (source) {
-    index.value = next;
+    if (!(source instanceof SourceWrapper)) {
+      source = new SourceWrapper(source, id++)
+    }
+  } else {
+    source = list[(i + 1) % list.length];
+  }
+  if (source) {
     await playSource(source);
   }
 };
 
 // 处理播放结束
 const handleEnded = () => {
-  const el = player.playerRef.value?.el;
+  const el = videoEl.value;
   const muted = el?.muted;
 
-  switch (player.currentMode) {
+  switch (gsPlayer.currentMode) {
     case 'sequence':
       // 检查是否有下一个视频
-      if (player.props.nextSrc) {
+      if (gsPlayer.props.nextSrc) {
         playNext();
-      } else if (player.props.playlist && player.props.playlist.length > 0) {
+      } else if (playlist.value && playlist.value.length > 0) {
         // 如果是播放列表的最后一个视频，则停止播放
-        if (index.value < player.props.playlist.length - 1) {
+        if (index.value < playlist.value.length - 1) {
           switchToNextInPlaylist();
         } else {
-          player.playerRef.value?.pause();
+          el?.pause();
         }
       } else {
         // 没有下一个视频，停止播放
-        player.playerRef.value?.pause();
+        el?.pause();
       }
       break;
     case 'disabled':
       // 停止播放
-      player.playerRef.value?.pause();
+      el?.pause();
       break;
     case 'loop':
       // 重新播放当前视频
-      player.playerRef.value?.el?.play().catch(console.error);
+      el?.play().catch(console.error);
       break;
     case 'loopAll':
       switchToNextInPlaylist();
@@ -195,12 +233,12 @@ const handleEnded = () => {
   }
 };
 
-const alwaysShowNav = computed(() => player.props.playlist?.length > 1 && ['loopAll', 'shuffle'].includes(player.currentMode));
+const alwaysShowNav = computed(() => playlist.value?.length > 1 && ['loopAll', 'shuffle'].includes(gsPlayer.currentMode));
 
 // 计算属性
-const hasPreSource = computed(() => player.props.preSrc || player.props.playlist?.[index.value - 1])
+const hasPreSource = computed(() => gsPlayer.props.preSrc || playlist.value?.[index.value - 1])
 
-const hasNextSource = computed(() => player.props.nextSrc || player.props.playlist?.[index.value + 1])
+const hasNextSource = computed(() => gsPlayer.props.nextSrc || playlist.value?.[index.value + 1])
 
 // 暴露方法给父组件
 defineExpose<INavControlsExpose>({

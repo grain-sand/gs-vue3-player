@@ -1,5 +1,5 @@
 import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from './IPlayerProps';
-import type {INavPlayerSource, IVideoQuality, PlayerSource} from './IPlayerSource';
+import type {IVideoQuality, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
@@ -58,7 +58,8 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	 * 当前播放的视频索引
 	 */
 	readonly index: number;
-
+	setMode: (mode: PlaybackMode) => void;
+	readonly isAnyFullscreen: boolean;
 
 	/**
 	 * 播放视频
@@ -69,7 +70,6 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	playPre(): Promise<void>
 
 	playNext(): Promise<void>
-
 
 	setSrc(src: number | PlayerSource): void;
 
@@ -87,11 +87,6 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 	toBestQuality(reference?: Partial<IVideoQuality>, now?: boolean): void
 
-
-	setMode: (mode: PlaybackMode) => void;
-
-
-	readonly isAnyFullscreen: boolean;
 	/**
 	 * 退出任意全屏模式
 	 */
@@ -101,5 +96,5 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {
 	modeChange: (mode: string) => void
-	srcChange: (src: INavPlayerSource) => void
+	srcChange: (src: PlayerSource) => void
 }

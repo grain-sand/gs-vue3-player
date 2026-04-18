@@ -18,7 +18,7 @@ export interface IVideoQualityItem extends IVideoQuality {
 }
 
 export interface ITypedPlayerSource<D = any, T extends string | IVideoQualityItem[] = any> {
-	type: PlayerSourceType;
+	type?: PlayerSourceType;
 	poster?: string;
 	title?: string;
 	/**
@@ -38,8 +38,3 @@ export interface IQualitiesPlayerSource<D = any> extends ITypedPlayerSource<D, A
 
 // 输入类型
 export type PlayerSource<D = any> = string | IStringPlayerSource<D> | IQualitiesPlayerSource<D>;
-
-export interface INavPlayerSource<T extends PlayerSource = PlayerSource> {
-	index: number;
-	src: T;
-}

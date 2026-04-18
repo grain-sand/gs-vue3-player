@@ -14,7 +14,6 @@
           :quality="quality"
           :use-browser-hls="useBrowserHls"
           :rate="rate"
-          :src="src"
           :volume="volume"
           :autoplay="autoplay"
           :showControls='false'
@@ -81,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, provide, ref, watch} from 'vue';
+import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
   ControlItemType,
@@ -135,15 +134,6 @@ const isWebFullscreen = ref(false);
 const currentMode = ref(props.mode || 'sequence');
 
 const fullTarget = computed(() => props.webFullscreenTarget || document.body);
-
-const src = computed(() => props.src || props.playlist?.[0]);
-
-watch(src, (newSrc) => {
-  if (newSrc) {
-    // @ts-ignore
-    emit('srcChange', {src: newSrc, index: 0});
-  }
-}, {immediate: true})
 
 // 计算属性：避免模板中频繁调用方法
 const controlsVisibility = computed(() => {
@@ -214,18 +204,6 @@ const handlePlayerDblClick = () => {
     ctrl.exitFullscreen()
   } else ctrl.webFullscreen()
 };
-
-// 监听 playlist 变化
-watch(() => props.playlist,
-    (newPlaylist) => {
-      if (newPlaylist && newPlaylist.length > 0) {
-        // 如果没有设置 src，则使用 playlist 中的第一个视频
-        if (!props.src) {
-          playerRef.value?.play(newPlaylist[0]);
-        }
-      }
-    }
-);
 
 // 计算播放器标题
 const playerTitle = computed(() => {
