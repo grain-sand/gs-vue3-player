@@ -2,9 +2,11 @@ import {ITypedPlayerSource, PlayerSource, PlayerSourceType} from "../../types";
 
 export class SourceWrapper implements ITypedPlayerSource {
 
+	private _type?: string
+
 	constructor(
-		public readonly data: PlayerSource&ITypedPlayerSource,
-		public readonly index:number
+		public readonly data: PlayerSource & any,
+		public readonly index: number
 	) {
 	}
 
@@ -13,19 +15,22 @@ export class SourceWrapper implements ITypedPlayerSource {
 	}
 
 	get src(): any {
-		return this.data.src;
+		if (typeof this.data === 'string') {
+			return this.data
+		}
+		return this.data.src || this.data;
 	}
 
 	get title(): string {
-		return this.data.src;
+		return this.data.title;
 	}
 
 	get type(): PlayerSourceType {
-		return this.data.type
+		return this._type || this.data.type
 	}
 
 	set type(v: PlayerSourceType) {
-		this.data.type = v;
+		this.data.type = this._type = v;
 	}
 
 }

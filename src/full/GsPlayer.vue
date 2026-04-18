@@ -88,7 +88,7 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose,
+  IPlayerExpose, ITypedPlayerSource,
   IVideoQuality,
   PlaybackMode
 } from '../types';
@@ -115,7 +115,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   visibleItems: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
   hiddenItems: () => [],
   fullscreenButtonMode: 'submenu',
-  playlist: () => [],
+  list: () => [],
   mode: 'sequence',
   i18n: () => zhCN,
   keyboardTarget: '.gs-player',
@@ -207,23 +207,17 @@ const handlePlayerDblClick = () => {
 
 // 计算播放器标题
 const playerTitle = computed(() => {
-  const hasPlaylist = props.playlist && props.playlist.length > 0;
-  const currentIdx = navControlsRef.value?.index || 0;
-  const currentSource: any = hasPlaylist && currentIdx >= 0 && currentIdx < props.playlist.length
-      ? props.playlist[currentIdx]
-      : props.src;
-  const hasTitle = currentSource && typeof currentSource === 'object' && currentSource.title;
-
-  if (hasPlaylist && hasTitle) {
-    const currentPosition = currentIdx + 1;
-    const totalCount = props.playlist.length;
-    return `${currentSource.title} ( ${currentPosition}/${totalCount} )`;
-  } else if (hasTitle) {
-    return currentSource.title;
-  } else if (hasPlaylist) {
-    const currentPosition = currentIdx + 1;
-    const totalCount = props.playlist.length;
-    return `${currentPosition}/${totalCount}`;
+  const i = navControlsRef.value?.index;
+  (top as any).console.log(i);
+  const title = (playerRef.value?.src as ITypedPlayerSource)?.title
+  const list = navControlsRef.value?.playlist || []
+  const pos = i + 1;
+  if (list.length && title) {
+    return `${title} ( ${pos}/${list.length} )`;
+  } else if (title) {
+    return title;
+  } else if (list.length) {
+    return `${pos}/${list.length}`;
   }
   return '';
 });
@@ -382,16 +376,16 @@ defineSlots<IGsPlayerSlots>()
 defineExpose<IGsPlayerExpose>({
   ...commonExpose,
   get src() {
-    return playerRef.value?.src
+    return playerRef.value.src
   },
   set src(v) {
-    playerRef.value?.setSrc(v)
+    playerRef.value.setSrc(v)
   },
   get index() {
     return navControlsRef.value?.index;
   },
   get player() {
-    return playerRef.value?.el;
+    return playerRef.value.el;
   },
   get volume() {
     return playerRef.value.volume
@@ -406,7 +400,7 @@ defineExpose<IGsPlayerExpose>({
     playerRef.value.muted = v
   },
   get time() {
-    return playerRef.value?.time
+    return playerRef.value.time
   },
   set time(v) {
     playerRef.value.time = v;
@@ -421,22 +415,25 @@ defineExpose<IGsPlayerExpose>({
     playerRef.value.rate = v
   },
   get playing() {
-    return playerRef.value?.playing
+    return playerRef.value.playing
   },
   get error() {
-    return playerRef.value?.error;
+    return playerRef.value.error;
   },
-  fullscreen: () => fullscreenControlRef.value?.fullscreen,
-  webFullscreen: () => fullscreenControlRef.value?.webFullscreen,
-  playPre: () => navControlsRef.value?.playPre(),
-  playNext: () => navControlsRef.value?.playNext(),
+  get playlist() {
+    return navControlsRef.value.playlist;
+  },
+  fullscreen: () => fullscreenControlRef.value.fullscreen,
+  webFullscreen: () => fullscreenControlRef.value.webFullscreen,
+  playPre: () => navControlsRef.value.playPre(),
+  playNext: () => navControlsRef.value.playNext(),
   get setSrc() {
-    return navControlsRef.value?.setSrc;
+    return navControlsRef.value.setSrc;
   },
   get isAnyFullscreen() {
-    return fullscreenControlRef.value?.isAnyFullscreen
+    return fullscreenControlRef.value.isAnyFullscreen
   },
-  exitFullscreen: () => fullscreenControlRef.value?.exitFullscreen,
-  autoQualityHls: () => playerRef.value?.autoQualityHls(),
+  exitFullscreen: () => fullscreenControlRef.value.exitFullscreen,
+  autoQualityHls: () => playerRef.value.autoQualityHls(),
 });
 </script>

@@ -19,6 +19,7 @@
     duration: {{ playerRef?.duration }}<br/>
     rate: {{ playerRef?.rate }}<br/>
     index: {{ playerRef?.index }}<br/>
+    list: {{ playerRef?.playlist?.length }}<br/>
     src: {{ playerRef?.src }}<br/>
   </div>
 </template>
@@ -47,7 +48,7 @@ function eventChange(name: string, data: any) {
 
 function switchToNextSrc() {
   // playerRef.value.setVolume(.1)
-  playerRef.value.play(videoList[0])
+  playerRef.value.play(oSrc)
 }
 
 </script>

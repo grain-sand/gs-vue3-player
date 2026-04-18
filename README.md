@@ -33,7 +33,7 @@ yarn add gs-vue3-player
 <template>
   <GsPlayer
       :src="videoSrc"
-      :playlist="playlist"
+      :list="playlist"
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
