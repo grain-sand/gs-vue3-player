@@ -33,7 +33,7 @@
 import {computed, inject, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 
-import type {IGsPlayerExpose, PlayerSource} from '../../types';
+import type {IGsPlayerExpose, ISourceWrapper, PlayerSource} from '../../types';
 
 
 import {IGsPlayerInject, PlayerInjectKey} from '../types/IGsPlayerInject';
@@ -46,7 +46,7 @@ const player = computed(() => gsPlayer.playerRef.value);
 
 const videoEl = computed(() => player.value?.el);
 
-const playlist = ref<SourceWrapper[]>()
+const playlist = ref<ISourceWrapper[]>()
 
 let id = 0;
 
@@ -80,8 +80,8 @@ const index = computed(() => {
   if (!playlist.value) {
     return 0;
   }
-  const i = (player.value?.src as any)?.index;
-  return playlist.value.findIndex((item) => item.index === i)
+  const i = (player.value?.src as ISourceWrapper)?._id;
+  return playlist.value.findIndex((item) => item._id === i)
 });
 
 // 监听播放器ended事件
@@ -124,7 +124,7 @@ function changeSource(src: undefined | number | PlayerSource, pos: number, play?
     }
   }
   // noinspection TypeScriptValidateTypes
-  gsPlayer.emit('srcChange', (src as any)?.data);
+  gsPlayer.emit('srcChange', (src as ISourceWrapper)?._raw);
   if (play) {
     return el.play(src as PlayerSource);
   } else {
@@ -216,10 +216,10 @@ const handleEnded = () => {
         if (currentIndex >= 0 && currentIndex < playlist.value.length) {
           const deletedItem = playlist.value[currentIndex];
           playlist.value.splice(currentIndex, 1);
-          wrapperMap.delete(deletedItem.data);
+          wrapperMap.delete(deletedItem._raw);
 
           // @ts-ignore
-          gsPlayer.emit('srcRemove', deletedItem.data);
+          gsPlayer.emit('srcRemove', deletedItem._raw);
 
           // 如果还有视频，播放下一个
           if (playlist.value.length) {

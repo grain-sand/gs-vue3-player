@@ -1,5 +1,5 @@
 import {IPlayerExpose} from "./IPlayerProps";
-import {IVideoQuality, PlayerSource} from "./IPlayerSource";
+import {GsPlayerSource, ISourceWrapper, IVideoQuality} from "./IPlayerSource";
 import {PlaybackMode} from "./IGsPlayerProps";
 
 
@@ -9,7 +9,7 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	/** 播放器实例 */
 	readonly player: HTMLVideoElement;
 
-	readonly playlist: PlayerSource[]
+	readonly playlist: ISourceWrapper[]
 
 	/**
 	 * 当前播放的视频索引
@@ -24,13 +24,13 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	 * 播放视频
 	 * @param src 视频地址 或 索引 ( 仅当设置了列表字段时生效 )
 	 */
-	play(src?: number | PlayerSource): Promise<void>
+	play(src?: number | GsPlayerSource): Promise<void>
 
 	playPre(): Promise<void>
 
 	playNext(): Promise<void>
 
-	setSrc(src: number | PlayerSource): void;
+	setSrc(src: number | GsPlayerSource): void;
 
 	/** 设置音量 */
 	setVolume(volume: number): void;

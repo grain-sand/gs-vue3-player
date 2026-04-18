@@ -1,5 +1,5 @@
 import type {IPlayerEmits, IPlayerProps} from './IPlayerProps';
-import type {PlayerSource} from './IPlayerSource';
+import type {GsPlayerSource, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
@@ -15,15 +15,15 @@ export type PlaybackMode = (typeof PlaybackModes)[number];
 
 export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/** 视频地址 */
-	src?: PlayerSource;
+	src?: GsPlayerSource;
 	/** 是否显示控制面板 */
 	showControls?: boolean;
 	/** 是否显示错误信息 */
 	showError?: boolean;
 	/** 下一个输入源 */
-	nextSrc?: PlayerSource;
+	nextSrc?: GsPlayerSource;
 	/** 上一个输入源 */
-	preSrc?: PlayerSource;
+	preSrc?: GsPlayerSource;
 	/** 是否处理播放器单击，默认为true，为静音时，为取消静音，否则为切换播放 */
 	handleClick?: boolean;
 	/** 是否处理播放器双击，默认为true，用于 在常规状态切换到网页全屏，在任意全屏状态都是退出全屏 */
@@ -39,7 +39,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/** 全屏按钮显示方式，可选项为：子菜单（默认）、控制面板（最右位置）、隐藏 */
 	fullscreenButtonMode?: FullscreenButtonMode;
 	/** 播放列表 */
-	playlist?: PlayerSource[];
+	playlist?: GsPlayerSource[];
 	/** 播放模式，可选项为：播放下一个（默认值）、禁用、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
 	mode?: PlaybackMode;
 	/** 国际化配置 */

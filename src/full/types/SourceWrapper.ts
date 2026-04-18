@@ -1,36 +1,44 @@
-import {ITypedPlayerSource, PlayerSource, PlayerSourceType} from "../../types";
+import {GsPlayerSource, ISourceWrapper, PlayerSourceType} from "../../types";
 
-export class SourceWrapper implements ITypedPlayerSource {
-
-	private _type?: string
+export class SourceWrapper implements ISourceWrapper {
 
 	constructor(
-		public readonly data: PlayerSource & any,
-		public readonly index: number
+		public readonly _raw: GsPlayerSource & any,
+		public readonly _id: number
 	) {
 	}
 
-	get poster(): string {
-		return this.data.poster
-	}
-
-	get src(): any {
-		if (typeof this.data === 'string') {
-			return this.data
-		}
-		return this.data.src || this.data;
-	}
-
-	get title(): string {
-		return this.data.title;
-	}
+	private _type?: string
 
 	get type(): PlayerSourceType {
-		return this._type || this.data.type
+		return this._type || this._raw.type
 	}
 
 	set type(v: PlayerSourceType) {
-		this.data.type = this._type = v;
+		this._raw.type = this._type = v;
+	}
+
+	get poster(): string {
+		return this._raw.poster
+	}
+
+	get src(): any {
+		if (typeof this._raw === 'string') {
+			return this._raw
+		}
+		return this._raw.src || this._raw;
+	}
+
+	get title(): string {
+		return this._raw.title;
+	}
+
+	get link() {
+		return this._raw.link
+	}
+
+	get data(): any {
+		return this._raw.data
 	}
 
 }

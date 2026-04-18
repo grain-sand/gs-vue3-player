@@ -208,7 +208,6 @@ const handlePlayerDblClick = () => {
 // 计算播放器标题
 const playerTitle = computed(() => {
   const i = navControlsRef.value?.index;
-  (top as any).console.log(i);
   const title = (playerRef.value?.src as ITypedPlayerSource)?.title
   const list = navControlsRef.value?.playlist || []
   const pos = i + 1;
