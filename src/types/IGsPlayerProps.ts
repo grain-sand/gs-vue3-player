@@ -9,7 +9,7 @@ export const FullscreenButtonModes = ['submenu', 'control', 'hidden'] as const;
 export type FullscreenButtonMode = (typeof FullscreenButtonModes)[number];
 
 /** 播放模式 */
-export const PlaybackModes = ['sequence', 'disabled', 'loop', 'loopAll', 'shuffle'] as const;
+export const PlaybackModes = ['sequence', 'disabled', 'loop', 'loopAll', 'shuffle', 'deleteAfterPlay'] as const;
 /** 播放模式类型 */
 export type PlaybackMode = (typeof PlaybackModes)[number];
 

@@ -23,7 +23,8 @@ export const PlaybackModeIcons: Record<PlaybackMode, any> = {
 	disabled,
 	loop,
 	loopAll,
-	shuffle
+	shuffle,
+	deleteAfterPlay: TrashSvg
 };
 
 export const PlayStateIcons: Record<'true' | 'false', any> = {

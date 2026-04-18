@@ -124,7 +124,7 @@ function changeSource(src: undefined | number | PlayerSource, pos: number, play?
     }
   }
   // noinspection TypeScriptValidateTypes
-  gsPlayer.emit('srcChange', (src as any).data);
+  gsPlayer.emit('srcChange', (src as any)?.data);
   if (play) {
     return el.play(src as PlayerSource);
   } else {
@@ -209,6 +209,27 @@ const handleEnded = () => {
     case 'shuffle':
       switchToNextInPlaylist();
       break;
+    case 'deleteAfterPlay':
+      if (playlist.value?.length) {
+        // 从播放列表中删除当前视频
+        const currentIndex = index.value;
+        if (currentIndex >= 0 && currentIndex < playlist.value.length) {
+          const deletedItem = playlist.value[currentIndex];
+          playlist.value.splice(currentIndex, 1);
+          wrapperMap.delete(deletedItem.data);
+
+          // 如果还有视频，播放下一个
+          if (playlist.value.length) {
+            const nextIndex = currentIndex < playlist.value.length ? currentIndex : 0;
+            changeSource(nextIndex, 0, true);
+          } else {
+            changeSource(undefined, 0, false);
+          }
+        }
+      } else {
+        changeSource(undefined, 0, false);
+      }
+      break;
   }
   if (el) {
     el.muted = muted;
@@ -228,7 +249,7 @@ defineExpose<INavControlsExpose>({
     return index.value
   },
   get playlist() {
-    return playlist.value||[]
+    return playlist.value || []
   },
   handleEnded,
   play,

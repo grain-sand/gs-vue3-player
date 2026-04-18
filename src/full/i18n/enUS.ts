@@ -10,7 +10,8 @@ export const enUS: II18n = {
 		disabled: 'Disabled',
 		loop: 'Loop Current',
 		loopAll: 'Loop All',
-		shuffle: 'Shuffle'
+		shuffle: 'Shuffle',
+		deleteAfterPlay: 'Delete After Play'
 	},
 	titles: {
 		play: 'Play/Pause',

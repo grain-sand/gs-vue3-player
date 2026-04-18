@@ -16,6 +16,8 @@ export interface II18n {
     loopAll: string;
     /** 随机播放 */
     shuffle: string;
+    /** 播放后删除 */
+    deleteAfterPlay: string;
   },
   /** 按钮标题 */
   titles: {

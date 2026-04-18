@@ -7,7 +7,8 @@ export const zhCN: II18n = {
 		disabled: '禁用',
 		loop: '单个循环',
 		loopAll: '全部循环',
-		shuffle: '随机播放'
+		shuffle: '随机播放',
+		deleteAfterPlay: '播放后删除'
 	},
 	titles: {
 		play: '播放/暂停',

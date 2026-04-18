@@ -40,11 +40,12 @@ const availableModes = computed<Array<{
     {value: 'loop', text: player.props.i18n.playbackModes.loop}
   ];
 
-  // 如果设置了列表，添加全部循环和随机播放
+  // 如果设置了列表，添加全部循环、随机播放和播放后删除
   if (player.props.playlist && player.props.playlist.length > 0) {
     modes.push(
         {value: 'loopAll', text: player.props.i18n.playbackModes.loopAll},
-        {value: 'shuffle', text: player.props.i18n.playbackModes.shuffle}
+        {value: 'shuffle', text: player.props.i18n.playbackModes.shuffle},
+        {value: 'deleteAfterPlay', text: player.props.i18n.playbackModes.deleteAfterPlay}
     );
   }
 

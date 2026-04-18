@@ -119,7 +119,10 @@ function setSrc(src: PlayerSource) {
     return;
   }
   if (!src) {
-    video.poster = video.src = ' ;'
+    video.removeAttribute('poster')
+    video.removeAttribute('src')
+    video.load()
+    console.log('un set src')
     return;
   }
 
