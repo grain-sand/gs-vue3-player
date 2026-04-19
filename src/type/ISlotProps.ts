@@ -1,7 +1,7 @@
 import {VNode} from "vue";
 import {IGsPlayerExpose} from "./IGsPlayerExpose";
 
-export const ControlItemTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
+export const ControlItemTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay', 'infoPanel', 'playlist'] as const;
 
 export type ControlItemType = (typeof ControlItemTypes)[number];
 

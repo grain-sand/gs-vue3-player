@@ -75,12 +75,12 @@
           </footer>
         </slot>
       </div>
-      <teleport :to="floatingPanelsRef?.titlePanel" :disabled="!floatingPanelsRef?.floating">
+      <teleport v-if="controlsVisibility.infoPanel" :to="floatingPanelsRef?.titlePanel" :disabled="!floatingPanelsRef?.floating">
         <slot name="infoPanel" v-bind="playlistProps">
           <info-panel/>
         </slot>
       </teleport>
-      <teleport :to="floatingPanelsRef?.rightPanel" :disabled="!floatingPanelsRef?.floating">
+      <teleport v-if="controlsVisibility.playlist" :to="floatingPanelsRef?.rightPanel" :disabled="!floatingPanelsRef?.floating">
         <slot name="playlist" v-bind="playlistProps">
           <playlist/>
         </slot>
@@ -93,7 +93,7 @@
 import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
-  ControlItemType,
+  ControlItemType, ControlItemTypes,
   DefaultAspectRatio,
   IGsPlayerEmits,
   IGsPlayerExpose,
@@ -127,7 +127,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleClick: true,
   handleDblClick: true,
   rates: () => [0.8, 1.0, 1.2, 1.5, 2.0, 3.0],
-  visibleItems: () => ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'],
+  visibleItems: () => ControlItemTypes,
   hiddenItems: () => [],
   fullscreenButtonMode: 'submenu',
   list: () => [],
@@ -165,7 +165,9 @@ const controlsVisibility = computed(() => {
     volume: isVisible('volume'),
     fullscreen: isVisible('fullscreen'),
     progress: isVisible('progress'),
-    playOverlay: isVisible('playOverlay')
+    playOverlay: isVisible('playOverlay'),
+    infoPanel: isVisible('infoPanel'),
+    playlist: isVisible('playlist')
   };
 });
 
