@@ -1,5 +1,7 @@
 <template>
-  <div class="gs-title-float-panel" ref="titlePanel"></div>
+  <div class="gs-title-float-panel">
+    <div ref="titlePanel"></div>
+  </div>
   <div class="gs-right-float-panel" ref="rightPanel"></div>
 </template>
 
@@ -35,7 +37,7 @@ const playerCoreHeight = computed(() => {
     }
   } else {
     const [w = 16, h = 9] = aspectRatio.value || [];
-    return width * h / w + 2;
+    return width * (Number(h) / Number(w)) + 2;
   }
 });
 
@@ -45,7 +47,7 @@ const resizeObserver = new ResizeObserver(async ([e]) => {
     rect.value = e.contentRect
   }
   floating.value = api.isAnyFullscreen && rect.value.width > rect.value.height;
-  if(floating.value) {
+  if (floating.value) {
     setStyleVars(api.containerRef.value, {playerCoreHeight: '100%'});
   } else {
     setStyleVars(api.containerRef.value, {playerCoreHeight});

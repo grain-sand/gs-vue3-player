@@ -9,4 +9,6 @@ export interface IAuthorProps {
 
 	author?: IAuthor
 
+	handleClick?: boolean;
+
 }

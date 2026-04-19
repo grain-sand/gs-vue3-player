@@ -10,8 +10,10 @@
         <dt>{{ item.title }}</dt>
         <dd>
           <time>{{ formatTime(item.duration) }}</time>
-          <author :author="item.author"/>
-          <button @click.stop="api.removePlaylistItem(item)"><span>&times;</span></button>
+          <div>
+            <author :author="item.author"/>
+            <button @click.stop="api.removePlaylistItem(item)"><span>&times;</span></button>
+          </div>
         </dd>
       </dl>
     </li>

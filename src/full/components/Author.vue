@@ -2,8 +2,8 @@
   <figure
       v-if="author"
       class="gs-author"
-      :class="{handleClick: props.author?.link}"
-      @click="openFn"
+      :class="{handleClick:props.handleClick && props.author?.link}"
+      @click.stop="openFn"
   >
     <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">
     <figcaption>{{ author?.name }}</figcaption>
@@ -16,8 +16,8 @@ import {IAuthorProps} from "../../type";
 const props = defineProps<IAuthorProps>()
 
 function openFn() {
-  const link = props.author?.link
-  if (link) {
+  const {handleClick, author: {link}} = props
+  if (handleClick && link) {
     window.open(link)
   }
 }
