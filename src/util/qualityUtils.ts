@@ -1,4 +1,4 @@
-import type {IVideoQualityItem} from '../types';
+import type {IVideoQualityItem} from '../type';
 
 /**
  * 计算两个尺寸之间的差异百分比

@@ -44,33 +44,33 @@
           <!-- 进度条插槽 -->
           <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
             <!-- 进度条 -->
-            <GsProgressBar/>
+            <ProgressBar/>
           </slot>
 
           <slot name="controls" v-bind="slotProps">
             <!-- 控制面板 -->
             <div class="gs-controls" :title="playerTitle">
               <!-- 导航按钮组 -->
-              <GsNavControls ref="navControlsRef"/>
+              <NavControls ref="navControlsRef"/>
 
               <!-- 时间显示 -->
-              <GsTimeDisplay/>
+              <TimeDisplay/>
               <div class="space"></div>
               <slot v-bind="slotProps">
               </slot>
               <div class="space"></div>
 
               <!-- 速度控制 -->
-              <GsSpeedControl/>
+              <SpeedControl/>
 
               <!-- 音量控制 -->
-              <GsVolumeControl/>
+              <VolumeControl/>
 
               <!-- 播放模式 -->
-              <GsModeControl/>
+              <ModeControl/>
 
               <!-- 全屏控制 -->
-              <GsFullscreenControl ref="fullscreenControlRef"/>
+              <FullscreenControl ref="fullscreenControlRef"/>
             </div>
           </slot>
         </footer>
@@ -84,27 +84,29 @@ import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
   ControlItemType,
+  DefaultAspectRatio,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose, ITypedPlayerSource,
+  IPlayerExpose,
+  ITypedPlayerSource,
   IVideoQuality,
   PlaybackMode
-} from '../types';
+} from '../type';
 import {zhCN} from "./i18n/zhCN";
 import {ErrorSvg, MuteSvg, PlayOverlaySvg} from '../svgs';
 import {
-  GsFullscreenControl,
-  GsModeControl,
-  GsNavControls,
-  GsProgressBar,
-  GsSpeedControl,
-  GsTimeDisplay,
-  GsVolumeControl
+  FullscreenControl,
+  ModeControl,
+  NavControls,
+  ProgressBar,
+  SpeedControl,
+  TimeDisplay,
+  VolumeControl
 } from './components';
-import {IGsPlayerInject, PlayerInjectKey} from './types/IGsPlayerInject';
-import {IGsFullscreenControlExpose, INavControlsExpose} from "./types/ControlsExposes";
+import {IGsPlayerInject, PlayerInjectKey} from './type/IGsPlayerInject';
+import {IGsFullscreenControlExpose, INavControlsExpose} from "./type/ControlsExposes";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -119,6 +121,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   mode: 'sequence',
   i18n: () => zhCN,
   keyboardTarget: '.gs-player',
+  aspectRatio: <any>DefaultAspectRatio,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -374,6 +377,9 @@ defineSlots<IGsPlayerSlots>()
 
 defineExpose<IGsPlayerExpose>({
   ...commonExpose,
+  get aspectRatio() {
+    return props.aspectRatio
+  },
   get src() {
     return playerRef.value.src
   },

@@ -1,6 +1,6 @@
 import {IPlayerExpose} from "./IPlayerProps";
 import {GsPlayerSource, ISourceWrapper, IVideoQuality} from "./IPlayerSource";
-import {PlaybackMode} from "./IGsPlayerProps";
+import {AspectRatio, PlaybackMode} from "./IGsPlayerProps";
 
 
 export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc' | 'toBestQuality'> {
@@ -19,6 +19,8 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	setMode: (mode: PlaybackMode) => void;
 
 	readonly isAnyFullscreen: boolean;
+
+	readonly aspectRatio?: AspectRatio | 'auto'
 
 	/**
 	 * 播放视频

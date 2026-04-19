@@ -1,4 +1,4 @@
-import {PlayerSource} from "../types";
+import {PlayerSource} from "../type";
 
 /**
  * 获取字符串类型的视频源

@@ -1,4 +1,4 @@
-import {II18n} from "../../types";
+import {II18n} from "../../type";
 
 export const zhCN: II18n = {
 	errorMessage: '请求错误',

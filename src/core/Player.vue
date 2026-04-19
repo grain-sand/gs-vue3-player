@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import Hls from 'hls.js';
-import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, IVideoQuality, PlayerSource} from '../types';
+import {DefaultHlsConfig, IPlayerEmits, IPlayerExpose, IPlayerProps, IVideoQuality, PlayerSource} from '../type';
 import {
   findClosestHlsLevel,
   findClosestQuality,

@@ -1,4 +1,4 @@
-import {GsPlayerSource, ISourceWrapper, PlayerSourceType} from "../../types";
+import {GsPlayerSource, ISourceWrapper, PlayerSourceType} from "../../type";
 
 export class SourceWrapper implements ISourceWrapper {
 

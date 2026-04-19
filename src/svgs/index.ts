@@ -14,7 +14,7 @@ import shuffle from './shuffle.svg';
 import WebFullscreenSvg from './web-fullscreen.svg';
 import FullscreenSvg from './fullscreen.svg';
 import PipSvg from './pip.svg';
-import {PlaybackMode} from "../types";
+import {PlaybackMode} from "../type";
 import TrashSvg from './trash.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件

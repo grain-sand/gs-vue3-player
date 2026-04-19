@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import type {IGsPlayerInject} from '../types/IGsPlayerInject';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
+import type {IGsPlayerInject} from '../type/IGsPlayerInject';
+import {PlayerInjectKey} from '../type/IGsPlayerInject';
 import {formatTime} from "../../util";
 
 const player = inject<IGsPlayerInject>(PlayerInjectKey)!;

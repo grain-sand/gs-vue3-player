@@ -1,4 +1,4 @@
-import type {ControlItemType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode} from '../../types';
+import type {ControlItemType, IGsPlayerExpose, IGsPlayerProps, IPlayerExpose, PlaybackMode} from '../../type';
 import {Ref} from "vue";
 
 /**

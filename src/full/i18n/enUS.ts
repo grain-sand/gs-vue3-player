@@ -1,4 +1,4 @@
-import {II18n} from "../../types";
+import {II18n} from "../../type";
 
 /**
  * 英文默认值

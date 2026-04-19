@@ -14,9 +14,9 @@
 
 <script setup lang="ts">
 import {computed, inject, ref} from 'vue';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
+import {PlayerInjectKey} from '../type/IGsPlayerInject';
 
-import type { IGsPlayerInject } from '../types/IGsPlayerInject';
+import type { IGsPlayerInject } from '../type/IGsPlayerInject';
 
 const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 

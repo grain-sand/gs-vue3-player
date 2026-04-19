@@ -33,12 +33,12 @@
 import {computed, inject, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 
-import type {IGsPlayerExpose, ISourceWrapper, PlayerSource} from '../../types';
+import type {IGsPlayerExpose, ISourceWrapper, PlayerSource} from '../../type';
 
 
-import {IGsPlayerInject, PlayerInjectKey} from '../types/IGsPlayerInject';
-import {INavControlsExpose} from "../types/ControlsExposes";
-import {SourceWrapper} from "../types/SourceWrapper";
+import {IGsPlayerInject, PlayerInjectKey} from '../type/IGsPlayerInject';
+import {INavControlsExpose} from "../type/ControlsExposes";
+import {SourceWrapper} from "../type/SourceWrapper";
 
 const gsPlayer = inject<IGsPlayerInject>(PlayerInjectKey)!;
 

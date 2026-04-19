@@ -1,7 +1,7 @@
-export { default as GsProgressBar } from './GsProgressBar.vue';
-export { default as GsNavControls } from './GsNavControls.vue';
-export { default as GsTimeDisplay } from './GsTimeDisplay.vue';
-export { default as GsSpeedControl } from './GsSpeedControl.vue';
-export { default as GsVolumeControl } from './GsVolumeControl.vue';
-export { default as GsModeControl } from './GsModeControl.vue';
-export { default as GsFullscreenControl } from './GsFullscreenControl.vue';
+export { default as ProgressBar } from './ProgressBar.vue';
+export { default as NavControls } from './NavControls.vue';
+export { default as TimeDisplay } from './TimeDisplay.vue';
+export { default as SpeedControl } from './SpeedControl.vue';
+export { default as VolumeControl } from './VolumeControl.vue';
+export { default as ModeControl } from './ModeControl.vue';
+export { default as FullscreenControl } from './FullscreenControl.vue';

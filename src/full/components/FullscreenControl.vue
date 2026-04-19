@@ -26,12 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import {inject, ref, onMounted, computed} from 'vue';
-import {FullscreenSvg, WebFullscreenSvg, PipSvg} from '../../svgs';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
-
-import type {IGsPlayerInject} from '../types/IGsPlayerInject';
-import {IGsFullscreenControlExpose} from "../types/ControlsExposes";
+import {inject, onMounted, ref} from 'vue';
+import {FullscreenSvg, PipSvg, WebFullscreenSvg} from '../../svgs';
+import type {IGsPlayerInject} from '../type/IGsPlayerInject';
+import {PlayerInjectKey} from '../type/IGsPlayerInject';
+import {IGsFullscreenControlExpose} from "../type/ControlsExposes";
 import {wait} from "gs-base/timer";
 
 const player = inject<IGsPlayerInject>(PlayerInjectKey)!;

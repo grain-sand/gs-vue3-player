@@ -3,6 +3,7 @@ import type {GsPlayerSource, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
+export type AspectRatio = [number, number] | 'auto';
 /** 全屏按钮显示方式 */
 export const FullscreenButtonModes = ['submenu', 'control', 'hidden'] as const;
 /** 全屏按钮显示方式类型 */
@@ -12,6 +13,10 @@ export type FullscreenButtonMode = (typeof FullscreenButtonModes)[number];
 export const PlaybackModes = ['sequence', 'disabled', 'loop', 'loopAll', 'shuffle', 'deleteAfterPlay'] as const;
 /** 播放模式类型 */
 export type PlaybackMode = (typeof PlaybackModes)[number];
+
+export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3, 4]];
+
+export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
 
 export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/** 视频地址 */
@@ -46,6 +51,10 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	i18n?: II18n;
 	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
 	keyboardTarget?: string | HTMLElement | false;
+	/**
+	 * 视频比例
+	 */
+	aspectRatio?: AspectRatio
 }
 
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {

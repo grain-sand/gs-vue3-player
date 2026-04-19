@@ -22,10 +22,10 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { PlaybackModeIcons } from '../../svgs';
-import { PlayerInjectKey } from '../types/IGsPlayerInject';
-import type { PlaybackMode } from '../../types';
+import { PlayerInjectKey } from '../type/IGsPlayerInject';
+import type { PlaybackMode } from '../../type';
 
-import type { IGsPlayerInject } from '../types/IGsPlayerInject';
+import type { IGsPlayerInject } from '../type/IGsPlayerInject';
 
 const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 

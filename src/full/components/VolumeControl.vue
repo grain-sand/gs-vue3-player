@@ -20,9 +20,9 @@
 <script setup lang="ts">
 import {inject, computed} from 'vue';
 import {VolumeStateIcons} from '../../svgs';
-import {PlayerInjectKey} from '../types/IGsPlayerInject';
+import {PlayerInjectKey} from '../type/IGsPlayerInject';
 
-import type {IGsPlayerInject} from '../types/IGsPlayerInject';
+import type {IGsPlayerInject} from '../type/IGsPlayerInject';
 
 const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
 

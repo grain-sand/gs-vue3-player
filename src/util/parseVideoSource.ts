@@ -4,7 +4,7 @@ import {
 	ITypedPlayerSource,
 	PlayerSource,
 	PlayerSourceType
-} from "../types";
+} from "../type";
 import {isString} from "gs-base/types";
 
 export function parseVideoSource(source: PlayerSource): ITypedPlayerSource {
