@@ -1,5 +1,5 @@
 // noinspection TypeScriptCheckImport
-import type {IGsPlayerEmits, IGsPlayerExpose, IGsPlayerProps, IGsPlayerSlots} from '../types'
+import type {IGsPlayerEmits, IGsPlayerExpose, IGsPlayerProps, IGsPlayerSlots} from '../type'
 import {
 	ComponentOptionsMixin,
 	ComponentPropsOptions,

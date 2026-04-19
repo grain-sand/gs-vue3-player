@@ -1,5 +1,5 @@
 // noinspection TypeScriptCheckImport
-import { PlaybackMode } from "../types";
+import { PlaybackMode } from "../type";
 import {DefineComponent} from "vue";
 export type SvgComponent = DefineComponent<{}, {}, any>
 

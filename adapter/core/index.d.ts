@@ -1,5 +1,5 @@
 // noinspection TypeScriptCheckImport
-import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from '../types'
+import type {IPlayerEmits, IPlayerExpose, IPlayerProps} from '../type'
 import {ComponentOptionsMixin, ComputedOptions, DefineComponent, MethodOptions} from "vue";
 
 /**
