@@ -37,9 +37,9 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	handleDblClick?: boolean;
 	/** 可改变速度的数字数组，默认为 [0.8, 1, 1.2, 1.5, 2.0, 3.0] */
 	rates?: number[];
-	/** 需要显示的按钮，默认为全部显示 */
+	/** 需要显示的组件，默认为全部显示 */
 	visibleItems?: ControlItemType[];
-	/** 排除显示的按钮，默认为空，冲突时排除优先级更高 */
+	/** 排除显示的组件，默认为空，冲突时排除优先级更高 */
 	hiddenItems?: ControlItemType[];
 	/** 网页全屏挂载目标，默认为body */
 	webFullscreenTarget?: string | HTMLElement;

@@ -76,10 +76,14 @@
         </slot>
       </div>
       <teleport :to="floatingPanelsRef?.titlePanel" :disabled="!floatingPanelsRef?.floating">
-        <info-panel/>
+        <slot name="infoPanel" v-bind="playlistProps">
+          <info-panel/>
+        </slot>
       </teleport>
       <teleport :to="floatingPanelsRef?.rightPanel" :disabled="!floatingPanelsRef?.floating">
-        <playlist/>
+        <slot name="playlist" v-bind="playlistProps">
+          <playlist/>
+        </slot>
       </teleport>
     </div>
   </teleport>
@@ -95,7 +99,7 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose, ISourceWrapper,
+  IPlayerExpose, IPlaylistSlotProps, ISourceWrapper,
   ITypedSource,
   IVideoQuality,
   PlaybackMode
@@ -179,6 +183,12 @@ const slotProps: any = computed(() => ({
   playbackRate: playerRef.value?.rate || 1,
   controlsVisibility: controlsVisibility.value
 }));
+
+const playlistProps = computed<IPlaylistSlotProps>(() => ({
+  playlist: navControlsRef.value?.playlist || [],
+  src: playerRef.value?.src as any,
+  play: navControlsRef.value?.play,
+}))
 
 
 // 播放控制

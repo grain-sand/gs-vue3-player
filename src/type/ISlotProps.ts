@@ -1,8 +1,8 @@
 import {VNode} from "vue";
+import {IGsPlayerExpose} from "./IGsPlayerExpose";
 
-/** 按钮类型 */
 export const ControlItemTypes = ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] as const;
-/** 按钮类型联合类型 */
+
 export type ControlItemType = (typeof ControlItemTypes)[number];
 
 /** 进度条插槽接口 */
@@ -61,6 +61,9 @@ export interface IControlsSlotProps extends IProgressSlotProps {
 	formatTime: (seconds: number) => string;
 }
 
+export interface IPlaylistSlotProps extends Pick<IGsPlayerExpose, 'playlist' | 'src' | 'play'> {
+}
+
 
 export interface IGsPlayerSlots {
 
@@ -71,5 +74,9 @@ export interface IGsPlayerSlots {
 	buttons(props: IControlsSlotProps): VNode[] | VNode
 
 	progress(props: IProgressSlotProps): VNode[] | VNode
+
+	infoPanel(props: IPlaylistSlotProps): VNode[] | VNode
+
+	playlist(props: IPlaylistSlotProps): VNode[] | VNode
 
 }
