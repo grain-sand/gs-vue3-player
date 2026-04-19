@@ -67,7 +67,7 @@ export interface IQualitiesGsSource<D = any> extends IGsPlayerSource<D, Array<IV
 
 export type GsPlayerSource<D = any> = string | IStringGsSource<D> | IQualitiesGsSource<D>;
 
-export interface ISourceWrapper<D = any, R extends GsPlayerSource<D> = GsPlayerSource<D>> extends Readonly<IGsPlayerSource<D>> {
+export interface ISourceWrapper<D=any,R extends GsPlayerSource<D> = GsPlayerSource<D>> extends Readonly<IGsPlayerSource> {
 	/**
 	 * 播放器内部对源的唯一标识
 	 */

@@ -8,6 +8,7 @@
         @dblclick="handlePlayerDblClick"
     >
       <div class="player-main">
+        <!--   @vue-ignore -->
         <player
             ref="playerRef"
             :hls-config="hlsConfig"

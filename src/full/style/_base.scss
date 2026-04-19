@@ -1,16 +1,6 @@
 /* 基础结构 */
 .gs-player {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: var(--gs-bg);
-  overflow: hidden;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: calc(var(--gs-progress-min-h) / 2);
-  align-items: center;
-  justify-content: center;
+
   &,& *{
 	box-sizing: border-box;
 	-moz-text-size-adjust: none;
@@ -18,51 +8,15 @@
 	text-size-adjust: none;
   }
 
-  video {
-	max-width: 100%;
-	max-height: 100%;
-	object-fit: contain;
-  }
-
-  .space {
-	min-width: 0 !important;
-	min-height: 0 !important;
-	border: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	flex: 1;
-  }
-
-  .gs-player-footer {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-
-	.gs-controls {
-	  transform: translateY(100%);
-	  transition-delay: var(--gs-progress-out-delay);
-	}
-
-	.gs-progress-container {
-	  transform: translateY(45.5px);
-	  transition-delay: var(--gs-progress-out-delay);
-	}
-  }
-
   &.is-web-fullscreen {
 	position: fixed;
 	inset: 0;
 	z-index: 9999;
 	background: #000;
-	padding-bottom: 0;
-
-	.gs-progress-container {
-	  transform: translateY(46px);
-	}
+	overflow: hidden;
   }
 
-  &:not(:fullscreen):not(.is-web-fullscreen):hover .gs-player-footer, .gs-player-footer:hover {
+  &:not(:fullscreen):not(.is-web-fullscreen):hover .player-main .gs-player-footer {
 	.gs-progress-container {
 	  transform: translateY(2px);
 	  transition-delay: 0s;
@@ -71,6 +25,14 @@
 	.gs-controls {
 	  transform: translateY(0%);
 	  transition-delay: 0s;
+	}
+  }
+
+  &.is-web-fullscreen .player-main {
+	padding-bottom: 0;
+
+	.gs-progress-container {
+	  transform: translateY(46px);
 	}
   }
 }
