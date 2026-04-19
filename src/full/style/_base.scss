@@ -1,5 +1,3 @@
-@use "scrollbar" as *;
-
 /* 基础结构 */
 .gs-player {
   display: flex;
@@ -19,7 +17,24 @@
   .gs-playlist,
   .gs-info-panel section {
 	border-top: 1px solid var(--border-light);
-	@include scrollbar;
+	&::-webkit-scrollbar {
+	  width: 6px;
+	  height: 8px;
+	}
+
+	&::-webkit-scrollbar-track {
+	  background: var(--bg-secondary);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  background: rgba(255, 255, 255, 0.3);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+	  background: rgba(255, 255, 255, 0.5);
+	}
   }
 
   &.is-web-fullscreen {

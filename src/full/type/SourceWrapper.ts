@@ -61,4 +61,8 @@ export class SourceWrapper implements ISourceWrapper {
 	get aspectRatio(): AspectRatio {
 		return this._raw.aspectRatio;
 	}
+
+	get description(): string {
+		return this._raw.description;
+	}
 }

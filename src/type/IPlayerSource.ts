@@ -63,6 +63,8 @@ export interface IGsSource<D = any, T extends string | IVideoQualityItem[] = any
 	author?: IAuthor;
 
 	aspectRatio?: AspectRatio;
+
+	description?: string;
 }
 
 // 指定类型与URL

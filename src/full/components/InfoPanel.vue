@@ -1,6 +1,6 @@
 <template>
   <div class="gs-info-panel">
-    <section v-text="src?.title"></section>
+    <section v-html="src?.description||src?.title"></section>
     <footer v-if="src?.author || src?.link">
       <author :author="src.author" :handle-click="true"/>
       <a v-if="src.link" :href="src.link" target="_blank">
