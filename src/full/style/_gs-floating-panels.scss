@@ -1,9 +1,5 @@
-@use "variables" as vars;
-
 .gs-player {
   position: relative;
-
-  $size: 48px;
 
   .gs-title-float-panel,
   .gs-right-float-panel {
@@ -39,14 +35,14 @@
 		  height: auto;
 		  min-height: auto;
 		  max-height: 100%;
-		  padding: vars.$spacing-lg;
+		  padding: var(--spacing-lg);
 		  border: none;
 		}
 	  }
 	}
 
 	&:not(:hover) {
-	  height: $size;
+	  height: 48px;
 
 	  > div {
 		transform: translateY(-90em);
@@ -63,9 +59,9 @@
   }
 
   .gs-right-float-panel {
-	top: $size;
-	bottom: $size;
-	width: $size;
+	top: 48px;
+	bottom: 48px;
+	width: 48px;
 	display: flex;
 	flex-flow: nowrap column;
 	justify-content: center;
@@ -75,7 +71,7 @@
 	}
 
 	&:not(:hover) {
-	  width: $size;
+	  width: 48px;
 	  > ul {
 		opacity: 0;
 		transform: translateX(320px);

@@ -1,13 +1,3 @@
-$font-size-sm: 12px;
-$font-size-md: 14px;
-$font-size-lg: 16px;
-$spacing-xs: 2px;
-$spacing-sm: 4px;
-$spacing-md: 6px;
-$spacing-lg: 8px;
-$border-radius: 4px;
-$transition: all 0.3s ease;
-
 @mixin variables($selector:'.gs-player') {
   #{$selector} {
 	/* 主题变量：更加柔和的现代配色 */
@@ -54,5 +44,14 @@ $transition: all 0.3s ease;
 	--gs-progress-min-h: 4px;
 	--gs-progress-out-delay: .5s;
 	--gs-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	--font-size-sm: 12px;
+	--font-size-md: 14px;
+	--font-size-lg: 16px;
+	--spacing-xs: 2px;
+	--spacing-sm: 4px;
+	--spacing-md: 6px;
+	--spacing-lg: 8px;
+	--border-radius: 4px;
+	--transition: all 0.3s ease;
   }
 }

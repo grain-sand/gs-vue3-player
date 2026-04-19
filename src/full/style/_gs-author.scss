@@ -1,13 +1,11 @@
-@use "variables" as vars;
-
 .gs-author {
   display: flex;
   flex-flow: nowrap row;
   align-items: center;
-  gap: vars.$spacing-sm;
+  gap: var(--spacing-sm);
   margin: 0;
   cursor: pointer;
-  transition: vars.$transition;
+  transition: var(--transition);
   opacity: 0.9;
 
   > img {
@@ -19,7 +17,7 @@
   }
 
   > figcaption {
-	font-size: vars.$font-size-sm;
+	font-size: var(--font-size-sm);
 	color: var(--text-secondary);
 	margin: 0;
 	white-space: nowrap;
@@ -29,7 +27,7 @@
 
   &.handleClick:hover {
 	opacity: 1;
-	transition: vars.$transition;
+	transition: var(--transition);
 
 	> figcaption {
 	  text-decoration: underline;
