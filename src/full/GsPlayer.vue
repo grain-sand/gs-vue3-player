@@ -1,10 +1,11 @@
 <template>
-  <Teleport :to="fullTarget" :disabled="!isWebFullscreen">
+  <teleport :to="fullTarget" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
         ref="containerRef"
     >
+      <floating-panels ref="floatingPanelsRef"/>
       <div class="gs-player-main"
            @click="handlePlayerClick"
            @dblclick="handlePlayerDblClick"
@@ -74,10 +75,14 @@
           </footer>
         </slot>
       </div>
-      <info-panel/>
-      <playlist/>
+      <teleport :to="floatingPanelsRef?.titlePanel.value" :disabled="!floatingPanelsRef?.floating">
+        <info-panel/>
+      </teleport>
+      <teleport :to="floatingPanelsRef?.rightPanel.value" :disabled="!floatingPanelsRef?.floating">
+        <playlist/>
+      </teleport>
     </div>
-  </Teleport>
+  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -107,9 +112,10 @@ import {
   VolumeControl
 } from './components';
 import {IGsPlayerInject, GsPlayerInjectKey} from './type/IGsPlayerInject';
-import {IGsFullscreenControlExpose, INavControlsExpose} from "./type/ControlsExposes";
+import {IFloatingPanelsExpose, IGsFullscreenControlExpose, INavControlsExpose} from "./type/ControlsExposes";
 import InfoPanel from "./components/InfoPanel.vue";
 import Playlist from "./components/Playlist.vue";
+import FloatingPanels from "./components/FloatingPanels.vue";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -134,6 +140,7 @@ const playerRef = ref<IPlayerExpose>();
 const containerRef = ref<HTMLDivElement>();
 const navControlsRef = ref<INavControlsExpose>();
 const fullscreenControlRef = ref<IGsFullscreenControlExpose>();
+const floatingPanelsRef = ref<IFloatingPanelsExpose>();
 
 // State
 const isWebFullscreen = ref(false);
