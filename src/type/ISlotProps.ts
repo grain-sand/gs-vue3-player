@@ -68,7 +68,7 @@ export interface IGsPlayerSlots {
 
 	footer(props: IControlsSlotProps): VNode[] | VNode
 
-	controls(props: IControlsSlotProps): VNode[] | VNode
+	buttons(props: IControlsSlotProps): VNode[] | VNode
 
 	progress(props: IProgressSlotProps): VNode[] | VNode
 

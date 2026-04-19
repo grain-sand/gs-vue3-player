@@ -7,74 +7,71 @@
         @click="handlePlayerClick"
         @dblclick="handlePlayerDblClick"
     >
-      <!-- @vue-ignore-->
-      <Player
-          ref="playerRef"
-          :hls-config="hlsConfig"
-          :quality="quality"
-          :use-browser-hls="useBrowserHls"
-          :rate="rate"
-          :volume="volume"
-          :autoplay="autoplay"
-          :showControls='false'
-          :muted="muted"
-          @volume-change="emit('volumeChange', $event)"
-          @rate-change="emit('rateChange', $event)"
-      />
-
-      <!-- 播放覆盖层 -->
-      <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
-           class="gs-player-play-overlay" :class="{muted:playerRef?.muted,paused:!playerRef?.playing}">
-        <div class="gs-play-overlay-button">
-          <PlayOverlaySvg v-if="!playerRef?.playing"/>
-          <MuteSvg v-else-if="playerRef?.muted"/>
+      <div class="player-main">
+        <player
+            ref="playerRef"
+            :hls-config="hlsConfig"
+            :quality="quality"
+            :use-browser-hls="useBrowserHls"
+            :rate="rate"
+            :volume="volume"
+            :autoplay="autoplay"
+            :showControls='false'
+            :muted="muted"
+            @volume-change="emit('volumeChange', $event)"
+            @rate-change="emit('rateChange', $event)"
+        />
+        <!-- 播放覆盖层 -->
+        <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
+             class="gs-player-play-overlay" :class="{muted:playerRef?.muted,paused:!playerRef?.playing}">
+          <div class="gs-play-overlay-button">
+            <PlayOverlaySvg v-if="!playerRef?.playing"/>
+            <MuteSvg v-else-if="playerRef?.muted"/>
+          </div>
         </div>
+
+        <!-- 错误信息 -->
+        <div v-if="showError && playerRef?.error" class="gs-player-error">
+          <ErrorSvg class="gs-icon-spin"/>
+          <span>{{ props.i18n.errorMessage }}</span>
+        </div>
+
+        <slot name="footer" v-bind="slotProps">
+          <!-- 底部控制区域 -->
+          <footer v-if="props.showControls" class="gs-player-footer" @dblclick.stop @click.stop>
+            <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
+              <!-- 进度条 -->
+              <ProgressBar/>
+            </slot>
+
+            <slot name="buttons" v-bind="slotProps">
+              <!-- 控制面板 -->
+              <div class="gs-controls" :title="playerTitle">
+                <!-- 导航按钮组 -->
+                <NavControls ref="navControlsRef"/>
+
+                <!-- 时间显示 -->
+                <TimeDisplay/>
+                <div class="space"></div>
+                <slot v-bind="slotProps"></slot>
+                <div class="space"></div>
+
+                <!-- 速度控制 -->
+                <SpeedControl/>
+
+                <!-- 音量控制 -->
+                <VolumeControl/>
+
+                <!-- 播放模式 -->
+                <ModeControl/>
+
+                <!-- 全屏控制 -->
+                <FullscreenControl ref="fullscreenControlRef"/>
+              </div>
+            </slot>
+          </footer>
+        </slot>
       </div>
-
-      <!-- 错误信息 -->
-      <div v-if="showError && playerRef?.error" class="gs-player-error">
-        <ErrorSvg class="gs-icon-spin"/>
-        <span>{{ props.i18n.errorMessage }}</span>
-      </div>
-
-      <!-- 默认插槽 -->
-      <slot name="footer" v-bind="slotProps">
-        <!-- 底部控制区域 -->
-        <footer v-if="props.showControls" class="gs-player-footer" @dblclick.stop @click.stop>
-          <!-- 进度条插槽 -->
-          <slot name="progress" v-if="controlsVisibility.progress" v-bind="progressSlotProps">
-            <!-- 进度条 -->
-            <ProgressBar/>
-          </slot>
-
-          <slot name="controls" v-bind="slotProps">
-            <!-- 控制面板 -->
-            <div class="gs-controls" :title="playerTitle">
-              <!-- 导航按钮组 -->
-              <NavControls ref="navControlsRef"/>
-
-              <!-- 时间显示 -->
-              <TimeDisplay/>
-              <div class="space"></div>
-              <slot v-bind="slotProps">
-              </slot>
-              <div class="space"></div>
-
-              <!-- 速度控制 -->
-              <SpeedControl/>
-
-              <!-- 音量控制 -->
-              <VolumeControl/>
-
-              <!-- 播放模式 -->
-              <ModeControl/>
-
-              <!-- 全屏控制 -->
-              <FullscreenControl ref="fullscreenControlRef"/>
-            </div>
-          </slot>
-        </footer>
-      </slot>
     </div>
   </Teleport>
 </template>

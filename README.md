@@ -167,7 +167,7 @@ yarn add gs-vue3-player
     </template>
 
     <!-- Custom controls -->
-    <template #controls="{ isPlaying, togglePlay, volume, setVolume }">
+    <template #buttons="{ isPlaying, togglePlay, volume, setVolume }">
       <div class="custom-controls">
         <button @click="togglePlay">
           {{ isPlaying ? 'Pause' : 'Play' }}
