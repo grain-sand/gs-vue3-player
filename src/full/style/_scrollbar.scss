@@ -1,0 +1,22 @@
+@use "variables" as vars;
+
+@mixin scrollbar($width: 6px, $height: 8px) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $height;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}

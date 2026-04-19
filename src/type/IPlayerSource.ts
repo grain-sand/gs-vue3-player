@@ -1,3 +1,5 @@
+import {IAuthor} from "./IAuthorProps";
+
 export const PlayerSourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
 
 export type PlayerSourceType = (typeof PlayerSourceTypes)[number];
@@ -17,57 +19,59 @@ export interface IVideoQualityItem extends IVideoQuality {
 	url: string;
 }
 
-export interface ITypedPlayerSource<D = any, T extends string | IVideoQualityItem[] = any> {
+export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = any> {
 	type?: PlayerSourceType;
 	poster?: string;
 	title?: string;
 	src: T;
 	/**
-	 * 用于设置的附加数据
+	 * 外部设置的附加数据
 	 */
-	_raw?: D;
+	data?: D;
+
+	/**
+	 * 视频时长
+	 * 单位：秒
+	 * 未设置时，播放器会自动回写
+	 */
+	duration?: number;
 }
 
 // 指定类型与URL
-export interface IStringPlayerSource<D = any> extends ITypedPlayerSource<D, string> {
+export interface IStringSource<D = any> extends ITypedSource<D, string> {
 }
 
-export interface IQualitiesPlayerSource<D = any> extends ITypedPlayerSource<D, Array<IVideoQualityItem>> {
+export interface IQualitiesSource<D = any> extends ITypedSource<D, Array<IVideoQualityItem>> {
 }
 
 // 输入类型
-export type PlayerSource<D = any> = string | IStringPlayerSource<D> | IQualitiesPlayerSource<D>;
-
-export interface IAuthor {
-	profile_image?: string;
-	name: string;
-	link?: string;
-}
+export type PlayerSource<D = any> = string | IStringSource<D> | IQualitiesSource<D>;
 
 
-export interface IGsPlayerSource<D = any, T extends string | IVideoQualityItem[] = any> extends ITypedPlayerSource<D, T> {
+export interface IGsSource<D = any, T extends string | IVideoQualityItem[] = any> extends ITypedSource<D, T> {
 	/**
-	 * 用于设置的标识索引的值
+	 * 外部设置的索引标识
 	 */
-	_id?: number
+	index?: number
 
 	/**
 	 * 点击时跳转到
 	 */
 	link?: string;
 
+	author?: IAuthor;
 }
 
 // 指定类型与URL
-export interface IStringGsSource<D = any> extends IGsPlayerSource<D, string> {
+export interface IGsStringSource<D = any> extends IGsSource<D, string> {
 }
 
-export interface IQualitiesGsSource<D = any> extends IGsPlayerSource<D, Array<IVideoQualityItem>> {
+export interface IGsQualitiesSource<D = any> extends IGsSource<D, Array<IVideoQualityItem>> {
 }
 
-export type GsPlayerSource<D = any> = string | IStringGsSource<D> | IQualitiesGsSource<D>;
+export type GsPlayerSource<D = any> = string | IGsStringSource<D> | IGsQualitiesSource<D>;
 
-export interface ISourceWrapper<D=any,R extends GsPlayerSource<D> = GsPlayerSource<D>> extends Readonly<IGsPlayerSource> {
+export interface ISourceWrapper<D = any, R extends GsPlayerSource<D> = GsPlayerSource<D>> extends Readonly<IGsSource<D>> {
 	/**
 	 * 播放器内部对源的唯一标识
 	 */

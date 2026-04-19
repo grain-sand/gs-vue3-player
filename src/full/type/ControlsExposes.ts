@@ -1,6 +1,6 @@
 import {IGsPlayerExpose} from "../../type";
 
-export interface INavControlsExpose extends Pick<IGsPlayerExpose, 'play' | 'playPre' | 'playNext' | 'index' | 'setSrc' | 'playlist'> {
+export interface INavControlsExpose extends Pick<IGsPlayerExpose, 'play' | 'playPre' | 'playNext' | 'index' | 'setSrc' | 'playlist' | 'removePlaylistItem'> {
 	handleEnded: Function,
 
 }

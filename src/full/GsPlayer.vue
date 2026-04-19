@@ -4,10 +4,11 @@
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
         ref="containerRef"
-        @click="handlePlayerClick"
-        @dblclick="handlePlayerDblClick"
     >
-      <div class="player-main">
+      <div class="gs-player-main"
+           @click="handlePlayerClick"
+           @dblclick="handlePlayerDblClick"
+      >
         <!--   @vue-ignore -->
         <player
             ref="playerRef"
@@ -73,6 +74,8 @@
           </footer>
         </slot>
       </div>
+      <info-panel/>
+      <playlist/>
     </div>
   </Teleport>
 </template>
@@ -87,8 +90,8 @@ import {
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose,
-  ITypedPlayerSource,
+  IPlayerExpose, ISourceWrapper,
+  ITypedSource,
   IVideoQuality,
   PlaybackMode
 } from '../type';
@@ -103,8 +106,10 @@ import {
   TimeDisplay,
   VolumeControl
 } from './components';
-import {IGsPlayerInject, PlayerInjectKey} from './type/IGsPlayerInject';
+import {IGsPlayerInject, GsPlayerInjectKey} from './type/IGsPlayerInject';
 import {IGsFullscreenControlExpose, INavControlsExpose} from "./type/ControlsExposes";
+import InfoPanel from "./components/InfoPanel.vue";
+import Playlist from "./components/Playlist.vue";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -209,7 +214,7 @@ const handlePlayerDblClick = () => {
 // 计算播放器标题
 const playerTitle = computed(() => {
   const i = navControlsRef.value?.index;
-  const title = (playerRef.value?.src as ITypedPlayerSource)?.title
+  const title = (playerRef.value?.src as ITypedSource)?.title
   const list = navControlsRef.value?.playlist || []
   const pos = i + 1;
   if (list.length && title) {
@@ -240,11 +245,29 @@ function toBestQuality(reference?: IVideoQuality) {
   playerRef.value?.toBestQuality(reference)
 }
 
-const commonExpose = Object.freeze({play, pause, togglePlay, unmute, setVolume, setRate, toBestQuality, setMode})
+const removePlaylistItem = (src: number | ISourceWrapper) => navControlsRef.value?.removePlaylistItem(src)
+
+const commonExpose = Object.freeze({
+  play,
+  pause,
+  togglePlay,
+  unmute,
+  setVolume,
+  setRate,
+  toBestQuality,
+  setMode,
+  removePlaylistItem
+})
 
 // 提供依赖项给子组件
-provide<IGsPlayerInject>(PlayerInjectKey, {
+provide<IGsPlayerInject>(GsPlayerInjectKey, {
   ...commonExpose,
+  get playlist() {
+    return navControlsRef.value?.playlist || [];
+  },
+  get src() {
+    return playerRef.value?.src as any;
+  },
   get index() {
     return navControlsRef.value?.index;
   },
@@ -379,7 +402,7 @@ defineExpose<IGsPlayerExpose>({
     return props.aspectRatio
   },
   get src() {
-    return playerRef.value.src
+    return playerRef.value.src as any;
   },
   set src(v) {
     playerRef.value.setSrc(v)

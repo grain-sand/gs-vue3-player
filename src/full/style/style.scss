@@ -1,6 +1,9 @@
 @use './base';
-@use './error';
-@use './progress';
-@use './controls';
-@use './play-overlay';
-@use './player-main';
+@use "gs-author";
+@use "gs-info-panel";
+@use "gs-playlist";
+@use 'gs-player-error';
+@use 'gs-progress-container';
+@use 'gs-controls';
+@use 'gs-player-play-overlay';
+@use 'gs-player-main';

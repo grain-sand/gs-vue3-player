@@ -1,0 +1,49 @@
+@use "variables" as *;
+
+.gs-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  background-color: var(--bg-secondary);
+
+  > section {
+	padding: $spacing-md;
+    font-size: $font-size-sm;
+    line-height: 1.5em;
+    color: var(--text-primary);
+    height: 4.5em;
+    min-height: 4.5em;
+    max-height: 4.5em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow-y: auto;
+  }
+
+  > footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-light);
+	background-color: var(--bg-tertiary);
+	padding: $spacing-sm $spacing-md $spacing-sm $spacing-lg;
+
+    > a {
+      color: var(--text-secondary);
+      transition: $transition;
+
+      &:hover {
+        color: var(--text-primary);
+      }
+
+      > svg {
+		width: 16px;
+        transition: $transition;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}

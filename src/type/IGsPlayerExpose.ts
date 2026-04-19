@@ -3,7 +3,7 @@ import {GsPlayerSource, ISourceWrapper, IVideoQuality} from "./IPlayerSource";
 import {AspectRatio, PlaybackMode} from "./IGsPlayerProps";
 
 
-export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc' | 'toBestQuality'> {
+export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'setSrc' | 'toBestQuality' | 'src'> {
 
 
 	/** 播放器实例 */
@@ -21,6 +21,8 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	readonly isAnyFullscreen: boolean;
 
 	readonly aspectRatio?: AspectRatio | 'auto'
+
+	readonly src: ISourceWrapper
 
 	/**
 	 * 播放视频
@@ -52,5 +54,7 @@ export interface IGsPlayerExpose extends Omit<IPlayerExpose, 'el' | 'play' | 'se
 	 * 退出任意全屏模式
 	 */
 	exitFullscreen(): void;
+
+	removePlaylistItem(src: number | ISourceWrapper): void
 
 }

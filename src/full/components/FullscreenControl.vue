@@ -29,11 +29,11 @@
 import {inject, onMounted, ref} from 'vue';
 import {FullscreenSvg, PipSvg, WebFullscreenSvg} from '../../svgs';
 import type {IGsPlayerInject} from '../type/IGsPlayerInject';
-import {PlayerInjectKey} from '../type/IGsPlayerInject';
+import {GsPlayerInjectKey} from '../type/IGsPlayerInject';
 import {IGsFullscreenControlExpose} from "../type/ControlsExposes";
 import {wait} from "gs-base/timer";
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(GsPlayerInjectKey)!;
 
 const isPipSupported = ref(false);
 const isAnyFullscreen = () => player.isWebFullscreen.value || !!document.fullscreenElement;

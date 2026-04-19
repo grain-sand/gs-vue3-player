@@ -36,11 +36,11 @@ import {NextSvg, PlayStateIcons, PreSvg} from '../../svgs';
 import type {IGsPlayerExpose, ISourceWrapper, PlayerSource} from '../../type';
 
 
-import {IGsPlayerInject, PlayerInjectKey} from '../type/IGsPlayerInject';
+import {IGsPlayerInject, GsPlayerInjectKey} from '../type/IGsPlayerInject';
 import {INavControlsExpose} from "../type/ControlsExposes";
 import {SourceWrapper} from "../type/SourceWrapper";
 
-const gsPlayer = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const gsPlayer = inject<IGsPlayerInject>(GsPlayerInjectKey)!;
 
 const player = computed(() => gsPlayer.playerRef.value);
 
@@ -214,13 +214,7 @@ const handleEnded = () => {
         // 从播放列表中删除当前视频
         const currentIndex = index.value;
         if (currentIndex >= 0 && currentIndex < playlist.value.length) {
-          const deletedItem = playlist.value[currentIndex];
-          playlist.value.splice(currentIndex, 1);
-          wrapperMap.delete(deletedItem._raw);
-
-          // @ts-ignore
-          gsPlayer.emit('srcRemove', deletedItem._raw);
-
+          removePlaylistItem(currentIndex);
           // 如果还有视频，播放下一个
           if (playlist.value.length) {
             const nextIndex = currentIndex < playlist.value.length ? currentIndex : 0;
@@ -238,6 +232,17 @@ const handleEnded = () => {
     el.muted = muted;
   }
 };
+
+function removePlaylistItem(src: number | ISourceWrapper): void {
+  const i = typeof src === 'number' ? src : playlist.value?.findIndex((item) => item._id === src?._id)
+  const delSrc = playlist.value?.[i];
+  if (!delSrc) return;
+  playlist.value.splice(i, 1);
+  wrapperMap.delete(delSrc._raw);
+
+  // @ts-ignore
+  gsPlayer.emit('srcRemove', delSrc._raw);
+}
 
 const alwaysShowNav = computed(() => playlist.value?.length > 1 && ['loopAll', 'shuffle'].includes(gsPlayer.currentMode));
 
@@ -259,5 +264,6 @@ defineExpose<INavControlsExpose>({
   playNext,
   playPre,
   setSrc,
+  removePlaylistItem
 });
 </script>

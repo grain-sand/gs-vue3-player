@@ -1,4 +1,4 @@
-import {GsPlayerSource, ISourceWrapper, PlayerSourceType} from "../../type";
+import {GsPlayerSource, IAuthor, ISourceWrapper, PlayerSourceType} from "../../type";
 
 export class SourceWrapper implements ISourceWrapper {
 
@@ -41,4 +41,20 @@ export class SourceWrapper implements ISourceWrapper {
 		return this._raw.data
 	}
 
+	get duration(): number {
+		return this._raw.duration || 0
+	}
+
+	set duration(v: number) {
+		this._raw.duration = v
+	}
+
+
+	get author(): IAuthor {
+		return this._raw.author;
+	}
+
+	get index(): number {
+		return this._raw.index;
+	}
 }

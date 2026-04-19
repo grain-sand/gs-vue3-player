@@ -4,10 +4,10 @@ import {Ref} from "vue";
 /**
  * 播放器依赖注入接口
  */
-export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" | 'togglePlay' | 'play' | 'pause' | 'unmute' | 'setRate' | 'setVolume'|'setMode'> {
+export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" | 'togglePlay' | 'play' | 'pause' | 'unmute' | 'setRate' | 'setVolume' | 'setMode' | 'playlist' | 'src' | 'removePlaylistItem'|'index'>  {
 	// 状态
 	currentMode: PlaybackMode;
-	index: number;
+
 	// 计算属性
 	controlsVisibility: Record<ControlItemType, boolean>;
 	// Props
@@ -26,4 +26,4 @@ export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" |
 /**
  * 依赖注入的键
  */
-export const PlayerInjectKey = Symbol('PlayerInject');
+export const GsPlayerInjectKey = Symbol('PlayerInject');

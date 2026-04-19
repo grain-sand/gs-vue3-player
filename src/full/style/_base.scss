@@ -1,5 +1,12 @@
+@use "scrollbar" as *;
+
 /* 基础结构 */
 .gs-player {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
 
   &,& *{
 	box-sizing: border-box;
@@ -8,15 +15,23 @@
 	text-size-adjust: none;
   }
 
+  // 为所有子组件设置相同的滚动条样式
+  .gs-playlist,
+  .gs-info-panel section {
+	border-top: 1px solid var(--border-light);
+	@include scrollbar;
+  }
+
   &.is-web-fullscreen {
 	position: fixed;
 	inset: 0;
 	z-index: 9999;
 	background: #000;
-	overflow: hidden;
+	margin: 0;
+	padding: 0;
   }
 
-  &:not(:fullscreen):not(.is-web-fullscreen):hover .player-main .gs-player-footer {
+  &:not(:fullscreen):not(.is-web-fullscreen) .gs-player-main:hover .gs-player-footer {
 	.gs-progress-container {
 	  transform: translateY(2px);
 	  transition-delay: 0s;
@@ -28,7 +43,7 @@
 	}
   }
 
-  &.is-web-fullscreen .player-main {
+  &.is-web-fullscreen .gs-player-main {
 	padding-bottom: 0;
 
 	.gs-progress-container {

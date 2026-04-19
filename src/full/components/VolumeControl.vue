@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import {inject, computed} from 'vue';
 import {VolumeStateIcons} from '../../svgs';
-import {PlayerInjectKey} from '../type/IGsPlayerInject';
+import {GsPlayerInjectKey} from '../type/IGsPlayerInject';
 
 import type {IGsPlayerInject} from '../type/IGsPlayerInject';
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(GsPlayerInjectKey)!;
 
 // 计算属性：从playerRef获取音量和静音状态
 const volume = computed(() => player.playerRef.value?.volume || 0);

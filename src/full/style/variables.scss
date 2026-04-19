@@ -1,3 +1,13 @@
+$font-size-sm: 12px;
+$font-size-md: 14px;
+$font-size-lg: 16px;
+$spacing-xs: 2px;
+$spacing-sm: 4px;
+$spacing-md: 6px;
+$spacing-lg: 8px;
+$border-radius: 4px;
+$transition: all 0.3s ease;
+
 @mixin variables($selector:'.gs-player') {
   #{$selector} {
 	/* 主题变量：更加柔和的现代配色 */
@@ -8,6 +18,16 @@
 	  --gs-hover-bg: rgba(255, 255, 255, 0.15);
 	  --gs-primary: #409eff;
 	  --gs-track-bg: rgba(255, 255, 255, 0.3);
+	  --bg-primary: #1a1a1a;
+	  --bg-secondary: #252525;
+	  --bg-tertiary: #333333;
+	  --text-primary: var(--gs-text);
+	  --text-secondary: rgba(255, 255, 255, 0.7);
+	  --text-tertiary: rgba(255, 255, 255, 0.5);
+	  --border-color: rgba(255, 255, 255, 0.2);
+	  --border-light: rgba(255, 255, 255, 0.1);
+	  --hover-color: rgba(255, 255, 255, 0.15);
+	  --hover-light: rgba(255, 255, 255, 0.08);
 	}
 
 	&[theme="light"] {
@@ -17,6 +37,16 @@
 	  --gs-hover-bg: rgba(0, 0, 0, 0.08);
 	  --gs-primary: #409eff;
 	  --gs-track-bg: rgba(0, 0, 0, 0.15);
+	  --bg-primary: var(--gs-bg);
+	  --bg-secondary: rgba(0, 0, 0, 0.05);
+	  --bg-tertiary: rgba(0, 0, 0, 0.1);
+	  --text-primary: var(--gs-text);
+	  --text-secondary: rgba(0, 0, 0, 0.6);
+	  --text-tertiary: rgba(0, 0, 0, 0.4);
+	  --border-color: rgba(0, 0, 0, 0.1);
+	  --border-light: rgba(0, 0, 0, 0.05);
+	  --hover-color: rgba(0, 0, 0, 0.08);
+	  --hover-light: rgba(0, 0, 0, 0.04);
 	}
 
 	--gs-ctrl-h: 44px;

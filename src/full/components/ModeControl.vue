@@ -22,12 +22,12 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { PlaybackModeIcons } from '../../svgs';
-import { PlayerInjectKey } from '../type/IGsPlayerInject';
+import { GsPlayerInjectKey } from '../type/IGsPlayerInject';
 import type { PlaybackMode } from '../../type';
 
 import type { IGsPlayerInject } from '../type/IGsPlayerInject';
 
-const player = inject<IGsPlayerInject>(PlayerInjectKey)!;
+const player = inject<IGsPlayerInject>(GsPlayerInjectKey)!;
 
 // 可用的播放模式
 const availableModes = computed<Array<{
