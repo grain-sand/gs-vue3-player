@@ -4,7 +4,7 @@ import {Ref} from "vue";
 /**
  * 播放器依赖注入接口
  */
-export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" | 'togglePlay' | 'play' | 'pause' | 'unmute' | 'setRate' | 'setVolume' | 'setMode' | 'playlist' | 'src' | 'removePlaylistItem'|'index'>  {
+export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" | 'togglePlay' | 'play' | 'pause' | 'unmute' | 'setRate' | 'setVolume' | 'setMode' | 'playlist' | 'src' | 'removePlaylistItem' | 'index' | 'isAnyFullscreen'> {
 	// 状态
 	currentMode: PlaybackMode;
 
@@ -18,7 +18,7 @@ export interface IGsPlayerInject extends Pick<IGsPlayerExpose, "toBestQuality" |
 
 	containerRef: Ref<HTMLDivElement>;
 
-	isWebFullscreen: { value: boolean };
+	isWebFullscreen: Ref<boolean>
 
 	emit: (e: string, ...arg: any) => void;
 }

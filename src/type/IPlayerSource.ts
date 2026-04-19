@@ -1,4 +1,5 @@
 import {IAuthor} from "./IAuthorProps";
+import {AspectRatio} from "./IGsPlayerProps";
 
 export const PlayerSourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
 
@@ -60,6 +61,8 @@ export interface IGsSource<D = any, T extends string | IVideoQualityItem[] = any
 	link?: string;
 
 	author?: IAuthor;
+
+	aspectRatio?: AspectRatio;
 }
 
 // 指定类型与URL

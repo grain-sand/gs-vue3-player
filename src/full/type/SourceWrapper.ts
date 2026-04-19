@@ -1,4 +1,4 @@
-import {GsPlayerSource, IAuthor, ISourceWrapper, PlayerSourceType} from "../../type";
+import {AspectRatio, GsPlayerSource, IAuthor, ISourceWrapper, PlayerSourceType} from "../../type";
 
 export class SourceWrapper implements ISourceWrapper {
 
@@ -56,5 +56,9 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get index(): number {
 		return this._raw.index;
+	}
+
+	get aspectRatio(): AspectRatio {
+		return this._raw.aspectRatio;
 	}
 }

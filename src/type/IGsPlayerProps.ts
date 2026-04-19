@@ -3,7 +3,9 @@ import type {GsPlayerSource, PlayerSource} from './IPlayerSource';
 import type {ControlItemType} from './ISlotProps';
 import {II18n} from "./II18n";
 
-export type AspectRatio = [number, number] | 'auto';
+export type AspectRatio = [number, number];
+
+export type AspectRatioMode = AspectRatio | 'auto';
 /** 全屏按钮显示方式 */
 export const FullscreenButtonModes = ['submenu', 'control', 'hidden'] as const;
 /** 全屏按钮显示方式类型 */
@@ -54,7 +56,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/**
 	 * 视频比例
 	 */
-	aspectRatio?: AspectRatio
+	aspectRatio?: AspectRatioMode
 }
 
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {

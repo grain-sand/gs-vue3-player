@@ -75,10 +75,10 @@
           </footer>
         </slot>
       </div>
-      <teleport :to="floatingPanelsRef?.titlePanel.value" :disabled="!floatingPanelsRef?.floating">
+      <teleport :to="floatingPanelsRef?.titlePanel" :disabled="!floatingPanelsRef?.floating">
         <info-panel/>
       </teleport>
-      <teleport :to="floatingPanelsRef?.rightPanel.value" :disabled="!floatingPanelsRef?.floating">
+      <teleport :to="floatingPanelsRef?.rightPanel" :disabled="!floatingPanelsRef?.floating">
         <playlist/>
       </teleport>
     </div>
@@ -290,6 +290,9 @@ provide<IGsPlayerInject>(GsPlayerInjectKey, {
   props,
   //
   isWebFullscreen,
+  get isAnyFullscreen() {
+    return fullscreenControlRef.value.isAnyFullscreen
+  },
   emit,
   // 方法
   // Refs
