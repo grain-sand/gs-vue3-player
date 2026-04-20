@@ -57,6 +57,11 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	 * 视频比例
 	 */
 	aspectRatio?: AspectRatioMode
+
+	/**
+	 * css 变量写入目标，默认 gs-player
+	 */
+	variableWriteTarget?: HTMLElement;
 }
 
 export interface IGsPlayerEmits extends Omit<IPlayerEmits, 'srcChange'> {

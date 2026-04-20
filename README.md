@@ -36,7 +36,7 @@ yarn add gs-vue3-player
       :list="playlist"
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
-      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'infoPanel', 'playlist']"
       :keyboardTarget=".gs-player"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
@@ -122,7 +122,8 @@ yarn add gs-vue3-player
       disabled: 'Disabled',
       loop: 'Loop Current',
       loopAll: 'Loop All',
-      shuffle: 'Shuffle'
+      shuffle: 'Shuffle',
+      deleteAfterPlay: 'Delete After Play'
     },
     titles: {
       play: 'Play/Pause',
@@ -136,6 +137,30 @@ yarn add gs-vue3-player
       pip: 'Picture-in-Picture'
     }
   };
+</script>
+```
+
+### Built-in Languages
+
+The player comes with built-in support for multiple languages:
+
+- English (`enUS`)
+- Simplified Chinese (`zhCN`)
+- Traditional Chinese (`zhTW`)
+- Japanese (`jaJP`)
+- Korean (`koKR`)
+
+You can use them directly:
+
+```vue
+
+<template>
+  <GsPlayer src="https://example.com/video.mp4" :i18n="jaJP"/>
+</template>
+
+<script setup lang="ts">
+  import {GsPlayer, jaJP} from 'gs-vue3-player';
+  import 'gs-vue3-player/lib/main.css';
 </script>
 ```
 
@@ -228,7 +253,7 @@ yarn add gs-vue3-player
 | playlist             | PlayerSource[]       | []                                                                           | Playlist                    |
 | mode                 | PlaybackMode         | 'sequence'                                                                   | Playback mode               |
 | rates                | number[]             | [0.8, 1.0, 1.2, 1.5, 2.0, 3.0]                                              | Playback rates              |
-| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] | Visible controls            |
+| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay', 'infoPanel', 'playlist'] | Visible controls            |
 | hiddenItems          | ControlItemType[]    | []                                                                           | Hidden controls             |
 | showControls         | boolean              | true                                                                         | Show controls               |
 | showError            | boolean              | true                                                                         | Show error message          |
@@ -255,11 +280,13 @@ yarn add gs-vue3-player
 
 ## List and Navigation
 
-| Slot     | Description       | Props             |
-|----------|-------------------|-------------------|
-| footer   | Footer slot       | slotProps         |
-| progress | Progress bar slot | progressSlotProps |
-| controls | Controls slot     | slotProps         |
+| Slot       | Description         | Props             |
+|------------|---------------------|-------------------|
+| footer     | Footer slot         | slotProps         |
+| progress   | Progress bar slot   | progressSlotProps |
+| controls   | Controls slot       | slotProps         |
+| infoPanel  | Info panel slot     | playlistSlotProps |
+| playlist   | Playlist slot       | playlistSlotProps |
 
 ## Expose
 

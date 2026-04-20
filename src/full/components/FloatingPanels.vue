@@ -22,6 +22,7 @@ const rightPanel = ref<HTMLDivElement>()
 const aspectRatio = ref<AspectRatioMode>(api.props.aspectRatio || DefaultAspectRatio)
 const rect = ref<DOMRectReadOnly>(<any>{})
 const floating = ref(false)
+const target = computed(() => api.props.variableWriteTarget || api.containerRef.value)
 
 const playerCoreHeight = computed(() => {
   const {width} = rect.value
@@ -47,10 +48,11 @@ const resizeObserver = new ResizeObserver(async ([e]) => {
     rect.value = e.contentRect
   }
   floating.value = api.isAnyFullscreen && rect.value.width > rect.value.height;
+  const playerCoreWidth = rect.value.width;
   if (floating.value) {
-    setStyleVars(api.containerRef.value, {playerCoreHeight: '100%'});
+    setStyleVars(target.value, {playerCoreHeight: '100%', playerCoreWidth});
   } else {
-    setStyleVars(api.containerRef.value, {playerCoreHeight});
+    setStyleVars(target.value, {playerCoreHeight, playerCoreWidth});
   }
 })
 

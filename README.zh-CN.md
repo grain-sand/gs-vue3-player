@@ -36,7 +36,7 @@ yarn add gs-vue3-player
       :list="playlist"
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
-      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress']"
+      :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'infoPanel', 'playlist']"
       :keyboardTarget=".gs-player"
       @srcChange="handleSrcChange"
       @volumeChange="handleVolumeChange"
@@ -122,7 +122,8 @@ yarn add gs-vue3-player
       disabled: '禁用',
       loop: '单个循环',
       loopAll: '全部循环',
-      shuffle: '随机播放'
+      shuffle: '随机播放',
+      deleteAfterPlay: '播放后删除'
     },
     titles: {
       play: '播放/暂停',
@@ -136,6 +137,30 @@ yarn add gs-vue3-player
       pip: '弹出窗口'
     }
   };
+</script>
+```
+
+### 内置语言支持
+
+播放器内置支持多种语言：
+
+- 英语 (`enUS`)
+- 简体中文 (`zhCN`)
+- 繁体中文 (`zhTW`)
+- 日语 (`jaJP`)
+- 韩语 (`koKR`)
+
+您可以直接使用它们：
+
+```vue
+
+<template>
+  <GsPlayer src="https://example.com/video.mp4" :i18n="jaJP"/>
+</template>
+
+<script setup lang="ts">
+  import {GsPlayer, jaJP} from 'gs-vue3-player';
+  import 'gs-vue3-player/lib/main.css';
 </script>
 ```
 
@@ -228,7 +253,7 @@ yarn add gs-vue3-player
 | playlist             | PlayerSource[]       | []                                                                           | 播放列表      |
 | mode                 | PlaybackMode         | 'sequence'                                                                   | 播放模式      |
 | rates                | number[]             | [0.8, 1.0, 1.2, 1.5, 2.0, 3.0]                                              | 播放速度      |
-| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay'] | 可见控件      |
+| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay', 'infoPanel', 'playlist'] | 可见控件      |
 | hiddenItems          | ControlItemType[]    | []                                                                           | 隐藏控件      |
 | showControls         | boolean              | true                                                                         | 显示控件      |
 | showError            | boolean              | true                                                                         | 显示错误信息    |
@@ -260,6 +285,8 @@ yarn add gs-vue3-player
 | footer   | 底部插槽  | slotProps         |
 | progress | 进度条插槽 | progressSlotProps |
 | controls | 控件插槽  | slotProps         |
+| infoPanel | 信息面板插槽 | playlistSlotProps |
+| playlist | 播放列表插槽 | playlistSlotProps |
 
 ## 暴露的属性和方法
 
