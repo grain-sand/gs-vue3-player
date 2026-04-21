@@ -268,6 +268,7 @@ You can use them directly:
 | keyboardTarget       | string  HTMLElement  false | '.gs-player'                                                           | Keyboard event target       |
 | preSrc               | PlayerSource         | undefined                                                                    | Previous video source       |
 | nextSrc              | PlayerSource         | undefined                                                                    | Next video source           |
+| disableWheelNavigation | boolean              | false                                                                         | Disable wheel navigation     |
 
 ## Events
 

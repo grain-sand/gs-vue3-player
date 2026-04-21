@@ -268,6 +268,7 @@ yarn add gs-vue3-player
 | keyboardTarget       | string  HTMLElement  false | '.gs-player'                                                           | 键盘事件目标    |
 | preSrc               | PlayerSource         | undefined                                                                    | 上一个视频源    |
 | nextSrc              | PlayerSource         | undefined                                                                    | 下一个视频源    |
+| disableWheelNavigation | boolean              | false                                                                         | 禁用鼠标滚轮导航  |
 
 ## 事件
 

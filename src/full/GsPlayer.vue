@@ -23,10 +23,13 @@
             :muted="muted"
             @volume-change="emit('volumeChange', $event)"
             @rate-change="emit('rateChange', $event)"
+            @wheel.stop="handlePlayerWheel"
         />
         <!-- 播放覆盖层 -->
         <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
-             class="gs-player-play-overlay" :class="{muted:playerRef?.muted,paused:!playerRef?.playing}">
+             class="gs-player-play-overlay"
+             @wheel.stop="handlePlayerWheel"
+             :class="{muted:playerRef?.muted,paused:!playerRef?.playing}">
           <div class="gs-play-overlay-button">
             <PlayOverlaySvg v-if="!playerRef?.playing"/>
             <MuteSvg v-else-if="playerRef?.muted"/>
@@ -75,12 +78,14 @@
           </footer>
         </slot>
       </div>
-      <teleport v-if="controlsVisibility.infoPanel" :to="floatingPanelsRef?.titlePanel" :disabled="!floatingPanelsRef?.floating">
+      <teleport v-if="controlsVisibility.infoPanel" :to="floatingPanelsRef?.titlePanel"
+                :disabled="!floatingPanelsRef?.floating">
         <slot name="infoPanel" v-bind="playlistProps">
           <info-panel/>
         </slot>
       </teleport>
-      <teleport v-if="controlsVisibility.playlist" :to="floatingPanelsRef?.rightPanel" :disabled="!floatingPanelsRef?.floating">
+      <teleport v-if="controlsVisibility.playlist" :to="floatingPanelsRef?.rightPanel"
+                :disabled="!floatingPanelsRef?.floating">
         <slot name="playlist" v-bind="playlistProps">
           <playlist/>
         </slot>
@@ -135,6 +140,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
   keyboardTarget: '.gs-player',
   aspectRatio: <any>DefaultAspectRatio,
+  disableWheelNavigation: false,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -373,6 +379,21 @@ const handleKeydown = (e: KeyboardEvent) => {
       // 与双击功能一致
       handlePlayerDblClick();
       break;
+  }
+};
+
+// 鼠标滚轮事件处理
+const handlePlayerWheel = (e: WheelEvent) => {
+  // 如果禁用了鼠标滚轮导航，则不执行操作
+  if (props.disableWheelNavigation) return;
+
+  e.preventDefault();
+  if (e.deltaY < 0) {
+    // 向上滚动：上一个
+    navControlsRef.value?.playPre();
+  } else {
+    // 向下滚动：下一个
+    navControlsRef.value?.playNext();
   }
 };
 

@@ -59,6 +59,11 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	aspectRatio?: AspectRatioMode
 
 	/**
+	 * 是否禁用鼠标滚轮切换上一个下一个，默认为false（不禁用）
+	 */
+	disableWheelNavigation?: boolean;
+
+	/**
 	 * css 变量写入目标，默认 gs-player
 	 */
 	variableWriteTarget?: HTMLElement;
