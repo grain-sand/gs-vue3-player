@@ -20,6 +20,7 @@ export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3,
 
 export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
 
+
 export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/** 视频地址 */
 	src?: GsPlayerSource;
@@ -52,7 +53,7 @@ export interface IGsPlayerProps extends Omit<IPlayerProps, 'src' | 'controls'> {
 	/** 国际化配置 */
 	i18n?: II18n;
 	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
-	keyboardTarget?: string | HTMLElement | false;
+	keyboardTarget?: HTMLElement | Document | {} | string | false;
 	/**
 	 * 视频比例
 	 */

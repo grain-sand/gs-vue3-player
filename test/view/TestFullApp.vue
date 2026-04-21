@@ -9,6 +9,7 @@
         @rate-change="eventChange('ratechange',$event)"
         @mutedChange="eventChange('mutedChange',$event)"
         @srcRemove="eventChange('srcRemove',$event)"
+        :keyboard-target="tar"
     >
     </gs-player>
     <button @click="switchToNextSrc">switchToNextSrc</button>
@@ -32,6 +33,8 @@ import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringSource} from "../../src";
 
 const playerRef = ref<IGsPlayerExpose>()
+
+const tar = document
 
 const videoList: IStringSource[] = videos;
 // const videoList: IStringPlayerSource[] = [videos[0]];

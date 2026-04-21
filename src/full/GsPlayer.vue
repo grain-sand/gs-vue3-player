@@ -9,6 +9,7 @@
       <div class="gs-player-main"
            @click="handlePlayerClick"
            @dblclick="handlePlayerDblClick"
+           @wheel.stop="handlePlayerWheel"
       >
         <!--   @vue-ignore -->
         <player
@@ -23,7 +24,6 @@
             :muted="muted"
             @volume-change="emit('volumeChange', $event)"
             @rate-change="emit('rateChange', $event)"
-            @wheel.stop="handlePlayerWheel"
         />
         <!-- 播放覆盖层 -->
         <div v-if="(!playerRef?.playing || playerRef?.muted) && controlsVisibility.playOverlay"
@@ -98,13 +98,16 @@
 import {computed, onBeforeUnmount, onMounted, provide, ref} from 'vue';
 import Player from '../core/Player.vue';
 import {
-  ControlItemType, ControlItemTypes,
+  ControlItemType,
+  ControlItemTypes,
   DefaultAspectRatio,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsPlayerSlots,
-  IPlayerExpose, IPlaylistSlotProps, ISourceWrapper,
+  IPlayerExpose,
+  IPlaylistSlotProps,
+  ISourceWrapper,
   ITypedSource,
   IVideoQuality,
   PlaybackMode
@@ -120,11 +123,12 @@ import {
   TimeDisplay,
   VolumeControl
 } from './components';
-import {IGsPlayerInject, GsPlayerInjectKey} from './type/IGsPlayerInject';
+import {GsPlayerInjectKey, IGsPlayerInject} from './type/IGsPlayerInject';
 import {IFloatingPanelsExpose, IGsFullscreenControlExpose, INavControlsExpose} from "./type/ControlsExposes";
 import InfoPanel from "./components/InfoPanel.vue";
 import Playlist from "./components/Playlist.vue";
 import FloatingPanels from "./components/FloatingPanels.vue";
+import {wait} from "gs-base/timer";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   showControls: true,
@@ -341,34 +345,10 @@ const handleKeydown = (e: KeyboardEvent) => {
       }
       break;
     case 'ArrowUp':
-      if (e.ctrlKey) {
-        // Ctrl+上：上一个
-        navControlsRef.value?.playPre();
-      } else {
-        // 向上调整播放速度
-        const currentRate = playerRef.value?.rate || 1;
-        if (currentRate < Math.max(...props.rates)) {
-          const currentRateIndex = props.rates.indexOf(currentRate);
-          if (currentRateIndex < props.rates.length - 1) {
-            setRate(props.rates[currentRateIndex + 1]);
-          }
-        }
-      }
+      navControlsRef.value?.playPre();
       break;
     case 'ArrowDown':
-      if (e.ctrlKey) {
-        // Ctrl+下：下一个
-        navControlsRef.value?.playNext();
-      } else {
-        // 向下调整播放速度
-        const currentRate = playerRef.value?.rate || 1;
-        if (currentRate > Math.min(...props.rates)) {
-          const currentRateIndex = props.rates.indexOf(currentRate);
-          if (currentRateIndex > 0) {
-            setRate(props.rates[currentRateIndex - 1]);
-          }
-        }
-      }
+      navControlsRef.value?.playNext();
       break;
     case ' ': // 空格键
       e.preventDefault();
@@ -401,19 +381,20 @@ const handlePlayerWheel = (e: WheelEvent) => {
 let keyboardEventTarget: EventTarget | null = null;
 
 // 监听键盘事件
-onMounted(() => {
-  // 普通键盘事件根据keyboardTarget注册
-  if (props.keyboardTarget !== false) {
-    if (typeof props.keyboardTarget === 'string') {
+onMounted(async () => {
+  await wait(100)
+  const {keyboardTarget: keyTar} = props;
+  if (keyTar !== false) {
+    if (typeof keyTar === 'string') {
       // 如果是字符串选择器，尝试获取元素
-      keyboardEventTarget = document.querySelector(props.keyboardTarget);
+      keyboardEventTarget = document.querySelector(keyTar);
       // 如果没有找到元素，默认使用播放器容器
-      if (!keyboardEventTarget && props.keyboardTarget === '.gs-player') {
+      if (!keyboardEventTarget && keyTar === '.gs-player') {
         keyboardEventTarget = containerRef.value;
       }
-    } else if (props.keyboardTarget instanceof HTMLElement) {
+    } else if (keyTar instanceof HTMLElement || keyTar instanceof Document) {
       // 如果是HTMLElement，直接使用
-      keyboardEventTarget = props.keyboardTarget;
+      keyboardEventTarget = keyTar;
     } else {
       // 默认使用播放器容器
       keyboardEventTarget = containerRef.value;
@@ -425,7 +406,7 @@ onMounted(() => {
       if (keyboardEventTarget instanceof HTMLElement && !keyboardEventTarget.hasAttribute('tabindex')) {
         keyboardEventTarget.setAttribute('tabindex', '0');
       }
-      keyboardEventTarget.addEventListener('keydown', handleKeydown);
+      keyboardEventTarget.addEventListener('keydown', handleKeydown,true);
     }
   }
 
@@ -433,7 +414,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (keyboardEventTarget) {
-    keyboardEventTarget.removeEventListener('keydown', handleKeydown);
+    keyboardEventTarget.removeEventListener('keydown', handleKeydown,true);
   }
 });
 

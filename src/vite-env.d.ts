@@ -1,4 +1,4 @@
-
+/// <reference lib="dom" />
 /// <reference types="vite/client" />
 
 declare module '*.svg' {

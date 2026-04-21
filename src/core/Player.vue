@@ -181,8 +181,11 @@ async function play() {
     el.autoplay = true
     el.playsInline = true
     el.muted = false
-    await el?.play().catch(catchError)
-  } catch {
+    await el?.play()
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      return
+    }
     el.muted = true
     await el?.play().catch(catchError)
     el.muted = false
