@@ -66,7 +66,7 @@ onMounted(() => {
 
 function loadedmetadata() {
   duration.value = videoRef.value.duration
-  if(innerSrc.value) {
+  if (innerSrc.value) {
     (innerSrc.value as ITypedSource).duration = duration.value
   }
   if (isFirstLoadedmetadata) {
@@ -181,11 +181,17 @@ async function play() {
     el.autoplay = true
     el.playsInline = true
     el.muted = false
-    await el?.play()
+    await el?.play().catch(catchError)
   } catch {
     el.muted = true
-    await el?.play()
+    await el?.play().catch(catchError)
     el.muted = false
+  }
+}
+
+function catchError(e: Error) {
+  if (e.name !== 'AbortError') {
+    console.log(e)
   }
 }
 
@@ -265,7 +271,7 @@ function toBestQuality(reference: IVideoQuality, now: boolean = false) {
         // 重新加载URL
         video.src = bestQuality.url;
         video.currentTime = currentTime;
-        video.play();
+        video.play().catch(catchError);
       }
     }
   }

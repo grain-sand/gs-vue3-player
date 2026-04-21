@@ -1,5 +1,5 @@
 <template>
-  <ul class="gs-playlist">
+  <ul class="gs-playlist" ref="playlistRef">
     <li v-for="item in api.playlist" :key="item._id"
         :class="{'active': item._id === api.src?._id}"
 
@@ -22,13 +22,33 @@
 </template>
 
 <script lang="ts" setup>
-import {inject} from "vue";
+import {inject, ref, watch} from "vue";
 import Author from "./Author.vue";
 import {GsPlayerInjectKey, IGsPlayerInject} from "../type/IGsPlayerInject";
 import {formatTime} from "../../util";
+import {wait} from "gs-base/timer";
 
 
 const api = inject<IGsPlayerInject>(GsPlayerInjectKey)!;
+const playlistRef = ref<HTMLElement>();
 
+// 当激活状态改变时，滚动到激活的条目
+watch(() => api.src?._id, () => {
+  scrollToActiveItem();
+});
+
+// 当播放列表改变时，滚动到激活的条目
+watch(() => api.playlist.length, () => {
+  scrollToActiveItem();
+});
+
+async function scrollToActiveItem() {
+  if (!playlistRef.value) return;
+  await wait(100)
+  const activeItem = playlistRef.value.querySelector('.active');
+  if (activeItem) {
+    activeItem.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+}
 
 </script>

@@ -201,7 +201,7 @@ const handleEnded = () => {
       break;
     case 'loop':
       // 重新播放当前视频
-      el?.play().catch(console.error);
+      el?.play().catch(console.log);
       break;
     case 'loopAll':
       switchToNextInPlaylist();
