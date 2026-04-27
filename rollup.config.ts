@@ -1,4 +1,4 @@
-import {defineDts, defineJs, GsRollupDefaults as Defaults, scssMerge} from 'gs-rollup'
+import {defineDts, defineJs, GsRollupDefaults as Defaults, scssCompile, scssMerge} from 'gs-rollup'
 import svgPlugin from 'vite-svg-loader'
 
 Defaults.outputBase = 'dist'
@@ -26,10 +26,9 @@ export default [
 				style: "./lib/style.css"
 			},
 			after(pkg) {
-				delete pkg.main
-				pkg.exports['./lib/variables.scss'] = './lib/variables.scss'
-				pkg.exports['./lib/style.scss'] = './lib/style.scss'
-				pkg.exports['./lib/main.css'] = './lib/main.css'
+				delete pkg.main;
+				['variables.scss', 'style.scss', 'main.css']
+					.forEach(e => pkg[`./lib/${e}`] = `./lib/${e}`);
 			}
 		},
 		addPlugins: [
@@ -38,16 +37,17 @@ export default [
 				'src/full/style/variables.scss',
 			])
 		],
-		vueDts:{
-			importPattern:/\.svg$/,
+		vueDts: {
+			importPattern: /\.svg$/,
 		}
 		// vueDts: false,
 		// addExternal: /\.(vue|svg)$/
 	}),
 	...defineJs({
 		input,
-		addPlugins:[
+		addPlugins: [
 			svgPlugin() as any,
+			scssCompile('src/full/style/main.scss')
 		]
 	})
 ];

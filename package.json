@@ -10,9 +10,7 @@
 		"url": "git+https://github.com/grain-sand/gs-vue3-player.git"
 	},
 	"scripts": {
-		"build": "yarn run build:js && yarn run build:dts",
-		"build:js": "vite build",
-		"build:dts": "gs-rollup -c",
+		"build": "gs-rollup -c",
 		"git:merge": "git branch -f master dev",
 		"test": "vitest run",
 		"test:core-ui": "vitest core-ui",
