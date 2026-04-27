@@ -1,32 +1,24 @@
-import {RollupOptions} from 'rollup'
-import {defineDts, GsRollupDefaults as Defaults, scssMerge} from 'gs-rollup'
-import fs from "node:fs";
+import {defineDts, defineJs, GsRollupDefaults as Defaults, scssMerge} from 'gs-rollup'
+import svgPlugin from 'vite-svg-loader'
 
-const file = 'tmp/index.d.ts'
-
-const delFile = 'dist/lib/style.mjs'
-
-if (fs.existsSync(delFile)) {
-	fs.unlinkSync(delFile)
-}
-// if(fs.existsSync(file)) {
-// 	const dts = fs.readFileSync(file, 'utf-8')
-// 	const result = dts.replace(/(.vue)(['"])/,'$1.d.ts$2');
-// 	if(result !== dts) {
-// 		fs.writeFileSync(file, result)
-// 	}
-// }
-
-Defaults.external = '/^node:|dynamic|\\.scss$'
 Defaults.outputBase = 'dist'
 Defaults.outputCodeDir = 'lib'
 
-export default <RollupOptions[]>[
+const input = [
+	"src/core/index.ts",
+	"src/full/index.ts",
+	"src/full/style/index.ts",
+	"src/index.ts",
+	"src/svgs/index.ts",
+	"src/type/index.ts",
+	"src/util/index.ts"
+]
+
+// logJson(dts)
+
+export default [
 	...defineDts({
-		external: Defaults.external,
-		input: {
-			"index": file
-		},
+		input,
 		buildPackageJson: {
 			deleteProps: /^(devDependencies|scripts)$/,
 			overwriteProps: {
@@ -35,9 +27,6 @@ export default <RollupOptions[]>[
 			},
 			after(pkg) {
 				delete pkg.main
-				for (const e of Object.values(pkg.exports)) {
-					delete e.require
-				}
 				pkg.exports['./lib/variables.scss'] = './lib/variables.scss'
 				pkg.exports['./lib/style.scss'] = './lib/style.scss'
 				pkg.exports['./lib/main.css'] = './lib/main.css'
@@ -48,6 +37,17 @@ export default <RollupOptions[]>[
 				'src/full/style/style.scss',
 				'src/full/style/variables.scss',
 			])
-		]
+		],
+		vueDts:{
+			importPattern:/\.svg$/,
+		}
+		// vueDts: false,
+		// addExternal: /\.(vue|svg)$/
 	}),
-]
+	...defineJs({
+		input,
+		addPlugins:[
+			svgPlugin() as any,
+		]
+	})
+];

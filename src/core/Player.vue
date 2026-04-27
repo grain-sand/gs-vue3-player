@@ -11,7 +11,7 @@
       @error="error = videoRef.error"
       @play="playing = true"
       @pause="playing = false"
-      @timeupdate="time = videoRef.currentTime"
+      @timeupdate="time = videoRef?.currentTime || 0"
       @loadedmetadata="loadedmetadata"
   ></video>
 </template>

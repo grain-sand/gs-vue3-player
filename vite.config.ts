@@ -5,7 +5,7 @@ import svgPlugin from 'vite-svg-loader'
 export default defineConfig({
 	build: {
 		minify: false,
-		sourcemap: true,
+		sourcemap: false,
 		lib: {
 			entry: {
 				'index': 'src/index.ts',
@@ -16,7 +16,6 @@ export default defineConfig({
 		rolldownOptions: {
 			external: ['vue', 'hls.js','gs-base'],
 			output: {
-				entryFileNames: '[name].mjs',
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.name?.endsWith('.css')) {
 						return 'main.css'   // 固定文件名

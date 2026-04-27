@@ -18,7 +18,7 @@
             :quality="quality"
             :use-browser-hls="useBrowserHls"
             :rate="rate"
-            :volume="volume"
+            :volume="volume||0.5"
             :autoplay="autoplay"
             :showControls='false'
             :muted="muted"
@@ -271,7 +271,7 @@ function toBestQuality(reference?: IVideoQuality) {
       height: c.clientHeight,
     }
   }
-  playerRef.value?.toBestQuality(reference)
+  playerRef.value?.toBestQuality(reference, true)
 }
 
 const removePlaylistItem = (src: number | ISourceWrapper) => navControlsRef.value?.removePlaylistItem(src)
@@ -406,7 +406,7 @@ onMounted(async () => {
       if (keyboardEventTarget instanceof HTMLElement && !keyboardEventTarget.hasAttribute('tabindex')) {
         keyboardEventTarget.setAttribute('tabindex', '0');
       }
-      keyboardEventTarget.addEventListener('keydown', handleKeydown,true);
+      keyboardEventTarget.addEventListener('keydown', handleKeydown, true);
     }
   }
 
@@ -414,7 +414,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   if (keyboardEventTarget) {
-    keyboardEventTarget.removeEventListener('keydown', handleKeydown,true);
+    keyboardEventTarget.removeEventListener('keydown', handleKeydown, true);
   }
 });
 

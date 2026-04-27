@@ -17,26 +17,27 @@ import PipSvg from './pip.svg';
 import {PlaybackMode} from "../type";
 import TrashSvg from './trash.svg';
 import LinkSvg from './link.svg';
+import {DefineComponent} from "vue";
 
 // 类型断言，确保 svg 文件被正确识别为组件
-export const PlaybackModeIcons: Record<PlaybackMode, any> = {
+export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
 	sequence,
 	disabled,
 	loop,
 	loopAll,
 	shuffle,
 	deleteAfterPlay: TrashSvg
-};
+} as any;
 
-export const PlayStateIcons: Record<'true' | 'false', any> = {
+export const PlayStateIcons: Record<'true' | 'false', DefineComponent> = {
 	'true': PauseSvg,
 	'false': PlaySvg
-};
+} as any;
 
-export const VolumeStateIcons: Record<'true' | 'false', any> = {
+export const VolumeStateIcons: Record<'true' | 'false', DefineComponent> = {
 	'true': MuteSvg,
 	'false': VolumeSvg
-};
+} as any;
 
 export {
 	ErrorSvg,

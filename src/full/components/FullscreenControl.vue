@@ -45,7 +45,7 @@ onMounted(() => {
 async function toBestQuality() {
   try {
     await wait(10)
-      player.toBestQuality();
+    player.toBestQuality();
   } catch (e) {
     console.log(e)
   }

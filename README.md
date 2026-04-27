@@ -289,6 +289,19 @@ You can use them directly:
 | infoPanel  | Info panel slot     | playlistSlotProps |
 | playlist   | Playlist slot       | playlistSlotProps |
 
+## Keyboard Shortcuts
+
+| Shortcut          | Description                          |
+|-------------------|--------------------------------------|
+| Space             | Play/Pause                           |
+| Arrow Left        | Rewind 5 seconds                     |
+| Ctrl + Arrow Left | Rewind 15 seconds                    |
+| Arrow Right       | Fast forward 5 seconds               |
+| Ctrl + Arrow Right| Fast forward 15 seconds              |
+| Arrow Up          | Play previous video                  |
+| Arrow Down        | Play next video                      |
+| Enter/Escape      | Toggle fullscreen (same as double click) |
+
 ## Expose
 
 ### Properties
