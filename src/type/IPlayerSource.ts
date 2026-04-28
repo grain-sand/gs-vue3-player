@@ -1,9 +1,16 @@
 import {IAuthor} from "./IAuthorProps";
-import {AspectRatio} from "./IGsPlayerProps";
 
-export const PlayerSourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
+export type AspectRatio = [number, number];
 
-export type PlayerSourceType = (typeof PlayerSourceTypes)[number];
+// export type AspectRatioMode = AspectRatio | 'auto';
+
+// export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3, 4]];
+
+// export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
+
+export const PlaySourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
+
+export type PlaySourceType = (typeof PlaySourceTypes)[number];
 
 export interface IVideoQuality {
 	/**
@@ -21,9 +28,13 @@ export interface IVideoQualityItem extends IVideoQuality {
 }
 
 export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = any> {
-	type?: PlayerSourceType;
+
+	type?: PlaySourceType;
+
 	poster?: string;
+
 	title?: string;
+
 	src: T;
 	/**
 	 * 外部设置的附加数据
@@ -31,11 +42,31 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 	data?: D;
 
 	/**
-	 * 视频时长
+	 * 视频参考时长
 	 * 单位：秒
 	 * 未设置时，播放器会自动回写
 	 */
 	duration?: number;
+
+	/**
+	 * 点击时跳转链接
+	 */
+	link?: string;
+
+	/**
+	 * 视频作者
+	 */
+	author?: IAuthor;
+
+	/**
+	 * 视频宽高比
+	 */
+	aspectRatio?: AspectRatio;
+
+	/**
+	 * 视频描述
+	 */
+	description?: string;
 }
 
 // 指定类型与URL
@@ -46,37 +77,10 @@ export interface IQualitiesSource<D = any> extends ITypedSource<D, Array<IVideoQ
 }
 
 // 输入类型
-export type PlayerSource<D = any> = string | IStringSource<D> | IQualitiesSource<D>;
+export type PlaySource<D = any> = string | IStringSource<D> | IQualitiesSource<D>;
 
 
-export interface IGsSource<D = any, T extends string | IVideoQualityItem[] = any> extends ITypedSource<D, T> {
-	/**
-	 * 外部设置的索引标识
-	 */
-	index?: number
-
-	/**
-	 * 点击时跳转到
-	 */
-	link?: string;
-
-	author?: IAuthor;
-
-	aspectRatio?: AspectRatio;
-
-	description?: string;
-}
-
-// 指定类型与URL
-export interface IGsStringSource<D = any> extends IGsSource<D, string> {
-}
-
-export interface IGsQualitiesSource<D = any> extends IGsSource<D, Array<IVideoQualityItem>> {
-}
-
-export type GsPlayerSource<D = any> = string | IGsStringSource<D> | IGsQualitiesSource<D>;
-
-export interface ISourceWrapper<D = any, R extends GsPlayerSource<D> = GsPlayerSource<D>> extends Readonly<IGsSource<D>> {
+export interface ISourceWrapper<D = any, R extends PlaySource<D> = PlaySource<D>> extends Readonly<ITypedSource<D>> {
 	/**
 	 * 播放器内部对源的唯一标识
 	 */

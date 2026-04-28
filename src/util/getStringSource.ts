@@ -1,11 +1,11 @@
-import {PlayerSource} from "../type";
+import {PlaySource} from "../type";
 
 /**
  * 获取字符串类型的视频源
  * @param source
  * @param width 获取大于等于此质量的视频，如果不存在将选择最小值
  */
-export function getStringSource(source: PlayerSource, width?: number): string {
+export function getStringSource(source: PlaySource, width?: number): string {
 	if (typeof source === 'string') {
 		return source;
 	}

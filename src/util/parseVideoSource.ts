@@ -2,12 +2,12 @@ import {
 	IQualitiesSource,
 	IStringSource,
 	ITypedSource,
-	PlayerSource,
-	PlayerSourceType
+	PlaySource,
+	PlaySourceType
 } from "../type";
 import {isString} from "gs-base/types";
 
-export function parseVideoSource(source: PlayerSource): ITypedSource {
+export function parseVideoSource(source: PlaySource): ITypedSource {
 	if (isString(source)) {
 		const type = getSourceTypeFromUrl(source as string);
 		return {
@@ -26,7 +26,7 @@ export function parseVideoSource(source: PlayerSource): ITypedSource {
 	return typedSourc;
 }
 
-function getSourceTypeFromUrl(url: string): PlayerSourceType {
+function getSourceTypeFromUrl(url: string): PlaySourceType {
 	const lowerUrl = url.toLowerCase();
 	if (lowerUrl.includes('.m3u8') || lowerUrl.includes('hls')) {
 		return 'hls';

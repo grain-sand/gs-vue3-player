@@ -15,7 +15,7 @@ coverage
 *.local
 *.lock
 *.local.ts
-tmp/
+tmp*
 tmp-test/
 
 /cypress/videos/
