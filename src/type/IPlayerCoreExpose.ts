@@ -23,6 +23,7 @@ export interface IPlayerCoreExpose {
 	readonly playing: boolean
 
 	readonly error?: MediaError
+
 	readonly playlist: ISourceWrapper[]
 	/**
 	 * 当前播放的视频索引
@@ -32,6 +33,8 @@ export interface IPlayerCoreExpose {
 	readonly nextSrc?: PlaySource;
 	/** 上一个输入源 */
 	readonly preSrc?: PlaySource;
+
+	readonly bestQuality: Partial<IVideoQuality> | undefined
 
 	play(src?: PlaySource): Promise<void>
 
