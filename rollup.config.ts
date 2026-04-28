@@ -28,7 +28,7 @@ export default [
 			after(pkg) {
 				delete pkg.main;
 				['variables.scss', 'style.scss', 'main.css']
-					.forEach(e => pkg[`./lib/${e}`] = `./lib/${e}`);
+					.forEach(e => pkg.exports[`./lib/${e}`] = `./lib/${e}`);
 			}
 		},
 		addPlugins: [

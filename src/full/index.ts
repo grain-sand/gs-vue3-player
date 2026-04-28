@@ -4,4 +4,3 @@ export * from './i18n/jaJP';
 export * from './i18n/koKR';
 export * from './i18n/enUS';
 export * from './view';
-import './style/main.scss'
