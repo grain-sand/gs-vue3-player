@@ -38,13 +38,22 @@ export interface IPlayerCoreExpose {
 
 	play(src?: PlaySource): Promise<void>
 
-	setSrc(src?: PlaySource): void
+	/**
+	 * 设置当前播放的视频源
+	 * - 如果未在播放列表中，则将添加到播放列表
+	 * @param src
+	 */
+	setSrc(src: PlaySource): void
+
+	/**
+	 * 从播放列表中移除视频源
+	 * @param src
+	 */
+	removeSrc(src: PlaySource): void
 
 	togglePlay(): Promise<void>
 
 	pause(): Promise<void>
-
-	setVolume(volume: number): void
 
 	unmute(): Promise<void>
 

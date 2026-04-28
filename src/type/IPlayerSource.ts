@@ -1,12 +1,5 @@
 import {IAuthor} from "./IAuthorProps";
-
-export type AspectRatio = [number, number];
-
-// export type AspectRatioMode = AspectRatio | 'auto';
-
-// export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3, 4]];
-
-// export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
+import {AspectRatio} from "./GsUnionTypes";
 
 export const PlaySourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
 
@@ -33,6 +26,11 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 
 	poster?: string;
 
+
+	/**
+	 * 视频标题
+	 * - 始终使用 `v-text` 渲染
+	 */
 	title?: string;
 
 	src: T;
@@ -65,6 +63,7 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 
 	/**
 	 * 视频描述
+	 * - 始终使用 `v-html` 渲染
 	 */
 	description?: string;
 }

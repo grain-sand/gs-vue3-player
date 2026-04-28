@@ -455,7 +455,6 @@ defineExpose<IPlayerCoreExpose>({
     await doPlay()
   },
   setSrc,
-  setVolume,
   async pause() {
     await videoRef.value?.pause()
   },
