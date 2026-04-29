@@ -9,15 +9,9 @@
     </gs-player>
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
-    volume: {{ playerRef?.core?.volume }}<br/>
-    muted: {{ playerRef?.core?.muted }}<br/>
-    playing: {{ playerRef?.core?.playing }}<br/>
-    time: {{ playerRef?.core?.time }}<br/>
-    duration: {{ playerRef?.core?.duration }}<br/>
-    rate: {{ playerRef?.core?.rate }}<br/>
-    index: {{ playerRef?.core?.index }}<br/>
     list: {{ playerRef?.core?.playlist?.length }}<br/>
-    src: {{ playerRef?.core?.src}}<br/>
+    aspectRatio: {{ playerRef?.aspectRatio }}<br/>
+    layout: {{ playerRef?.layout }}<br/>
   </div>
 </template>
 

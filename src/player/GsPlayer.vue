@@ -8,30 +8,41 @@
         @dblclick="handlePlayerDblClick"
         @wheel.stop="handlePlayerWheel"
     >
-      <PlayerCore
-          ref="coreRef"
-          :src="props.src"
-          :hls-config="props.hlsConfig"
-          :quality="props.quality"
-          :use-browser-hls="props.useBrowserHls"
-          :rate="props.rate"
-          :volume="props.volume||0.5"
-          :autoplay="props.autoplay"
-          :controls="false"
-          :muted="props.muted"
-          :next-src="props.nextSrc"
-          :pre-src="props.preSrc"
-          :playlist="props.playlist"
-          :mode="props.mode"
-          @src-change="trigger('srcChange', $event)"
-          @src-remove="trigger('srcRemove', $event)"
-          @volume-change="trigger('volumeChange', $event)"
-          @muted-change="trigger('mutedChange', $event)"
-          @rate-change="trigger('rateChange', $event)"
-          @mode-change="trigger('modeChange', $event)"
-      />
+      <div class="gs-player-main">
+        <PlayerCore
+            ref="coreRef"
+            :src="props.src"
+            :hls-config="props.hlsConfig"
+            :quality="props.quality"
+            :use-browser-hls="props.useBrowserHls"
+            :rate="props.rate"
+            :volume="props.volume||0.5"
+            :autoplay="props.autoplay"
+            :controls="false"
+            :muted="props.muted"
+            :next-src="props.nextSrc"
+            :pre-src="props.preSrc"
+            :playlist="props.playlist"
+            :mode="props.mode"
+            @src-change="trigger('srcChange', $event)"
+            @src-remove="trigger('srcRemove', $event)"
+            @volume-change="trigger('volumeChange', $event)"
+            @muted-change="trigger('mutedChange', $event)"
+            @rate-change="trigger('rateChange', $event)"
+            @mode-change="trigger('modeChange', $event)"
+        />
 
-      <template v-for="widget in resolvedWidgets" :key="widget.key">
+        <template v-for="widget in innerWidgets" :key="widget.key">
+          <component
+              :is="widget.component"
+              :core="exposedCore"
+              :cxt="widgetContext"
+              :props="props"
+          />
+        </template>
+      </div>
+
+      <template v-for="widget in outerWidgets" :key="widget.key">
         <component
             :is="widget.component"
             :core="exposedCore"
@@ -64,6 +75,13 @@ import {
   LayoutMode
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
+import {FullscreenLogic, KeyboardLogic, StyleVariableLogic} from './logics';
+
+const defaultLogics = [
+  new StyleVariableLogic(),
+  new KeyboardLogic(),
+  new FullscreenLogic()
+];
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -157,13 +175,19 @@ interface ResolvedWidget {
   component: IGsWidget;
 }
 
-const resolvedWidgets = computed<ResolvedWidget[]>(() => {
+const innerWidgets = computed<ResolvedWidget[]>(() => {
+  const widgets: ResolvedWidget[] = [];
+  return widgets;
+});
+
+const outerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
   return widgets;
 });
 
 const mergedLogics = computed(() => {
-  return [...(props.logics || []), ...(props.appendLogics || [])];
+  const baseLogics = props.logics ?? defaultLogics;
+  return [...baseLogics, ...(props.appendLogics || [])];
 });
 
 const handlePlayerClick = async () => {
