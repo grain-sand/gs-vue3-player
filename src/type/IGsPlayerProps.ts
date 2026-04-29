@@ -1,7 +1,7 @@
 import {IPlayerCoreProps} from "./IPlayerCoreProps";
 import {II18n} from "./II18n";
 import {AspectRatioMode, VisibilityMode, I18nName, LayoutMode} from "./UnionTypes";
-import {IGsWidget} from "./IGsWidget";
+import {IGsLogic, IGsWidget} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
 
@@ -96,5 +96,26 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 */
 	listContainerVisibility?: VisibilityMode;
 
+	/**
+	 * 播放暂停时覆盖层
+	 * - `true`,默认值，包含默认覆盖层
+	 * 1. 暂停时,背景半透明
+	 * 2. 静音时,背景全透明
+	 * - `false` 不包含暂停时覆盖层
+	 * - `IGsWidget`自定义播放暂停时覆盖层
+	 */
+	playOverlay?: boolean | IGsWidget;
+
+	/**
+	 * 无界面逻辑组件
+	 * - 默认包含 css变量写入、键盘事件处理……等逻辑组件
+	 * - 对其定义会覆盖默认值，如果仅是添加逻辑，应该定义`appendLogics`
+	 */
+	logics?: IGsLogic[];
+
+	/**
+	 * 在现有无界面逻辑组件之后，追加无界面逻辑组件
+	 */
+	appendLogics?: IGsLogic[];
 
 }

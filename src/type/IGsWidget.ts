@@ -20,6 +20,12 @@ export interface IGsWidgetContext extends Pick<IGsPlayerProps, 'layout' | 'contr
 	 */
 	readonly isFullscreen: boolean;
 
+	/**
+	 * 容器元素
+	 * - 是 GsPlayer.vue <teleport> 内的根元素
+	 */
+	readonly container: HTMLElement;
+
 	/** 桌面全屏 */
 	fullscreen(): void;
 
@@ -41,6 +47,15 @@ export interface IGsWidgetProps {
 
 	readonly cxt: IGsWidgetContext;
 
+	readonly props: Readonly<IGsPlayerProps>
+
 }
 
 export type IGsWidget<P extends IGsWidgetProps = any> = DefineComponent<P, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
+
+export interface IGsLogic {
+
+	mount(param: IGsWidgetProps): void | Promise<void>;
+
+	unmount(param: IGsWidgetProps): void | Promise<void>;
+}
