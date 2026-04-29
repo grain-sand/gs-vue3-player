@@ -1,19 +1,24 @@
-import {AspectRatioMode, LayoutMode} from "./GsUnionTypes";
+import {AspectRatioMode, LayoutMode} from "./UnionTypes";
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
+import {IGsPlayerProps} from "./IGsPlayerProps";
+import {II18n} from "./II18n";
 
 
-export interface IGsWidgetContext {
+export interface IGsWidgetContext extends Pick<IGsPlayerProps, 'layout' | 'controlVisibility'> {
+
+	/**
+	 * 视频比例
+	 */
+	readonly aspectRatio: AspectRatioMode
+
+	readonly i18n: II18n;
 
 	/**
 	 * 是否全屏模式
 	 * - 包括 网页全屏 和 桌面全屏
 	 */
 	readonly isFullscreen: boolean;
-
-	readonly aspectRatio: AspectRatioMode
-
-	readonly layout: LayoutMode
 
 	/** 桌面全屏 */
 	fullscreen(): void;
@@ -38,4 +43,4 @@ export interface IGsWidgetProps {
 
 }
 
-export type IGsWidget<P extends IGsWidgetProps=any> = DefineComponent<P, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>
+export type IGsWidget<P extends IGsWidgetProps = any> = DefineComponent<P, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any, any>

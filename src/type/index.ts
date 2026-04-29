@@ -1,4 +1,4 @@
-export * from './GsUnionTypes';
+export * from './UnionTypes';
 export * from './DefaultHlsConfig';
 
 export * from './IAuthorProps';
@@ -13,3 +13,6 @@ export * from './IGsPlayerProps';
 export * from './IGsPlayerExpose';
 
 export * from './IGsWidget';
+
+export * from './IControlBarOption';
+export * from './IListContainerOption';

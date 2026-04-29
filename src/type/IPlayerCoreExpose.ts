@@ -1,5 +1,5 @@
 import {ISourceWrapper, IVideoQuality, PlaySource} from "./IPlayerSource";
-import {PlaybackMode} from "./IPlayerCoreProps";
+import {PlaybackMode} from "./UnionTypes";
 
 export interface IPlayerCoreExpose {
 

@@ -1,10 +1,7 @@
 import {IVideoQuality, PlaySource} from "./IPlayerSource";
 import {HlsConfig} from "hls.js";
+import {PlaybackMode} from "./UnionTypes";
 
-/** 播放模式 */
-export const PlaybackModes = ['sequence', 'disabled', 'loop', 'loopAll', 'shuffle', 'deleteAfterPlay'] as const;
-/** 播放模式类型 */
-export type PlaybackMode = (typeof PlaybackModes)[number];
 
 export interface IPlayerCoreProps {
 

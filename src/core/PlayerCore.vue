@@ -27,7 +27,7 @@ import {
   IPlayerCoreProps,
   IVideoQuality,
   PlaySource,
-  PlaybackMode
+  PlaybackMode, DefaultPlaybackMode
 } from '../type';
 import {
   findClosestHlsLevel,
@@ -54,8 +54,10 @@ const playing = ref(false)
 const duration = ref(0)
 const time = ref(0)
 const innerSrc = ref<PlaySource>()
-const currentMode = ref<PlaybackMode>(props.mode || 'sequence')
+const currentMode = ref<PlaybackMode>(DefaultPlaybackMode)
 const bestQuality = ref<Partial<IVideoQuality>>()
+
+watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode, {immediate: true})
 
 const playlistManager = new PlaylistManager({
   onSrcChange: (src) => {

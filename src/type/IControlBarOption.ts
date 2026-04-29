@@ -1,15 +1,9 @@
-import {IGsWidget, IGsWidgetProps} from "./IGsWidget";
-import {ControlItemName, VisibilityMode} from "./GsUnionTypes";
+import {IGsWidget} from "./IGsWidget";
+import {ControlItemName} from "./UnionTypes";
 
-export interface IControlBarItemProps extends IGsWidgetProps {
-	visibilityMode?: VisibilityMode;
-}
+export type ControlItem = ControlItemName | IGsWidget;
 
-export type IControlBarItem = IGsWidget<IControlBarItemProps>;
-
-export type ControlItem = ControlItemName | IControlBarItem;
-
-export interface IAddControlItemOption {
+export interface IControlItemAppendOption {
 	/**
 	 * 添加位置，默认为最后
 	 */
@@ -28,13 +22,6 @@ export interface IControlBarOption {
 	progressBar?: boolean | IGsWidget;
 
 	/**
-	 * 控制面板显示模式，默认为 `hover`
-	 * - `hover` 鼠标悬停到距离底部50px时显示
-	 * - `always` 一直显示
-	 */
-	visibilityMode?: VisibilityMode;
-
-	/**
 	 * 控制面板组件，
 	 * - 默认为 `ControlDefaultItems`
 	 * - 一旦设置，将完全覆盖默认值
@@ -49,6 +36,6 @@ export interface IControlBarOption {
 	/**
 	 * 额外添加组件的，默认为空
 	 */
-	addItems?: IAddControlItemOption[];
+	appendItems?: IControlItemAppendOption[];
 
 }

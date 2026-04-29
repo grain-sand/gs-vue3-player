@@ -1,9 +1,6 @@
 import {IAuthor} from "./IAuthorProps";
-import {AspectRatio} from "./GsUnionTypes";
+import {AspectRatio, PlaySourceType} from "./UnionTypes";
 
-export const PlaySourceTypes = ['hls', 'mp4', 'webm', 'ogg'] as const;
-
-export type PlaySourceType = (typeof PlaySourceTypes)[number];
 
 export interface IVideoQuality {
 	/**
