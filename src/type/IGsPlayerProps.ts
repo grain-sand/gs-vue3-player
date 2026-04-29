@@ -37,14 +37,6 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	layout?: LayoutMode;
 
 	/**
-	 * 进度条
-	 * - `true`,默认值，显示默认进度条
-	 * - `false` 不显示进度条
-	 * - `IGsWidget`自定义进度条组件
-	 */
-	progressBar?: boolean | IGsWidget;
-
-	/**
 	 * 信息面板
 	 * - `true`,默认值，显示默认信息面板
 	 * - `false` 不显示信息面板

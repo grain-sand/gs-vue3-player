@@ -1,7 +1,6 @@
 import {AspectRatioMode, LayoutMode} from "./GsUnionTypes";
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
-import {PlayerCore} from "../core";
 
 
 export interface IGsWidgetContext {

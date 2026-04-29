@@ -11,7 +11,6 @@
 	},
 	"scripts": {
 		"build": "gs-rollup -c",
-		"git:merge": "git branch -f master dev",
 		"test": "vitest run",
 		"test:core-ui": "vitest core-ui",
 		"test:full-ui": "vitest full-ui"

@@ -18,6 +18,7 @@ import {PlaybackMode} from "../type";
 import TrashSvg from './trash.svg';
 import LinkSvg from './link.svg';
 import {DefineComponent} from "vue";
+import PinSvg from './pin.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
@@ -50,4 +51,5 @@ export {
 	MuteSvg,
 	TrashSvg,
 	LinkSvg,
+	PinSvg
 };
