@@ -4,9 +4,7 @@
         class="gs-player"
         :class="{ 'is-web-fullscreen': isWebFullscreen }"
         ref="containerRef"
-        @click="handlePlayerClick"
-        @dblclick="handlePlayerDblClick"
-        @wheel.stop="handlePlayerWheel"
+
     >
       <div class="gs-player-main">
         <PlayerCore
@@ -75,13 +73,7 @@ import {
   LayoutMode
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
-import {FullscreenLogic, KeyboardLogic, StyleVariableLogic} from './logics';
-
-const defaultLogics = [
-  new StyleVariableLogic(),
-  new KeyboardLogic(),
-  new FullscreenLogic()
-];
+import {defaultLogics} from './logics';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -190,34 +182,7 @@ const mergedLogics = computed(() => {
   return [...baseLogics, ...(props.appendLogics || [])];
 });
 
-const handlePlayerClick = async () => {
-  if (!props.handleClick || !coreRef.value) return;
-  if (coreRef.value.muted) {
-    await coreRef.value.unmute();
-    await coreRef.value.play();
-  } else {
-    await coreRef.value.togglePlay();
-  }
-};
 
-const handlePlayerDblClick = () => {
-  if (!props.handleDblClick) return;
-  if (isFullscreen.value) {
-    widgetContext.value.exitFullscreen();
-  } else {
-    widgetContext.value.webFullscreen();
-  }
-};
-
-const handlePlayerWheel = (e: WheelEvent) => {
-  if (props.disableWheelNavigation) return;
-  e.preventDefault();
-  if (e.deltaY < 0) {
-    coreRef.value?.playPre();
-  } else {
-    coreRef.value?.playNext();
-  }
-};
 
 
 

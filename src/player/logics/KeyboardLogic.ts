@@ -1,82 +1,106 @@
-import {IGsLogic, IGsWidgetProps} from "../../type";
+import {IGsWidgetProps} from "../../type";
 
-export class KeyboardLogic implements IGsLogic {
+export function keyboardLogic() {
+  let target: HTMLElement | Document | null = null;
+  let boundHandler: ((e: KeyboardEvent) => void) | null = null;
 
-  private keyboardEventTarget: EventTarget | null = null;
-  private context: IGsWidgetProps['cxt'] | null = null;
-
-  mount({core, props, cxt}: IGsWidgetProps): void {
-    this.context = cxt;
-    const {keyboardTarget: keyTar} = props;
-    if (keyTar === false) return;
-
-    let target: EventTarget | null;
-
-    if (typeof keyTar === 'string') {
-      target = document.querySelector(keyTar);
-      if (!target && keyTar === '.gs-player') {
-        target = cxt.container;
-      }
-    } else if (keyTar instanceof HTMLElement || keyTar instanceof Document) {
-      target = keyTar;
-    } else {
-      target = cxt.container;
-    }
-
-    if (target) {
-      if (target instanceof HTMLElement && !target.hasAttribute('tabindex')) {
-        target.setAttribute('tabindex', '0');
-      }
-      target.addEventListener('keydown', this.handleKeydown.bind(this, core), true);
-      this.keyboardEventTarget = target;
-    }
-  }
-
-  private handleKeydown(core: IGsWidgetProps['core'], e: KeyboardEvent) {
+  const handleKeydown = (core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: KeyboardEvent) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
       return;
     }
 
-    switch (e.key) {
+    switch (e.code) {
+      case 'Space':
+        e.preventDefault();
+        core.togglePlay();
+        break;
       case 'ArrowLeft':
-        if (core) {
-          const step = e.ctrlKey ? 15 : 5;
-          core.time = Math.max(0, core.time - step);
-        }
+        e.preventDefault();
+        (core as any).seek?.(core.time - 10);
         break;
       case 'ArrowRight':
-        if (core) {
-          const step = e.ctrlKey ? 15 : 5;
-          core.time = Math.min(core.duration, core.time + step);
-        }
+        e.preventDefault();
+        (core as any).seek?.(core.time + 10);
         break;
       case 'ArrowUp':
-        core?.playPre();
+        e.preventDefault();
+        core.volume = Math.min(1, core.volume + 0.1);
         break;
       case 'ArrowDown':
-        core?.playNext();
-        break;
-      case ' ':
         e.preventDefault();
-        core?.togglePlay();
+        core.volume = Math.max(0, core.volume - 0.1);
         break;
-      case 'Escape':
-      case 'Enter':
-        if (this.context) {
-          if (this.context.isFullscreen) {
-            this.context.exitFullscreen();
-          } else {
-            this.context.webFullscreen();
-          }
+      case 'KeyM':
+        e.preventDefault();
+        if ((core as any).toggleMute) {
+          (core as any).toggleMute();
+        } else {
+          core.muted = !core.muted;
         }
         break;
+      case 'KeyF':
+        e.preventDefault();
+        if (cxt.isFullscreen) {
+          cxt.exitFullscreen();
+        } else {
+          cxt.fullscreen();
+        }
+        break;
+      case 'KeyW':
+        e.preventDefault();
+        if (cxt.isFullscreen) {
+          cxt.exitFullscreen();
+        } else {
+          cxt.webFullscreen();
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        if (cxt.isFullscreen) {
+          cxt.exitFullscreen();
+        }
+        break;
+      case 'KeyN':
+        e.preventDefault();
+        core.playNext();
+        break;
+      case 'KeyP':
+        e.preventDefault();
+        core.playPre();
+        break;
     }
-  }
+  };
 
-  unmount(): void {
-    if (this.keyboardEventTarget) {
-      this.keyboardEventTarget.removeEventListener('keydown', this.handleKeydown.bind(this), true);
-      this.keyboardEventTarget = null;
+  return {
+    mount({props, cxt, core}: IGsWidgetProps): void {
+      const {keyboardTarget} = props;
+      
+      if (keyboardTarget === false) {
+        return;
+      } else if (keyboardTarget === document || keyboardTarget === window) {
+        target = document;
+      } else if (keyboardTarget instanceof HTMLElement) {
+        target = keyboardTarget;
+      } else if (typeof keyboardTarget === 'string') {
+        target = document.querySelector(keyboardTarget) || cxt.container;
+      } else {
+        target = cxt.container;
+      }
+
+      if (target) {
+        boundHandler = handleKeydown.bind(null, core, cxt);
+        target.addEventListener('keydown', boundHandler);
+        if ('setAttribute' in target) {
+          target.setAttribute('tabindex', '0');
+        }
+      }
+    },
+    unmount(): void {
+      if (target && boundHandler) {
+        target.removeEventListener('keydown', boundHandler);
+      }
+      target = null;
+      boundHandler = null;
     }
-  }
+  };
 }

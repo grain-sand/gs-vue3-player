@@ -1,70 +1,20 @@
-import {IGsLogic, IGsWidgetProps} from "../../type";
+import {IGsWidgetProps} from "../../type";
 import {setStyleVars} from "../../util";
 import {AspectRatioMode, DefaultAspectRatio} from "../../type";
 import {Timer} from "gs-base/timer";
 
-export class StyleVariableLogic implements IGsLogic {
+export function styleVariableLogic() {
+  let target: HTMLElement | null = null;
+  let resizeObserver: ResizeObserver | null = null;
+  const timer = new Timer(300);
+  let rect: DOMRectReadOnly = {} as DOMRectReadOnly;
+  let aspectRatio: AspectRatioMode = DefaultAspectRatio;
 
-  private target: HTMLElement | null = null;
-  private resizeObserver: ResizeObserver | null = null;
-  private timer: Timer = new Timer(300);
-  private rect: DOMRectReadOnly = {} as DOMRectReadOnly;
-  private aspectRatio: AspectRatioMode = DefaultAspectRatio;
-
-  mount({props, cxt, core}: IGsWidgetProps): void {
-    const {variableWriteTarget} = props;
-    
-    if (variableWriteTarget instanceof HTMLElement) {
-      this.target = variableWriteTarget;
-    } else {
-      this.target = cxt.container;
-    }
-
-    this.aspectRatio = props.aspectRatio || DefaultAspectRatio;
-
-    if (this.target) {
-      this.resizeObserver = new ResizeObserver(this.handleResize.bind(this, cxt, core));
-      this.resizeObserver.observe(cxt.container);
-    }
-  }
-
-  private async handleResize(cxt: IGsWidgetProps['cxt'], core: IGsWidgetProps['core'], entries: ResizeObserverEntry[]) {
-    await this.timer.reWait();
-    
-    const entry = entries[0];
-    if (entry.contentRect) {
-      this.rect = entry.contentRect;
-    }
-
-    const isHorizontal = cxt.layout === 'horizontal';
-    const isFullscreen = cxt.isFullscreen;
-    const floating = isFullscreen && this.rect.width > this.rect.height;
-
-    let playerCoreHeight: number | string;
-    let playerCoreWidth: number | string;
-
-    if (floating) {
-      playerCoreHeight = '100%';
-      playerCoreWidth = '100%';
-    } else if (isHorizontal) {
-      playerCoreWidth = this.rect.width;
-      const [w = 16, h = 9] = Array.isArray(this.aspectRatio) ? this.aspectRatio : [];
-      playerCoreHeight = this.rect.width * (Number(h) / Number(w));
-    } else {
-      playerCoreWidth = this.rect.width;
-      playerCoreHeight = this.calculateHeight(core);
-    }
-
-    if (this.target) {
-      setStyleVars(this.target, {playerCoreHeight, playerCoreWidth});
-    }
-  }
-
-  private calculateHeight(core: IGsWidgetProps['core']): number {
-    const {width} = this.rect;
+  const calculateHeight = (core: IGsWidgetProps['core']): number => {
+    const {width} = rect;
     if (!width) return 240;
     
-    if (this.aspectRatio === 'auto') {
+    if (aspectRatio === 'auto') {
       const src = core.src as any;
       const ratio = src?.aspectRatio;
       if (ratio && Array.isArray(ratio)) {
@@ -73,16 +23,66 @@ export class StyleVariableLogic implements IGsLogic {
         return width * 9 / 16 + 2;
       }
     } else {
-      const [w = 16, h = 9] = this.aspectRatio;
+      const [w = 16, h = 9] = aspectRatio;
       return width * (Number(h) / Number(w)) + 2;
     }
-  }
+  };
 
-  unmount(): void {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+  const handleResize = async (cxt: IGsWidgetProps['cxt'], core: IGsWidgetProps['core'], entries: ResizeObserverEntry[]) => {
+    await timer.reWait();
+    
+    const entry = entries[0];
+    if (entry.contentRect) {
+      rect = entry.contentRect;
     }
-    this.target = null;
-  }
+
+    const isHorizontal = cxt.layout === 'horizontal';
+    const isFullscreen = cxt.isFullscreen;
+    const floating = isFullscreen && rect.width > rect.height;
+
+    let playerCoreHeight: number | string;
+    let playerCoreWidth: number | string;
+
+    if (floating) {
+      playerCoreHeight = '100%';
+      playerCoreWidth = '100%';
+    } else if (isHorizontal) {
+      playerCoreHeight = rect.height;
+      const [w = 16, h = 9] = Array.isArray(aspectRatio) ? aspectRatio : [];
+      playerCoreWidth = rect.height * (Number(w) / Number(h)) + 2;
+    } else {
+      playerCoreWidth = rect.width;
+      playerCoreHeight = calculateHeight(core);
+    }
+
+    if (target) {
+      setStyleVars(target, {playerCoreHeight, playerCoreWidth});
+    }
+  };
+
+  return {
+    mount({props, cxt, core}: IGsWidgetProps): void {
+      const {variableWriteTarget} = props;
+      
+      if (variableWriteTarget instanceof HTMLElement) {
+        target = variableWriteTarget;
+      } else {
+        target = cxt.container;
+      }
+
+      aspectRatio = props.aspectRatio || DefaultAspectRatio;
+
+      if (target) {
+        resizeObserver = new ResizeObserver(handleResize.bind(null, cxt, core));
+        resizeObserver.observe(cxt.container);
+      }
+    },
+    unmount(): void {
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+      }
+      target = null;
+    }
+  };
 }
