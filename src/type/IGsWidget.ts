@@ -57,5 +57,10 @@ export interface IGsLogic {
 
 	mount(param: IGsWidgetProps): void | Promise<void>;
 
-	unmount(param: IGsWidgetProps): void | Promise<void>;
+	/**
+	 * 卸载逻辑组件
+	 * - 可选
+	 * @param param
+	 */
+	unmount?(param: IGsWidgetProps): void | Promise<void>;
 }

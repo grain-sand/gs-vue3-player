@@ -118,4 +118,11 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 */
 	appendLogics?: IGsLogic[];
 
+	/**
+	 * 追加自定义组件
+	 * - 完全自定义的组件，不与任何特定位置绑定
+	 * - 组件将被渲染到播放器容器内
+	 */
+	appendWidgets?: IGsWidget | IGsWidget[];
+
 }
