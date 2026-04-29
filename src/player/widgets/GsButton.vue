@@ -20,7 +20,7 @@
 import {DefineComponent} from 'vue';
 
 interface Props {
-  icon?: DefineComponent;
+  icon?: DefineComponent | any;
   text?: string;
   title?: string;
   disabled?: boolean;

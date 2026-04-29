@@ -74,6 +74,7 @@ import {
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
+import {GsControlBar, GsPlayOverlay, GsProgressBar} from './widgets';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -85,7 +86,9 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   controlVisibility: DefaultControlVisibility,
   webFullscreenTarget: () => document.body,
   keyboardTarget: '.gs-player',
-  disableWheelNavigation: false
+  disableWheelNavigation: false,
+  playOverlay: true,
+  controlBar: true
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -169,11 +172,22 @@ interface ResolvedWidget {
 
 const innerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
+
+  if (props.playOverlay !== false) {
+    widgets.push({key: 'playOverlay', component: GsPlayOverlay});
+  }
+
   return widgets;
 });
 
 const outerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
+
+  if (props.controlBar !== false) {
+    widgets.push({key: 'progressBar', component: GsProgressBar});
+    widgets.push({key: 'controlBar', component: GsControlBar});
+  }
+
   return widgets;
 });
 

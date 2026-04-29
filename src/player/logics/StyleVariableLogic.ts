@@ -51,8 +51,8 @@ export function styleVariableLogic() {
       const [w = 16, h = 9] = Array.isArray(aspectRatio) ? aspectRatio : [];
       playerCoreWidth = rect.height * (Number(w) / Number(h)) + 2;
     } else {
-      playerCoreWidth = rect.width;
       playerCoreHeight = calculateHeight(core);
+      playerCoreWidth = rect.width;
     }
 
     if (target) {

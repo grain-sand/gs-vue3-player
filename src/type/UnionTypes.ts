@@ -18,7 +18,7 @@ export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3,
 
 export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
 
-export const LayoutModes = ['horizontal', 'vertical'] as const;
+export const LayoutModes = ['vertical','horizontal'] as const;
 
 export type LayoutMode = (typeof LayoutModes)[number];
 
@@ -100,17 +100,3 @@ export const DefaultListHeaderVisible: ListHeaderVisible = ListHeaderVisibles[0]
 export const PlaylistItemPartNames = ['author', '-', 'time'] as const;
 
 export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
