@@ -27,6 +27,7 @@ import {
   IPlayerCoreProps,
   IVideoQuality,
   PlaySource,
+  ISourceWrapper,
   PlaybackMode, DefaultPlaybackMode
 } from '../type';
 import {
@@ -148,8 +149,9 @@ function setSrc(src: PlaySource | undefined) {
   innerSrc.value = src;
   playlistManager.setCurrentSrc(src);
 
+  const wrapper = src ? playlistManager.getWrapper(src) : undefined;
   // @ts-ignore
-  setTimeout(() => emit('srcChange', src as any), 10);
+  setTimeout(() => emit('srcChange', wrapper), 10);
   destroyHls();
   const video = videoRef.value;
   if (!video) {
@@ -376,6 +378,10 @@ const playNext = async () => {
   await changeSourceAndPlay(source);
 }
 
+const removeSrc = (src: PlaySource | ISourceWrapper) => {
+  playlistManager.removeSrc(src);
+}
+
 defineExpose<IPlayerCoreExpose>({
   get el() {
     return videoRef.value
@@ -473,6 +479,7 @@ defineExpose<IPlayerCoreExpose>({
   get bestQuality() {
     return bestQuality.value;
   },
+  removeSrc,
   playPre,
   playNext
 })

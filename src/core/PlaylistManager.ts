@@ -183,8 +183,24 @@ export class PlaylistManager {
     this.wrapperMap.delete(delSrc._raw);
 
     if (this.config.onSrcRemove) {
-      this.config.onSrcRemove(delSrc._raw);
+      this.config.onSrcRemove(delSrc);
     }
+  }
+
+  removeSrc(src: PlaySource | ISourceWrapper): void {
+    let wrapper: ISourceWrapper | undefined;
+    if (typeof src === 'object' && src !== null && '_id' in src) {
+      wrapper = src;
+    } else {
+      wrapper = this.wrapperMap.get(src as PlaySource);
+    }
+    if (wrapper) {
+      this.removePlaylistItem(wrapper);
+    }
+  }
+
+  getWrapper(src: PlaySource): ISourceWrapper | undefined {
+    return this.wrapperMap.get(src);
   }
 
   clear() {

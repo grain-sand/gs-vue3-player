@@ -49,7 +49,7 @@ export interface IPlayerCoreExpose {
 	 * 从播放列表中移除视频源
 	 * @param src
 	 */
-	removeSrc(src: PlaySource): void
+	removeSrc(src: PlaySource | ISourceWrapper): void
 
 	togglePlay(): Promise<void>
 
