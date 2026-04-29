@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
-import PlayerCore from '../core/PlayerCore.vue';
+import {PlayerCore} from '../core';
 import {
   AspectRatioMode,
   DefaultAspectRatio,
@@ -74,7 +74,7 @@ import {
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsPlayOverlay, GsProgressBar} from './widgets';
+import {GsControlBar, GsPlayOverlay} from './widgets';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -177,17 +177,15 @@ const innerWidgets = computed<ResolvedWidget[]>(() => {
     widgets.push({key: 'playOverlay', component: GsPlayOverlay});
   }
 
+  if (props.controlBar !== false) {
+    widgets.push({key: 'controlBar', component: GsControlBar});
+  }
+
   return widgets;
 });
 
 const outerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
-
-  if (props.controlBar !== false) {
-    widgets.push({key: 'progressBar', component: GsProgressBar});
-    widgets.push({key: 'controlBar', component: GsControlBar});
-  }
-
   return widgets;
 });
 
@@ -195,9 +193,6 @@ const mergedLogics = computed(() => {
   const baseLogics = props.logics ?? defaultLogics;
   return [...baseLogics, ...(props.appendLogics || [])];
 });
-
-
-
 
 
 onMounted(async () => {

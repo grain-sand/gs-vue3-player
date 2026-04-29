@@ -13,7 +13,7 @@
 		"build": "gs-rollup -c",
 		"test": "vitest run",
 		"test:core-ui": "vitest core-ui",
-		"test:full-ui": "vitest full-ui"
+		"test:player-ui": "vitest player-ui"
 	},
 	"dependencies": {
 		"gs-base": "^0.1.21",

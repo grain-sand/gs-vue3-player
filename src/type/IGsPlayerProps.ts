@@ -44,7 +44,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	webFullscreenTarget?: string | HTMLElement;
 
 	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
-	keyboardTarget?: HTMLElement | Document | {} | string | false;
+	keyboardTarget?: HTMLElement | Document | null | string | false;
 
 	/**
 	 * 是否禁用鼠标滚轮切换上一个下一个，默认为false（不禁用）
@@ -74,7 +74,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `layout=vertical`时，显示于`PlayerCore`组件下方
 	 * - `layout=horizontal`时，透明显示背景，浮动于`PlayerCore`组件右下方，控制面板的上方
 	 */
-	infoPanel?: boolean | IGsWidget;
+	infoPanel?: boolean | IGsWidget | null;
 
 	/**
 	 * 列表容器
@@ -104,7 +104,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `false` 不包含暂停时覆盖层
 	 * - `IGsWidget`自定义播放暂停时覆盖层
 	 */
-	playOverlay?: boolean | IGsWidget;
+	playOverlay?: boolean | IGsWidget | null;
 
 	/**
 	 * 无界面逻辑组件
@@ -123,13 +123,13 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - 完全自定义的组件，不与任何特定位置绑定
 	 * - 组件将被渲染到播放器容器内
 	 */
-	appendInnerWidgets?: IGsWidget | IGsWidget[];
+	appendInnerWidgets?: IGsWidget | IGsWidget[] | null;
 
 	/**
 	 * 追加外部(与列表等同级)自定义组件
 	 * - 完全自定义的组件，不与任何特定位置绑定
 	 * - 组件将被渲染到播放器容器内
 	 */
-	appendOuterWidgets?: IGsWidget | IGsWidget[];
+	appendOuterWidgets?: IGsWidget | IGsWidget[] | null;
 
 }

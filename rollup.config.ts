@@ -6,13 +6,14 @@ Defaults.outputCodeDir = 'lib'
 
 const input = [
 	"src/core/index.ts",
-	"src/full/index.ts",
-	"src/full/style/index.ts",
+	"src/player/index.ts",
 	"src/index.ts",
 	"src/svgs/index.ts",
 	"src/type/index.ts",
 	"src/util/index.ts"
 ]
+
+const addExternal = 'hls.js';
 
 // logJson(dts)
 
@@ -33,13 +34,14 @@ export default [
 		},
 		addPlugins: [
 			scssMerge([
-				'src/full/style/style.scss',
-				'src/full/style/variables.scss',
+				'src/player/style/style.scss',
+				'src/player/style/variables.scss',
 			])
 		],
 		vueDts: {
 			importPattern: /\.svg$/,
-		}
+		},
+		addExternal
 		// vueDts: false,
 		// addExternal: /\.(vue|svg)$/
 	}),
@@ -47,7 +49,8 @@ export default [
 		input,
 		addPlugins: [
 			svgPlugin() as any,
-			scssCompile('src/full/style/main.scss')
-		]
+			scssCompile('src/player/style/main.scss')
+		],
+		addExternal
 	})
 ];
