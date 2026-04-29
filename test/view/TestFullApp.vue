@@ -3,30 +3,26 @@
     <gs-player
         ref="playerRef"
         :playlist="videoList"
-        @volumeChange="eventChange('volumeChange',$event)"
-        @modeChange="eventChange('playbackModeChange',$event)"
-        @rate-change="eventChange('ratechange',$event)"
-        @mutedChange="eventChange('mutedChange',$event)"
-        @srcRemove="eventChange('srcRemove',$event)"
+        @src-change="eventChange('src-change',$event)"
         :keyboard-target="tar"
     >
     </gs-player>
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
-    volume: {{ playerRef?.volume }}<br/>
-    muted: {{ playerRef?.muted }}<br/>
-    playing: {{ playerRef?.playing }}<br/>
-    time: {{ playerRef?.time }}<br/>
-    duration: {{ playerRef?.duration }}<br/>
-    rate: {{ playerRef?.rate }}<br/>
-    index: {{ playerRef?.index }}<br/>
-    list: {{ playerRef?.playlist?.length }}<br/>
-    src: {{ playerRef?.src }}<br/>
+    volume: {{ playerRef?.core?.volume }}<br/>
+    muted: {{ playerRef?.core?.muted }}<br/>
+    playing: {{ playerRef?.core?.playing }}<br/>
+    time: {{ playerRef?.core?.time }}<br/>
+    duration: {{ playerRef?.core?.duration }}<br/>
+    rate: {{ playerRef?.core?.rate }}<br/>
+    index: {{ playerRef?.core?.index }}<br/>
+    list: {{ playerRef?.core?.playlist?.length }}<br/>
+    src: {{ playerRef?.core?.src}}<br/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import '../../src/full/style/main.scss'
+import '../../src/player/style/main.scss'
 import {ref} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringSource} from "../../src";
@@ -47,7 +43,6 @@ function eventChange(name: string, data: any) {
 
 function switchToNextSrc() {
   // playerRef.value.setVolume(.1)
-  playerRef.value.play(oSrc)
 }
 
 </script>

@@ -45,6 +45,11 @@ const props = defineProps<IPlayerCoreProps>();
 
 const emit = defineEmits<IPlayerCoreEmits>();
 
+function trigger<T extends keyof IPlayerCoreEmits>(e: T, arg: Parameters<IPlayerCoreEmits[T]>[0]) {
+  // @ts-ignore
+  emit(e, arg);
+}
+
 const videoRef = ref<HTMLVideoElement>();
 const hls = shallowRef<Hls>();
 const muted = ref(false);
@@ -62,12 +67,10 @@ watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode,
 
 const playlistManager = new PlaylistManager({
   onSrcChange: (src) => {
-    // @ts-ignore
-    emit('srcChange', src)
+    trigger('srcChange', src);
   },
   onSrcRemove: (src) => {
-    // @ts-ignore
-    emit('srcRemove', src)
+    trigger('srcRemove', src);
   }
 });
 
@@ -109,21 +112,18 @@ function rateChange() {
   const old = rate.value;
   rate.value = videoRef.value?.playbackRate || 1
   if (rate.value !== old) {
-    // @ts-ignore
-    emit('rateChange', rate.value)
+    trigger('rateChange', rate.value);
   }
 }
 
 function volumeChange() {
   if (muted.value !== videoRef.value?.muted) {
     muted.value = videoRef.value?.muted || false
-    // @ts-ignore
-    emit('mutedChange', muted.value)
+    trigger('mutedChange', muted.value);
   }
   if (volume.value !== videoRef.value?.volume) {
     volume.value = videoRef.value?.volume || 0
-    // @ts-ignore
-    emit('volumeChange', volume.value)
+    trigger('volumeChange', volume.value);
   }
 }
 
@@ -149,9 +149,17 @@ function setSrc(src: PlaySource | undefined) {
   innerSrc.value = src;
   playlistManager.setCurrentSrc(src);
 
-  const wrapper = src ? playlistManager.getWrapper(src) : undefined;
-  // @ts-ignore
-  setTimeout(() => emit('srcChange', wrapper), 10);
+  let wrapper: ISourceWrapper | undefined;
+  if (src) {
+    if (typeof src === 'object' && '_id' in src) {
+      wrapper = src as ISourceWrapper;
+    } else {
+      wrapper = playlistManager.getWrapper(src);
+    }
+  }
+  if (wrapper) {
+    setTimeout(() => trigger('srcChange', wrapper), 10);
+  }
   destroyHls();
   const video = videoRef.value;
   if (!video) {
@@ -209,8 +217,7 @@ watch(() => props.mode, (newMode) => {
   if (newMode) {
     currentMode.value = newMode;
     playlistManager.currentMode = newMode;
-    // @ts-ignore
-    emit('modeChange', newMode);
+    trigger('modeChange', newMode);
   }
 });
 
@@ -431,8 +438,7 @@ defineExpose<IPlayerCoreExpose>({
   set mode(v) {
     currentMode.value = v;
     playlistManager.currentMode = v;
-    // @ts-ignore
-    emit('modeChange', v);
+    trigger('modeChange', v);
   },
   get playlist() {
     return playlistManager.getPlaylist()

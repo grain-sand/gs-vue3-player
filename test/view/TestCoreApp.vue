@@ -40,7 +40,7 @@
 
       <h3>音量控制</h3>
       <div class="button-group">
-        <button @click="setVolume(0)">静音</button>
+        <button @click="playerCoreRef.muted = true">静音</button>
         <button @click="setVolume(0.25)">25%</button>
         <button @click="setVolume(0.5)">50%</button>
         <button @click="setVolume(0.75)">75%</button>
@@ -129,7 +129,7 @@ const handlePlayNext = () => {
 };
 
 const setVolume = (volume: number) => {
-  playerCoreRef.value?.setVolume(volume);
+  playerCoreRef.value.volume = volume;
 };
 
 const setRate = (rate: number) => {
