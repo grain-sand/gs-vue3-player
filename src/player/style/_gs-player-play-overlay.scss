@@ -1,0 +1,40 @@
+.gs-player-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  transition: background 0.3s;
+  cursor: pointer;
+
+  &.muted {
+    background: transparent;
+  }
+
+  &.paused {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .gs-play-overlay-button {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s, background 0.2s;
+
+    svg {
+      width: 44px;
+      height: 44px;
+      color: #fff;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      background: rgba(0, 0, 0, 0.8);
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.gs-player-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  gap: 12px;
+
+  .gs-icon-spin {
+    animation: spin 2s linear infinite;
+    width: 48px;
+    height: 48px;
+  }
+
+  span {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

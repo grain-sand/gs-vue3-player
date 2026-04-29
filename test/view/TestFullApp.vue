@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-// import '../../src/player/style/main.scss'
+import '../../src/player/style/main.scss'
 import {ref} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringSource} from "../../src";

@@ -1,0 +1,112 @@
+.gs-playlist {
+  background: var(--gs-panel-bg);
+  backdrop-filter: blur(4px);
+  overflow-y: auto;
+  max-height: 200px;
+
+  .gs-playlist-header {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .gs-playlist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .gs-playlist-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border-light);
+
+    &:hover {
+      background: var(--gs-hover-bg);
+    }
+
+    &.active {
+      background: rgba(64, 158, 255, 0.1);
+    }
+
+    .gs-playlist-item-thumb {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: var(--text-tertiary);
+      }
+    }
+
+    .gs-playlist-item-info {
+      flex: 1;
+      min-width: 0;
+
+      .gs-playlist-item-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .gs-playlist-item-author {
+        font-size: 12px;
+        color: var(--text-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .gs-playlist-item-time {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .gs-playlist-item-remove {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+
+      &:hover {
+        background: rgba(255, 0, 0, 0.2);
+      }
+
+      svg {
+        width: 14px;
+        height: 14px;
+        color: var(--text-tertiary);
+      }
+    }
+
+    &:hover .gs-playlist-item-remove {
+      opacity: 1;
+    }
+  }
+}

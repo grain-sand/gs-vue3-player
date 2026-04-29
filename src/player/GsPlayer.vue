@@ -15,7 +15,7 @@
           :quality="props.quality"
           :use-browser-hls="props.useBrowserHls"
           :rate="props.rate"
-          :volume="props.volume"
+          :volume="props.volume||0.5"
           :autoplay="props.autoplay"
           :controls="false"
           :muted="props.muted"
