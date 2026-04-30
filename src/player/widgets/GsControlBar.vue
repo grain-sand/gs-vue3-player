@@ -1,5 +1,8 @@
 <template>
-  <div class="gs-player-footer">
+  <div class="gs-player-footer"
+       @mouseenter="$emit('mouseenter', $event)"
+       @mouseleave="$emit('mouseleave', $event)"
+  >
     <component
         v-if="progressBarComponent"
         :is="progressBarComponent"
@@ -52,7 +55,7 @@ const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
 const progressBarComponent = computed(() => {
   const controlBarOption = props.props.controlBar;
 
-  if (!controlBarOption || typeof controlBarOption === 'boolean') {
+  if (!controlBarOption) {
     return GsProgressBar;
   }
 
@@ -74,15 +77,15 @@ const resolvedItems = computed(() => {
   const controlBarOption = props.props.controlBar;
   let items: (ControlItemName | IGsWidget)[];
 
-  if (controlBarOption && typeof controlBarOption !== 'boolean' && 'items' in controlBarOption) {
+  if (Array.isArray(controlBarOption?.items)) {
     items = controlBarOption.items || [...ControlDefaultItems];
   } else {
     items = [...ControlDefaultItems];
   }
 
-  if (controlBarOption && typeof controlBarOption !== 'boolean' && controlBarOption.removeItems) {
+  if (Array.isArray(controlBarOption?.removeItems)) {
     return items.filter(item =>
-      typeof item === 'string' && !controlBarOption.removeItems!.includes(item)
+        typeof item === 'string' && !controlBarOption.removeItems!.includes(item)
     );
   }
 

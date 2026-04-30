@@ -90,16 +90,18 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `IGsWidget`自定义列表容器组件
 	 * - `IListContainerOption` 包含默认列表容器，并对默认列表容器选项进行配置
 	 * - `layout=vertical`时，显示于`infoPanel`组件下方
-	 * - `layout=horizontal`时，背景完全透明，浮动于`PlayerCore`组件左下方，控制面板的上方
+	 * - `layout=horizontal`时，背景完全透明，浮动于`PlayerCore`组件正右方，不与控制面板间产生任何覆盖
 	 */
 	listContainer?: null | IGsWidget | IListContainerOption;
 
 	/**
 	 * 列表容器显示模式
 	 * - `always` 默认值
+	 *   - `layout=vertical`时，`infoPanel`组件下方
+	 *   - `layout=horizontal`时，将GsPlayer设置为 flex row 布局，列表容器位于正右方
 	 * - `hover`
-	 * 1. `layout=vertical`时，始终隐藏
-	 * 2. `layout=horizontal`时，浮动于右侧，鼠标悬停右侧100px内时显示
+	 *   - `layout=vertical`时，始终隐藏
+	 *   - `layout=horizontal`时，浮动于右侧，鼠标悬停右侧100px内时显示
 	 */
 	listContainerVisibility?: VisibilityMode;
 

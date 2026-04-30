@@ -7,34 +7,35 @@
   background: rgba(0, 0, 0, 0.5);
   transition: background 0.3s;
   cursor: pointer;
+  z-index: 1;
 
   &.muted {
-    background: transparent;
+	background: transparent;
   }
 
   &.paused {
-    background: rgba(0, 0, 0, 0.5);
+	background: rgba(0, 0, 0, 0.5);
   }
 
   .gs-play-overlay-button {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    transition: transform 0.2s, background 0.2s;
+	width: 80px;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.6);
+	transition: transform 0.2s, background 0.2s;
 
-    svg {
-      width: 44px;
-      height: 44px;
-      color: #fff;
-    }
+	svg {
+	  width: 44px;
+	  height: 44px;
+	  color: #fff;
+	}
+  }
 
-    &:hover {
-      transform: scale(1.1);
-      background: rgba(0, 0, 0, 0.8);
-    }
+  &:hover .gs-play-overlay-button {
+	transform: scale(1.1);
+	background: rgba(0, 0, 0, 0.8);
   }
 }

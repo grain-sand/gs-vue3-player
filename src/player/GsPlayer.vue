@@ -10,10 +10,11 @@
           }
         ]"
         ref="containerRef"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
     >
-      <div class="gs-player-main">
+      <div class="gs-player-main"
+           @mouseenter="!isFullscreen && (isHovering= true)"
+           @mouseleave="isHovering= false"
+      >
         <PlayerCore
             ref="coreRef"
             :src="props.src"
@@ -35,6 +36,16 @@
             @muted-change="trigger('mutedChange', $event)"
             @rate-change="trigger('rateChange', $event)"
             @mode-change="trigger('modeChange', $event)"
+        />
+
+        <component
+            v-if="controlBarWidget && exposedCore"
+            :is="controlBarWidget"
+            :core="exposedCore"
+            :cxt="widgetContext"
+            :props="props"
+            @mouseenter="isHovering= true"
+            @mouseleave="isHovering= false"
         />
 
         <template v-for="widget in innerWidgets" :key="widget.key">
@@ -158,14 +169,6 @@ const isControlsVisible = computed(() => {
   return isHovering.value;
 });
 
-function handleMouseEnter() {
-  isHovering.value = true;
-}
-
-function handleMouseLeave() {
-  isHovering.value = false;
-}
-
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -220,12 +223,12 @@ interface ResolvedWidget {
   component: IGsWidget;
 }
 
-const controlBarWidget = computed<ResolvedWidget | null>(() => {
+const controlBarWidget = computed<IGsWidget | null>(() => {
   if (props.controlBar === null) return null;
-  if (props.controlBar !== undefined && isVueComponent(props.controlBar)) {
-    return {key: 'controlBar', component: props.controlBar as IGsWidget};
+  if (isVueComponent(props.controlBar)) {
+    return props.controlBar;
   }
-  return {key: 'controlBar', component: GsControlBar};
+  return GsControlBar;
 });
 
 const innerWidgets = computed<ResolvedWidget[]>(() => {
@@ -233,14 +236,9 @@ const innerWidgets = computed<ResolvedWidget[]>(() => {
 
   if (props.playOverlay !== null) {
     const component = props.playOverlay !== undefined && isVueComponent(props.playOverlay)
-      ? props.playOverlay
-      : GsPlayOverlay;
+        ? props.playOverlay
+        : GsPlayOverlay;
     widgets.push({key: 'playOverlay', component});
-  }
-
-  const controlBar = controlBarWidget.value;
-  if (controlBar) {
-    widgets.push(controlBar);
   }
 
   return widgets;
@@ -251,8 +249,8 @@ const outerWidgets = computed<ResolvedWidget[]>(() => {
 
   if (props.infoPanel !== null) {
     const component = props.infoPanel !== undefined && isVueComponent(props.infoPanel)
-      ? props.infoPanel
-      : GsInfoPanel;
+        ? props.infoPanel
+        : GsInfoPanel;
     widgets.push({key: 'infoPanel', component});
   }
 

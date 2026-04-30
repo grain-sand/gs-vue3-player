@@ -6,66 +6,69 @@
   position: relative;
 
   &, & * {
-    box-sizing: border-box;
-    -moz-text-size-adjust: none;
-    -ms-text-size-adjust: none;
-    text-size-adjust: none;
+	box-sizing: border-box;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	text-size-adjust: none;
   }
 
   .gs-playlist,
   .gs-info-panel section {
-    border-top: 1px solid var(--border-light);
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 8px;
-    }
+	border-top: 1px solid var(--border-light);
 
-    &::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-      border-radius: 4px;
-    }
+	&::-webkit-scrollbar {
+	  width: 6px;
+	  height: 8px;
+	}
 
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 4px;
-    }
+	&::-webkit-scrollbar-track {
+	  background: var(--bg-secondary);
+	  border-radius: 4px;
+	}
 
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
+	&::-webkit-scrollbar-thumb {
+	  background: rgba(255, 255, 255, 0.3);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+	  background: rgba(255, 255, 255, 0.5);
+	}
   }
 
   &.is-web-fullscreen {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: #000;
-    margin: 0;
-    padding: 0;
-  }
-
-  &:not(:fullscreen):not(.is-web-fullscreen) .gs-player-main:hover .gs-player-footer {
-    .gs-progress-container {
-      transform: translateY(2px);
-      transition-delay: 0s;
-    }
-
-    .gs-controls {
-      transform: translateY(0%);
-      transition-delay: 0s;
-    }
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	background: #000;
+	margin: 0;
+	padding: 0;
   }
 
   &.is-web-fullscreen .gs-player-main {
-    padding-bottom: 0;
+	padding-bottom: 0;
   }
 
-  &:not(:hover):not(.gs-controls-visible) .gs-player-main .gs-progress-container {
-    transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+  &:not(.gs-controls-visible) {
+	.gs-progress-container, &.layout-horizontal .gs-player-panels {
+	  transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+	  transition-delay: var(--gs-progress-out-delay);
+	}
+	.gs-controls {
+	  transform: translateY(100%);
+	  transition-delay: var(--gs-progress-out-delay);
+	}
   }
 
-  &:hover .gs-player-main .gs-progress-container,
-  &.gs-controls-visible .gs-player-main .gs-progress-container {
-    transform: translateY(0);
+  &.gs-controls-visible {
+	.gs-controls {
+	  transform: translateY(0%);
+	  transition-delay: 0s !important;
+	}
+
+	&.layout-horizontal .gs-player-panels, .gs-progress-container {
+	  transform: translateY(3px);
+	  transition-delay: 0s !important;
+	}
   }
 }
