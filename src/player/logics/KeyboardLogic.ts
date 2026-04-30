@@ -77,7 +77,7 @@ export function keyboardLogic() {
       
       if (keyboardTarget === false) {
         return;
-      } else if (keyboardTarget === document || keyboardTarget === window) {
+      } else if (keyboardTarget === document || (keyboardTarget as any) === window) {
         target = document;
       } else if (keyboardTarget instanceof HTMLElement) {
         target = keyboardTarget;

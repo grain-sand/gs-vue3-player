@@ -6,15 +6,13 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from 'vue';
 import {formatTime} from "../../util";
+import {IGsWidgetProps} from "../../type";
 
-interface Props {
-  currentTime: number;
-  duration: number;
-  showDuration?: boolean;
-}
+const props = defineProps<IGsWidgetProps>();
 
-withDefaults(defineProps<Props>(), {
-  showDuration: true
-});
+const currentTime = computed(() => props.core?.time ?? 0);
+const duration = computed(() => props.core?.duration ?? 0);
+const showDuration = computed(() => duration.value > 0);
 </script>

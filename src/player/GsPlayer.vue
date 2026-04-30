@@ -2,7 +2,11 @@
   <teleport :to="webFullscreenTarget" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
-        :class="{ 'is-web-fullscreen': isWebFullscreen }"
+        :class="{
+          'is-web-fullscreen': isWebFullscreen,
+          'layout-vertical': effectiveLayout === 'vertical',
+          'layout-horizontal': effectiveLayout === 'horizontal'
+        }"
         ref="containerRef"
 
     >
@@ -32,6 +36,7 @@
 
         <template v-for="widget in innerWidgets" :key="widget.key">
           <component
+              v-if="exposedCore"
               :is="widget.component"
               :core="exposedCore"
               :cxt="widgetContext"
@@ -40,20 +45,23 @@
         </template>
       </div>
 
-      <template v-for="widget in outerWidgets" :key="widget.key">
-        <component
-            :is="widget.component"
-            :core="exposedCore"
-            :cxt="widgetContext"
-            :props="props"
-        />
-      </template>
+      <div class="gs-player-panels">
+        <template v-for="widget in outerWidgets" :key="widget.key">
+          <component
+              v-if="exposedCore"
+              :is="widget.component"
+              :core="exposedCore"
+              :cxt="widgetContext"
+              :props="props"
+          />
+        </template>
+      </div>
     </div>
   </teleport>
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
+import {computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import {PlayerCore} from '../core';
 import {
   AspectRatioMode,
@@ -74,7 +82,7 @@ import {
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsPlayOverlay} from './widgets';
+import {GsControlBar, GsPlayOverlay, GsInfoPanel} from './widgets';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -88,7 +96,8 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   keyboardTarget: '.gs-player',
   disableWheelNavigation: false,
   playOverlay: true,
-  controlBar: true
+  controlBar: true,
+  infoPanel: true
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -102,7 +111,9 @@ const containerRef = ref<HTMLDivElement>();
 const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
 const currentLayout = ref<LayoutMode>(props.layout);
+const originalLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
+const forceUpdate = ref(0);
 
 const i18nConfig = computed<II18n>(() => {
   if (typeof props.i18n === 'string') {
@@ -129,6 +140,15 @@ const isFullscreen = computed(() => {
       document.fullscreenElement !== null;
 });
 
+const effectiveLayout = computed(() => {
+  forceUpdate.value;
+  if (isFullscreen.value && containerRef.value) {
+    const containerAspectRatio = containerRef.value.clientWidth / containerRef.value.clientHeight;
+    return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
+  }
+  return currentLayout.value;
+});
+
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -143,7 +163,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return containerRef.value as HTMLElement;
   },
   get layout() {
-    return currentLayout.value;
+    return effectiveLayout.value;
   },
   get controlVisibility() {
     return props.controlVisibility;
@@ -151,8 +171,10 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   fullscreen() {
     containerRef.value?.requestFullscreen?.();
   },
-  webFullscreen() {
+  async webFullscreen() {
     isWebFullscreen.value = true;
+    await nextTick();
+    forceUpdate.value++;
   },
   exitFullscreen() {
     if (document.fullscreenElement) {
@@ -161,7 +183,18 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     isWebFullscreen.value = false;
   },
   setLayout(layout: LayoutMode) {
-    currentLayout.value = layout;
+    if (!isFullscreen.value) {
+      currentLayout.value = layout;
+      originalLayout.value = layout;
+    }
+  }
+});
+
+watch(isFullscreen, (newVal, oldVal) => {
+  if (newVal && !oldVal) {
+    originalLayout.value = currentLayout.value;
+  } else if (!newVal && oldVal) {
+    currentLayout.value = originalLayout.value;
   }
 });
 
@@ -186,6 +219,12 @@ const innerWidgets = computed<ResolvedWidget[]>(() => {
 
 const outerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
+
+  if (props.infoPanel !== false && props.infoPanel !== null) {
+    const infoPanelComponent = typeof props.infoPanel === 'object' ? props.infoPanel : GsInfoPanel;
+    widgets.push({key: 'infoPanel', component: infoPanelComponent});
+  }
+
   return widgets;
 });
 
@@ -233,7 +272,7 @@ defineExpose<IGsPlayerExpose>({
     return containerRef.value!;
   },
   get layout() {
-    return currentLayout.value;
+    return effectiveLayout.value;
   },
   get controlVisibility() {
     return props.controlVisibility;

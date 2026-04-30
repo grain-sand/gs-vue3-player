@@ -13,8 +13,8 @@
 	"build": "gs-rollup -c",
 	"dev": "vite",
 	"test": "vitest run",
-	"test:core-ui": "vitest core-ui",
-	"test:player-ui": "vitest player-ui"
+	"test:core": "vitest core",
+	"test:player": "vitest player"
   },
   "dependencies": {
 	"gs-base": "^0.1.21",

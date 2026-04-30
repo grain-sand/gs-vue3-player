@@ -72,7 +72,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `false` 整体不包含信息面板组件
 	 * - `IGsWidget`自定义信息面板组件
 	 * - `layout=vertical`时，显示于`PlayerCore`组件下方
-	 * - `layout=horizontal`时，透明显示背景，浮动于`PlayerCore`组件右下方，控制面板的上方
+	 * - `layout=horizontal`时，透明显示背景，浮动于`PlayerCore`组件左下方，控制面板的上方
 	 */
 	infoPanel?: boolean | IGsWidget | null;
 
@@ -83,7 +83,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `IGsWidget`自定义列表容器组件
 	 * - `IListContainerOption` 包含默认列表容器，并对默认列表容器选项进行配置
 	 * - `layout=vertical`时，显示于`infoPanel`组件下方
-	 * - `layout=horizontal`时，透明显示背景，浮动于`PlayerCore`组件右下方，控制面板的上方
+	 * - `layout=horizontal`时，背景完全透明，浮动于`PlayerCore`组件左下方，控制面板的上方
 	 */
 	listContainer?: boolean | IGsWidget | IListContainerOption;
 

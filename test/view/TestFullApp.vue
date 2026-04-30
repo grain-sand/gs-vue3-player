@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import '../../src/player/style/main.scss'
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringSource} from "../../src";
 
@@ -38,6 +38,10 @@ function eventChange(name: string, data: any) {
 function switchToNextSrc() {
   // playerRef.value.setVolume(.1)
 }
+
+watch(() => playerRef.value?.layout, (layout) => {
+  console.log(layout)
+})
 
 </script>
 
