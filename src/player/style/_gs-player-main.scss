@@ -41,26 +41,24 @@
 	}
   }
 
-  .gs-player-footer:not(:hover) {
-	.gs-controls {
-	  transform: translateY(100%);
-	}
-
-	.gs-progress-container {
-	  transform: translateY(calc(var(--gs-ctrl-h) + 2px));
-	}
+  .gs-controls {
+    transform: translateY(100%);
   }
 
-  .gs-player-footer:hover {
-	.gs-progress-container {
-	  transform: translateY(0);
-	  transition-delay: 0s;
-	}
+  .gs-progress-container {
+    transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+  }
 
-	.gs-controls {
-	  transform: translateY(0%);
-	  transition-delay: 0s;
-	}
+  .gs-controls-visible & .gs-controls,
+  &:hover .gs-controls {
+    transform: translateY(0%);
+    transition-delay: 0s;
+  }
+
+  .gs-controls-visible & .gs-progress-container,
+  &:hover .gs-progress-container {
+    transform: translateY(0);
+    transition-delay: 0s;
   }
 }
 
@@ -100,14 +98,10 @@
       backdrop-filter: none;
       transition: var(--gs-transition);
       transition-delay: var(--gs-progress-out-delay);
-    }
-
-    .gs-player-footer:not(:hover) + .gs-player-panels,
-    &:not(:hover) .gs-player-panels {
       transform: translateY(calc(var(--gs-ctrl-h) + 2px));
     }
 
-    .gs-player-footer:hover + .gs-player-panels,
+    &.gs-controls-visible .gs-player-panels,
     &:hover .gs-player-panels {
       transform: translateY(0);
       transition-delay: 0s;

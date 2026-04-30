@@ -58,9 +58,14 @@
 
   &.is-web-fullscreen .gs-player-main {
     padding-bottom: 0;
+  }
 
-    .gs-progress-container {
-      transform: translateY(46px);
-    }
+  &:not(:hover):not(.gs-controls-visible) .gs-player-main .gs-progress-container {
+    transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+  }
+
+  &:hover .gs-player-main .gs-progress-container,
+  &.gs-controls-visible .gs-player-main .gs-progress-container {
+    transform: translateY(0);
   }
 }

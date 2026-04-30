@@ -17,7 +17,7 @@ export interface IListContainerTab {
 	 * - `IGsWidget` 自定义组件
 	 * - `PlaylistItemPart[]` 为数组时,将使用默认播放列表，其定义的项将作为列表项部件，添加在列表项主体的下方
 	 */
-	body: IGsWidget | PlaylistItemPart[];
+	body: object & IGsWidget | PlaylistItemPart[];
 }
 
 export interface IListContainerAppendTab extends IListContainerTab {

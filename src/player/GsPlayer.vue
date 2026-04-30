@@ -2,13 +2,16 @@
   <teleport :to="webFullscreenTarget" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
-        :class="{
-          'is-web-fullscreen': isWebFullscreen,
-          'layout-vertical': effectiveLayout === 'vertical',
-          'layout-horizontal': effectiveLayout === 'horizontal'
-        }"
+        :class="[
+          `layout-${effectiveLayout}`,
+          {
+            'is-web-fullscreen': isWebFullscreen,
+            'gs-controls-visible': isControlsVisible
+          }
+        ]"
         ref="containerRef"
-
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
     >
       <div class="gs-player-main">
         <PlayerCore
@@ -82,7 +85,8 @@ import {
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsPlayOverlay, GsInfoPanel} from './widgets';
+import {GsControlBar, GsInfoPanel, GsPlayOverlay} from './widgets';
+import {isVueComponent} from '../utils/vueComponent';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,
@@ -94,10 +98,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   controlVisibility: DefaultControlVisibility,
   webFullscreenTarget: () => document.body,
   keyboardTarget: '.gs-player',
-  disableWheelNavigation: false,
-  playOverlay: true,
-  controlBar: true,
-  infoPanel: true
+  disableWheelNavigation: false
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -114,6 +115,7 @@ const currentLayout = ref<LayoutMode>(props.layout);
 const originalLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
 const forceUpdate = ref(0);
+const isHovering = ref(false);
 
 const i18nConfig = computed<II18n>(() => {
   if (typeof props.i18n === 'string') {
@@ -148,6 +150,21 @@ const effectiveLayout = computed(() => {
   }
   return currentLayout.value;
 });
+
+const isControlsVisible = computed(() => {
+  if (props.controlVisibility === 'always') {
+    return true;
+  }
+  return isHovering.value;
+});
+
+function handleMouseEnter() {
+  isHovering.value = true;
+}
+
+function handleMouseLeave() {
+  isHovering.value = false;
+}
 
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
@@ -203,15 +220,27 @@ interface ResolvedWidget {
   component: IGsWidget;
 }
 
+const controlBarWidget = computed<ResolvedWidget | null>(() => {
+  if (props.controlBar === null) return null;
+  if (props.controlBar !== undefined && isVueComponent(props.controlBar)) {
+    return {key: 'controlBar', component: props.controlBar as IGsWidget};
+  }
+  return {key: 'controlBar', component: GsControlBar};
+});
+
 const innerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
 
-  if (props.playOverlay !== false) {
-    widgets.push({key: 'playOverlay', component: GsPlayOverlay});
+  if (props.playOverlay !== null) {
+    const component = props.playOverlay !== undefined && isVueComponent(props.playOverlay)
+      ? props.playOverlay
+      : GsPlayOverlay;
+    widgets.push({key: 'playOverlay', component});
   }
 
-  if (props.controlBar !== false) {
-    widgets.push({key: 'controlBar', component: GsControlBar});
+  const controlBar = controlBarWidget.value;
+  if (controlBar) {
+    widgets.push(controlBar);
   }
 
   return widgets;
@@ -220,9 +249,11 @@ const innerWidgets = computed<ResolvedWidget[]>(() => {
 const outerWidgets = computed<ResolvedWidget[]>(() => {
   const widgets: ResolvedWidget[] = [];
 
-  if (props.infoPanel !== false && props.infoPanel !== null) {
-    const infoPanelComponent = typeof props.infoPanel === 'object' ? props.infoPanel : GsInfoPanel;
-    widgets.push({key: 'infoPanel', component: infoPanelComponent});
+  if (props.infoPanel !== null) {
+    const component = props.infoPanel !== undefined && isVueComponent(props.infoPanel)
+      ? props.infoPanel
+      : GsInfoPanel;
+    widgets.push({key: 'infoPanel', component});
   }
 
   return widgets;

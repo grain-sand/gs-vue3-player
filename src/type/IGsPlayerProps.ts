@@ -57,7 +57,14 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	variableWriteTarget?: HTMLElement;
 
 
-	controlBar?: boolean | IGsWidget | IControlBarOption;
+	/**
+	 * 控制面板
+	 * - 未定义时，显示默认控制面板
+	 * - `null` 不显示控制面板
+	 * - `IGsWidget`自定义控制面板组件
+	 * - `IControlBarOption` 包含默认控制面板，并对默认控制面板选项进行配置
+	 */
+	controlBar?: null | IGsWidget | IControlBarOption;
 
 	/**
 	 * 控制面板显示模式，默认为 `hover`
@@ -68,24 +75,24 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 
 	/**
 	 * 信息面板
-	 * - `true`,默认值，包含默认信息面板
-	 * - `false` 整体不包含信息面板组件
+	 * - 未定义时，使用默认信息面板
+	 * - `null` 整体不包含信息面板组件
 	 * - `IGsWidget`自定义信息面板组件
 	 * - `layout=vertical`时，显示于`PlayerCore`组件下方
 	 * - `layout=horizontal`时，透明显示背景，浮动于`PlayerCore`组件左下方，控制面板的上方
 	 */
-	infoPanel?: boolean | IGsWidget | null;
+	infoPanel?: null | IGsWidget;
 
 	/**
 	 * 列表容器
-	 * - `true`,默认值，包含默认列表容器
-	 * - `false` 整体不包含列表容器组件
+	 * - 未定义时，包含默认列表容器
+	 * - `null` 整体不包含列表容器组件
 	 * - `IGsWidget`自定义列表容器组件
 	 * - `IListContainerOption` 包含默认列表容器，并对默认列表容器选项进行配置
 	 * - `layout=vertical`时，显示于`infoPanel`组件下方
 	 * - `layout=horizontal`时，背景完全透明，浮动于`PlayerCore`组件左下方，控制面板的上方
 	 */
-	listContainer?: boolean | IGsWidget | IListContainerOption;
+	listContainer?: null | IGsWidget | IListContainerOption;
 
 	/**
 	 * 列表容器显示模式
@@ -98,13 +105,13 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 
 	/**
 	 * 播放暂停时覆盖层
-	 * - `true`,默认值，包含默认覆盖层
+	 * - 未定义时，包含默认覆盖层
 	 * 1. 暂停时,背景半透明
 	 * 2. 静音时,背景全透明
-	 * - `false` 不包含暂停时覆盖层
+	 * - `null` 不包含暂停时覆盖层
 	 * - `IGsWidget`自定义播放暂停时覆盖层
 	 */
-	playOverlay?: boolean | IGsWidget | null;
+	playOverlay?: null | IGsWidget ;
 
 	/**
 	 * 无界面逻辑组件
