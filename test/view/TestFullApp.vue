@@ -42,9 +42,4 @@ function switchToNextSrc() {
 </script>
 
 <style lang="scss">
-html {
-  .TestFullApp {
-    padding-top: 20%;
-  }
-}
 </style>

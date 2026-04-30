@@ -132,4 +132,19 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 */
 	appendOuterWidgets?: IGsWidget | IGsWidget[] | null;
 
+	/**
+	 * 链接处理函数
+	 * - 默认值为 `window.open`
+	 */
+	linkHandler?: (url: string) => void | Promise<void>;
+
+	/**
+	 *  社交关键词处理函数
+	 * - 当信息面板包含：#hashtag、@user等被点击时，会调用此函数，
+	 * - 默认不处理
+	 * - 可以根据需要自定义处理函数
+	 * @param word
+	 */
+	socioWordHandler?: (word: string) => void | Promise<void>
+
 }
