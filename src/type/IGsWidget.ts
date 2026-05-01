@@ -1,11 +1,17 @@
-import {AspectRatioMode, LayoutMode} from "./UnionTypes";
+import {AspectRatioMode, LayoutMode, VisibilityMode} from "./UnionTypes";
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
 import {IGsPlayerProps} from "./IGsPlayerProps";
 import {II18n} from "./II18n";
 
 
-export interface IGsWidgetContext extends Pick<IGsPlayerProps, 'layout' | 'controlVisibility'> {
+export interface IGsWidgetContext {
+
+	controlVisibility: VisibilityMode;
+
+	listContainerVisibility: VisibilityMode;
+
+	readonly layout: LayoutMode;
 
 	/**
 	 * 视频比例

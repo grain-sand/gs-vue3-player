@@ -70,6 +70,14 @@
           />
         </template>
       </div>
+
+      <component
+          v-if="listContainerWidget && exposedCore"
+          :is="listContainerWidget"
+          :core="exposedCore"
+          :cxt="widgetContext"
+          :props="props"
+      />
     </div>
   </teleport>
 </template>
@@ -92,11 +100,12 @@ import {
   IGsWidgetProps,
   II18n,
   IPlayerCoreExpose,
-  LayoutMode
+  LayoutMode,
+  VisibilityMode
 } from '../type';
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsInfoPanel, GsPlayOverlay} from './widgets';
+import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
 import {isVueComponent} from '../utils/vueComponent';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -127,6 +136,8 @@ const originalLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
 const forceUpdate = ref(0);
 const isHovering = ref(false);
+const currentControlVisibility = ref<VisibilityMode>(props.controlVisibility);
+const currentListContainerVisibility = ref<VisibilityMode>(props.listContainerVisibility || 'always');
 
 const i18nConfig = computed<II18n>(() => {
   if (typeof props.i18n === 'string') {
@@ -163,7 +174,7 @@ const effectiveLayout = computed(() => {
 });
 
 const isControlsVisible = computed(() => {
-  if (props.controlVisibility === 'always') {
+  if (currentControlVisibility.value === 'always') {
     return true;
   }
   return isHovering.value;
@@ -186,7 +197,16 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return effectiveLayout.value;
   },
   get controlVisibility() {
-    return props.controlVisibility;
+    return currentControlVisibility.value;
+  },
+  set controlVisibility(value: VisibilityMode) {
+    currentControlVisibility.value = value;
+  },
+  get listContainerVisibility() {
+    return currentListContainerVisibility.value;
+  },
+  set listContainerVisibility(value: VisibilityMode) {
+    currentListContainerVisibility.value = value;
   },
   fullscreen() {
     containerRef.value?.requestFullscreen?.();
@@ -257,6 +277,14 @@ const outerWidgets = computed<ResolvedWidget[]>(() => {
   return widgets;
 });
 
+const listContainerWidget = computed<IGsWidget | null>(() => {
+  if (props.listContainer === null) return null;
+  if (isVueComponent(props.listContainer)) {
+    return props.listContainer;
+  }
+  return GsListContainer;
+});
+
 const mergedLogics = computed(() => {
   const baseLogics = props.logics ?? defaultLogics;
   return [...baseLogics, ...(props.appendLogics || [])];
@@ -304,7 +332,16 @@ defineExpose<IGsPlayerExpose>({
     return effectiveLayout.value;
   },
   get controlVisibility() {
-    return props.controlVisibility;
+    return currentControlVisibility.value;
+  },
+  set controlVisibility(value: VisibilityMode) {
+    currentControlVisibility.value = value;
+  },
+  get listContainerVisibility() {
+    return currentListContainerVisibility.value;
+  },
+  set listContainerVisibility(value: VisibilityMode) {
+    currentListContainerVisibility.value = value;
   },
   get i18n() {
     return i18nConfig.value;

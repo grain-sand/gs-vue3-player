@@ -1,0 +1,165 @@
+.gs-list-container {
+  position: relative;
+  background: var(--gs-panel-bg);
+  backdrop-filter: blur(4px);
+
+  &.visibility-always.layout-vertical {
+    order: 3;
+    border-top: 1px solid var(--border-light);
+  }
+
+  &.visibility-always.layout-horizontal {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-light);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.visibility-hover.layout-horizontal {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-light);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 10;
+
+    .gs-player:hover & {
+      transform: translateX(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.visibility-hover.layout-vertical {
+    display: none;
+  }
+
+  .gs-list-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .gs-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-primary);
+
+    .gs-list-tabs {
+      display: flex;
+      gap: 0;
+      flex: 1;
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .gs-list-tab {
+      flex: 1;
+      min-width: 80px;
+      max-width: 120px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        color: var(--text-primary);
+      }
+
+      &.active {
+        color: var(--gs-primary);
+        border-bottom-color: var(--gs-primary);
+      }
+    }
+
+    .gs-list-pin {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--gs-radius);
+      color: var(--text-secondary);
+      transition: color 0.2s, background 0.2s;
+      margin-right: 8px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        color: var(--text-primary);
+        background: var(--gs-hover-bg);
+      }
+    }
+  }
+
+  .gs-list-body {
+    flex: 1;
+    overflow-y: auto;
+
+    .gs-list-tab-body {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+}
+
+.layout-horizontal .gs-player-main {
+  & + .gs-list-container {
+    position: relative;
+    flex-shrink: 0;
+  }
+}
+
+.gs-player.layout-horizontal.visibility-always {
+  display: flex;
+  flex-direction: row;
+
+  .gs-player-main {
+    flex: 1;
+  }
+
+  .gs-player-panels {
+    position: absolute;
+    left: 16px;
+    bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 16px);
+    width: 280px;
+  }
+}

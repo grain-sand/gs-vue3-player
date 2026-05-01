@@ -10,3 +10,5 @@ export {default as GsNextButton} from './GsNextButton.vue';
 export {default as GsControlBar} from './GsControlBar.vue';
 export {default as GsAuthor} from './GsAuthor.vue';
 export {default as GsInfoPanel} from './GsInfoPanel.vue';
+export {default as GsListContainer} from './GsListContainer.vue';
+export {default as GsPlaylist} from './GsPlaylist.vue';

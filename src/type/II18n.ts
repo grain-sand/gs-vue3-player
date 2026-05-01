@@ -40,4 +40,8 @@ export interface II18n {
     /** 弹出小窗 */
     pip: string;
   };
+  /** 播放列表标题 */
+  playlist?: string;
+  /** 移除按钮标题 */
+  remove?: string;
 }
