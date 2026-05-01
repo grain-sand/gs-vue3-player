@@ -125,17 +125,4 @@
       }
     }
   }
-
-  .gs-list-body {
-    flex: 1;
-    overflow-y: auto;
-
-    .gs-list-tab-body {
-      display: none;
-
-      &.active {
-        display: block;
-      }
-    }
-  }
 }

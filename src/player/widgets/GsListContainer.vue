@@ -21,21 +21,18 @@
           </button>
         </div>
         <button class="gs-list-pin" @click="isPinned = !isPinned">
-          <PinSvg />
+          <PinSvg/>
         </button>
       </div>
 
-      <div class="gs-list-body">
-        <component
-            v-for="(tab, index) in tabs"
-            :key="index"
-            :is="getTabBodyComponent(tab)"
-            :core="props.core"
-            :cxt="props.cxt"
-            :props="props.props"
-            :class="{ 'gs-list-tab-body': true, active: activeTabIndex === index }"
-        />
-      </div>
+      <component
+          v-if="activeTab"
+          :is="getTabBodyComponent(activeTab)"
+          :core="props.core"
+          :cxt="props.cxt"
+          :props="props.props"
+          class="gs-list-tab-body active"
+      />
     </div>
   </div>
 </template>
@@ -78,6 +75,8 @@ const tabs = computed<IListContainerTab[]>(() => {
 
   return allTabs;
 });
+
+const activeTab = computed(() => tabs.value[activeTabIndex.value]);
 
 const getTabBodyComponent = (tab: IListContainerTab): IGsWidget => {
   if ('body' in tab && typeof tab.body === 'object' && tab.body !== null) {
