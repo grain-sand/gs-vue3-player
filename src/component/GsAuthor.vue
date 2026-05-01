@@ -19,6 +19,8 @@
 <script setup lang="ts">
 import {IAuthorProps} from '../type';
 
+defineOptions({inheritAttrs: false});
+
 const props = withDefaults(defineProps<IAuthorProps>(), {
   handleClick: true
 });

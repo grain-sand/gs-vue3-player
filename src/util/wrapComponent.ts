@@ -8,7 +8,7 @@ type ExtractComponentProps<T> = T extends new () => ComponentPublicInstance<infe
 
 export function wrapComponent<T extends Component>(
   component: T,
-  props: ExtractComponentProps<T>
+  props: Partial<ExtractComponentProps<T>>
 ): Component {
   return defineComponent(() => {
     return () => h(component, props);

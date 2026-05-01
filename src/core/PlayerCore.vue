@@ -66,6 +66,8 @@ const playlist = ref<ISourceWrapper[]>([]);
 const wrapperMap = new Map<PlaySource, ISourceWrapper>();
 let idCounter = 0;
 
+defineOptions({inheritAttrs: false });
+
 watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode, {immediate: true})
 
 function updatePlaylist(list: PlaySource[]) {
