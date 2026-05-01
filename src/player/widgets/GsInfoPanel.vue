@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {IGsWidgetProps} from '../../type';
-import GsAuthor from './GsAuthor.vue';
+import {GsAuthor} from "../../component";
 
 const props = defineProps<IGsWidgetProps>();
 

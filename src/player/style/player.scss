@@ -1,6 +1,5 @@
-@use './variables.scss';
-@use './_pre.scss';
-@use './_base.scss';
+@use '../../component/style/component.scss';
+@use './_gs-player.scss';
 @use './_gs-controls.scss';
 @use './_gs-player-main.scss';
 @use './_gs-progress-container.scss';
@@ -8,6 +7,5 @@
 @use './_gs-player-error.scss';
 @use './_gs-info-panel.scss';
 @use './_gs-playlist.scss';
-@use './_gs-author.scss';
 @use './_gs-floating-panels.scss';
 @use './_gs-list-container.scss';

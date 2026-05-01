@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import {IAuthor, IGsWidgetProps} from '../../type';
+import {IAuthor, IGsWidgetProps} from '../type';
 
 const props = defineProps<IGsWidgetProps>();
 

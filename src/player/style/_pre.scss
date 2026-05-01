@@ -1,3 +1,7 @@
+@use "../../component/style/variables.scss" as vars;
+
+@include vars.variables('.gs-player');
+
 *,
 *::before,
 *::after {
