@@ -2,6 +2,7 @@ export * from './UnionTypes';
 export * from './DefaultHlsConfig';
 
 export * from './IAuthorProps';
+export * from './IGsSpacerProps';
 
 export * from './IPlayerCoreProps';
 export * from './IPlayerCoreEmits';
