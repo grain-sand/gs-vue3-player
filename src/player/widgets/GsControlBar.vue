@@ -36,6 +36,10 @@ import GsTimeDisplay from './GsTimeDisplay.vue';
 import GsProgressBar from './GsProgressBar.vue';
 
 const props = defineProps<IGsWidgetProps>();
+defineEmits<{
+  (e: 'mouseenter', event: MouseEvent): void;
+  (e: 'mouseleave', event: MouseEvent): void;
+}>();
 
 const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
   play: GsPlayButton,
@@ -53,49 +57,22 @@ const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
 };
 
 const progressBarComponent = computed(() => {
-  const controlBarOption = props.props.controlBar;
-
-  if (!controlBarOption) {
-    return GsProgressBar;
-  }
-
-  if ('progressBar' in controlBarOption) {
-    const pb = controlBarOption.progressBar;
-    if (pb === false) {
-      return null;
-    } else if (pb === true || pb === undefined) {
-      return GsProgressBar;
-    } else {
-      return pb;
-    }
-  }
-
+  const pb = props.props.controlBar?.progressBar;
+  if (pb === false) return null;
+  if (pb && typeof pb !== 'boolean') return pb;
   return GsProgressBar;
 });
 
 const resolvedItems = computed(() => {
-  const controlBarOption = props.props.controlBar;
-  let items: (ControlItemName | IGsWidget)[];
-
-  if (Array.isArray(controlBarOption?.items)) {
-    items = controlBarOption.items || [...ControlDefaultItems];
-  } else {
-    items = [...ControlDefaultItems];
-  }
-
-  if (Array.isArray(controlBarOption?.removeItems)) {
-    return items.filter(item =>
-        typeof item === 'string' && !controlBarOption.removeItems!.includes(item)
-    );
-  }
-
-  return items;
+  const items = Array.isArray(props.props.controlBar?.items)
+      ? props.props.controlBar.items
+      : [...ControlDefaultItems];
+  return props.props.controlBar?.removeItems
+      ? items.filter(item => typeof item === 'string' && !props.props.controlBar!.removeItems!.includes(item))
+      : items;
 });
 
 const getComponent = (item: ControlItemName | IGsWidget) => {
-  if (typeof item === 'string') {
-    return defaultComponents[item];
-  }
-  return item;
+  return typeof item === 'string' ? defaultComponents[item] : item;
 };
 </script>

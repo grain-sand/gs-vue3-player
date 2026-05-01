@@ -1,12 +1,12 @@
 <template>
   <button
       class="gs-btn"
-      :class="[
-        { 'gs-text-btn': text },
-        { 'gs-dropdown-host': hasDropdown }
-      ]"
+      :class="{
+        'gs-text-btn': text,
+        'gs-dropdown-host': hasDropdown
+      }"
       :title="title"
-      @click="handleClick"
+      @click="$emit('click', $event)"
       :disabled="disabled"
   >
     <component v-if="icon" :is="icon"/>
@@ -27,18 +27,12 @@ interface Props {
   hasDropdown?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   disabled: false,
   hasDropdown: false
 });
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'click', event: MouseEvent): void
 }>();
-
-const handleClick = (event: MouseEvent) => {
-  if (!props.disabled) {
-    emit('click', event);
-  }
-};
 </script>

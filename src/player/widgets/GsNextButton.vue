@@ -1,28 +1,16 @@
 <template>
   <GsButton
-      v-if="visible"
+      v-if="core?.playlist?.[core?.index+1]"
       :icon="NextSvg"
-      :title="i18n.titles.next"
-      @click="handleClick"
+      :title="cxt.i18n.titles.next"
+      @click="core?.playNext()"
   />
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
 import {NextSvg} from '../../svgs';
 import GsButton from './GsButton.vue';
-import {IGsWidgetProps, II18n} from '../../type';
+import {IGsWidgetProps} from '../../type';
 
-const props = defineProps<IGsWidgetProps>();
-
-const i18n = computed<II18n>(() => props.cxt?.i18n as II18n);
-const visible = computed(() => {
-  const nextSrc = props.props.nextSrc;
-  const playlist = props.props.playlist;
-  return !!nextSrc || (playlist && playlist.length > 1);
-});
-
-const handleClick = async () => {
-  await props.core?.playNext();
-};
+defineProps<IGsWidgetProps>();
 </script>

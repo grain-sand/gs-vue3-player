@@ -2,88 +2,34 @@
   <div class="gs-playlist" @click.stop>
     <ul class="gs-playlist-items">
       <li
-          v-for="item in playlist"
+          v-for="item in core.playlist"
           :key="item._id"
           class="gs-playlist-item"
-          :class="{ active: item._id === currentId }"
+          :class="{ active: item._id === core.src._id }"
           @click="core?.play(item)"
       >
         <div class="gs-playlist-item-thumb">
-          <svg v-if="item._id === currentId && isPlaying" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="2">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="6" y="4" width="4" height="16"/>
-            <rect x="14" y="4" width="4" height="16"/>
-          </svg>
+          <img v-if="item.poster" :src="item.poster" class="gs-playlist-item-poster" alt="poster" loading="lazy" />
+          <component :is="PlayStateIcons[(item._id !== core.src._id).toString()]"/>
         </div>
         <div class="gs-playlist-item-info">
-          <div class="gs-playlist-item-title">{{ getTitle(item) }}</div>
-          <div class="gs-playlist-item-author" v-if="showAuthor(item)">
-            {{ getAuthor(item) }}
+          <div class="gs-playlist-item-title">{{ item.title }}</div>
+          <div v-if="item.author?.name" class="gs-playlist-item-author">
+            {{ item.author.name }}
           </div>
         </div>
-        <div v-if="showTime(item)" class="gs-playlist-item-time">
-          {{ formatDuration(item.duration) }}
+        <div v-if="item.duration" class="gs-playlist-item-time">
+          {{ formatTime(item.duration) }}
         </div>
-        <button
-            class="gs-playlist-item-remove"
-            @click.stop="core?.removeSrc(item)"
-            :title="cxt.i18n.remove || 'Remove'"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 6h18"/>
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-          </svg>
-        </button>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, watch} from 'vue';
 import {IGsWidgetProps} from '../../type';
-import {ISourceWrapper} from '../../type';
 import {formatTime} from '../../util';
+import {PlayStateIcons} from '../../svgs';
 
-const props = defineProps<IGsWidgetProps>();
-
-const playlist = computed(() => props.core.playlist);
-
-const currentId = computed(() => props.core.src._id);
-
-const isPlaying = computed(() => props.core.playing);
-
-function getTitle(item: ISourceWrapper): string {
-  if (typeof item.src === 'string') return '';
-  return item.title || '';
-}
-
-function getAuthor(item: ISourceWrapper): string {
-  if (typeof item.src === 'string') return '';
-  return item.author?.name || '';
-}
-
-function showAuthor(item: ISourceWrapper): boolean {
-  if (typeof item.src === 'string') return false;
-  return !!item.author?.name;
-}
-
-function showTime(item: ISourceWrapper): boolean {
-  return item.duration !== undefined && item.duration > 0;
-}
-
-function formatDuration(duration?: number): string {
-  if (!duration) return '';
-  return formatTime(duration);
-}
-
-
-watch(() => props.core?.playlist?.length, (len) => {
-  console.log(len)
-}, {immediate: true})
-
+defineProps<IGsWidgetProps>();
 </script>

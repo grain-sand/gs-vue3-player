@@ -1,20 +1,11 @@
-@use "../../component/style/variables.scss" as vars;
+@use "../../component/style/variables.scss" as v;
+@use "../../component/style/reset.scss" as r;
 
-@include vars.variables('.gs-player');
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@include v.variables;
+@include r.reset;
 
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  padding: 0;
 }

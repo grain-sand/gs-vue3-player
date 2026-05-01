@@ -1,4 +1,4 @@
-@mixin variables($selector) {
+@mixin variables($selector:'.gs-player') {
   #{$selector} {
 	/* 主题变量：更加柔和的现代配色 */
 	&:not([theme="light"]) {
@@ -53,14 +53,5 @@
 	--spacing-lg: 8px;
 	--border-radius: 4px;
 	--transition: all 0.3s ease;
-
-
-
-	&, & * {
-	  box-sizing: border-box;
-	  -moz-text-size-adjust: none;
-	  -ms-text-size-adjust: none;
-	  text-size-adjust: none;
-	}
   }
 }

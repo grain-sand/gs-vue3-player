@@ -2,7 +2,7 @@
   <div class="gs-progress-container"
        @click.stop="handleProgressClick"
        @mousemove="handleProgressMouseMove"
-       @mouseleave="handleProgressMouseLeave">
+       @mouseleave="showProgressTooltip = false">
     <div class="gs-progress-bar">
       <div class="gs-progress-track">
         <div class="gs-progress-buffered" :style="{ width: bufferedPercent + '%' }"/>
@@ -28,8 +28,7 @@ const tooltipTime = ref(0);
 
 const progress = computed(() => {
   const duration = props.core?.duration ?? 0;
-  const time = props.core?.time ?? 0;
-  return duration ? (time / duration) * 100 : 0;
+  return duration ? ((props.core?.time ?? 0) / duration) * 100 : 0;
 });
 
 const bufferedPercent = computed(() => {
@@ -49,15 +48,11 @@ const formatTime = (seconds: number) => {
 };
 
 const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
-  const rect = el.getBoundingClientRect();
-  return clamp((e.clientX - rect.left) / rect.width, 0, 1);
+  return clamp((e.clientX - el.getBoundingClientRect().left) / el.getBoundingClientRect().width, 0, 1);
 };
 
 const handleProgressClick = (e: MouseEvent) => {
-  const newTime = getProgressRatio(e, e.currentTarget as HTMLElement) * (props.core?.duration || 0);
-  if (props.core) {
-    props.core.time = newTime;
-  }
+  props.core!.time = getProgressRatio(e, e.currentTarget as HTMLElement) * (props.core?.duration || 0);
 };
 
 const handleProgressMouseMove = (e: MouseEvent) => {
@@ -65,9 +60,5 @@ const handleProgressMouseMove = (e: MouseEvent) => {
   showProgressTooltip.value = true;
   tooltipPosition.value = clamp(ratio * 100, 5, 95);
   tooltipTime.value = ratio * (props.core?.duration || 0);
-};
-
-const handleProgressMouseLeave = () => {
-  showProgressTooltip.value = false;
 };
 </script>

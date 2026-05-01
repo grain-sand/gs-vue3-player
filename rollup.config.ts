@@ -37,6 +37,7 @@ export default [
 			scssMerge([
 				'src/player/style/player.scss',
 				'src/component/style/variables.scss',
+				'src/component/style/reset.scss',
 				'src/component/style/component.scss',
 			])
 		],

@@ -50,7 +50,7 @@ export const ControlDefaultItems = [
 	 */
 	'time',
 	/**
-	 * 空白填充
+	 * 空白填充组件
 	 * - 会自动伸展占用所有剩余空间，没有padding与margin
 	 */
 	'-',
@@ -97,6 +97,20 @@ export type ListHeaderVisible = (typeof ListHeaderVisibles)[number];
 
 export const DefaultListHeaderVisible: ListHeaderVisible = ListHeaderVisibles[0];
 
-export const PlaylistItemPartNames = ['author', '-', 'time'] as const;
+export const PlaylistItemPartNames = [
+	/**
+	 * 作者 组件
+	 */
+	'author',
+	/**
+	 * 空白填充组件
+	 * - 会自动伸展占用所有剩余空间，没有padding与margin
+	 */
+	'-',
+	/**
+	 * 时间信息组件
+	 */
+	'time'
+] as const;
 
 export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];

@@ -3,7 +3,7 @@
       class="gs-dropdown-item"
       :class="{ active: active }"
       :title="title"
-      @click="handleClick"
+      @click="$emit('click', $event)"
   >
     <component v-if="icon" :is="icon"/>
     <span v-else-if="text">{{ text }}</span>
@@ -21,15 +21,11 @@ interface Props {
   active?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   active: false
 });
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'click', event: MouseEvent): void
 }>();
-
-const handleClick = (event: MouseEvent) => {
-  emit('click', event);
-};
 </script>
