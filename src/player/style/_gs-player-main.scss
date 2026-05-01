@@ -1,6 +1,5 @@
 .gs-player-main {
   position: relative;
-  width: 100%;
   height: var(--player-core-height, 240px);
   background: var(--gs-bg);
   overflow: hidden;
@@ -11,6 +10,7 @@
   align-items: center;
   justify-content: center;
   flex: var(--player-core-height, 240px) 0 0;
+  min-width: 0;
 
   video {
 	max-width: 100%;
@@ -49,8 +49,11 @@
     flex-direction: row;
 
     .gs-player-main {
-      flex: 1;
+      flex: 3 1 60%;
       position: relative;
+      width: auto;
+      height: auto;
+      min-height: var(--player-core-height, 240px);
     }
 
     .gs-player-panels {

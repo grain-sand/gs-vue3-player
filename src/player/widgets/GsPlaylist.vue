@@ -1,15 +1,16 @@
 <template>
-  <div class="gs-playlist">
+  <div class="gs-playlist" @click.stop>
     <ul class="gs-playlist-items">
       <li
-          v-for="(item, index) in playlist"
+          v-for="item in playlist"
           :key="item._id"
           class="gs-playlist-item"
-          :class="{ active: index === currentIndex }"
-          @click="handleItemClick(index)"
+          :class="{ active: item._id === currentId }"
+          @click="core?.play(item)"
       >
         <div class="gs-playlist-item-thumb">
-          <svg v-if="index === currentIndex && isPlaying" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg v-if="item._id === currentId && isPlaying" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2">
             <polygon points="5 3 19 12 5 21 5 3"/>
           </svg>
           <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -28,7 +29,7 @@
         </div>
         <button
             class="gs-playlist-item-remove"
-            @click.stop="handleRemove(item)"
+            @click.stop="core?.removeSrc(item)"
             :title="cxt.i18n.remove || 'Remove'"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -43,18 +44,16 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue';
+import {computed, watch} from 'vue';
 import {IGsWidgetProps} from '../../type';
 import {ISourceWrapper} from '../../type';
 import {formatTime} from '../../util';
 
 const props = defineProps<IGsWidgetProps>();
 
-const cxt = props.cxt;
-
 const playlist = computed(() => props.core.playlist);
 
-const currentIndex = computed(() => props.core.index);
+const currentId = computed(() => props.core.src._id);
 
 const isPlaying = computed(() => props.core.playing);
 
@@ -82,17 +81,9 @@ function formatDuration(duration?: number): string {
   return formatTime(duration);
 }
 
-function handleItemClick(index: number) {
-  if (index !== currentIndex.value) {
-    const item = playlist.value[index];
-    if (item) {
-      props.core.setSrc(item.src);
-      props.core.play();
-    }
-  }
-}
 
-function handleRemove(item: ISourceWrapper) {
-  props.core.removeSrc(item);
-}
+watch(() => props.core?.playlist?.length, (len) => {
+  console.log(len)
+}, {immediate: true})
+
 </script>

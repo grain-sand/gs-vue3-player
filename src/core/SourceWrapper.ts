@@ -18,6 +18,20 @@ export class SourceWrapper implements ISourceWrapper {
 		this._raw.type = this._type = v;
 	}
 
+	private _duration?: number
+
+	get duration(): number {
+		return this._raw.duration || this._duration || 0
+	}
+
+	set duration(v: number) {
+		if (typeof this._raw === 'object') {
+			this._raw.duration = v
+		} else {
+			this._duration = v
+		}
+	}
+
 	get poster(): string {
 		return this._raw.poster || ''
 	}
@@ -39,14 +53,6 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get data(): any {
 		return this._raw.data
-	}
-
-	get duration(): number {
-		return this._raw.duration || 0
-	}
-
-	set duration(v: number) {
-		this._raw.duration = v
 	}
 
 	get author(): IAuthor | undefined {

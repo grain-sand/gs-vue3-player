@@ -76,7 +76,7 @@ export interface IQualitiesSource<D = any> extends ITypedSource<D, Array<IVideoQ
 export type PlaySource<D = any> = string | IStringSource<D> | IQualitiesSource<D>;
 
 
-export interface ISourceWrapper<D = any, R extends PlaySource<D> = PlaySource<D>> extends Readonly<ITypedSource<D>> {
+export interface ISourceWrapper<D = any, R extends PlaySource<D> = PlaySource<D>> extends ITypedSource<D> {
 	/**
 	 * 播放器内部对源的唯一标识
 	 */

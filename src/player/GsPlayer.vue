@@ -106,7 +106,7 @@ import {
 import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
 import {defaultLogics} from './logics';
 import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
-import {isVueComponent} from '../utils/vueComponent';
+import {isVueComponent} from '../util';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => zhCN,

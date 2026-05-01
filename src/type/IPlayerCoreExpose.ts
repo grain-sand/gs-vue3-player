@@ -15,7 +15,7 @@ export interface IPlayerCoreExpose {
 
 	rate: number
 
-	src: PlaySource
+	src: ISourceWrapper
 
 	/** 播放模式，可选项为：播放下一个（默认值）、禁用、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
 	mode?: PlaybackMode;
