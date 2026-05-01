@@ -5,15 +5,16 @@ Defaults.outputBase = 'dist'
 Defaults.outputCodeDir = 'lib'
 
 const input = [
+	"src/type/index.ts",
 	"src/core/index.ts",
+	"src/component/index.ts",
 	"src/player/index.ts",
 	"src/index.ts",
 	"src/svgs/index.ts",
-	"src/type/index.ts",
 	"src/util/index.ts"
 ]
 
-const addExternal = 'hls.js';
+const addExternal = ['hls.js'];
 
 // logJson(dts)
 
@@ -28,14 +29,15 @@ export default [
 			},
 			after(pkg) {
 				delete pkg.main;
-				['variables.scss', 'style.scss', 'main.css']
+				['variables.scss', 'component.scss', 'player.scss', 'main.css']
 					.forEach(e => pkg.exports[`./lib/${e}`] = `./lib/${e}`);
 			}
 		},
 		addPlugins: [
 			scssMerge([
-				'src/player/style/style.scss',
-				'src/player/style/variables.scss',
+				'src/player/style/player.scss',
+				'src/component/style/variables.scss',
+				'src/component/style/component.scss',
 			])
 		],
 		vueDts: {

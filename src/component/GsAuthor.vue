@@ -17,17 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import {IAuthor, IGsWidgetProps} from '../type';
+import {IAuthorProps} from '../type';
 
-const props = defineProps<IGsWidgetProps>();
-
-const src = props.props.src;
-const author = typeof src !== 'string' ? (src as any)?.author as IAuthor | undefined : undefined;
-const handleClick = props.props.linkHandler !== undefined;
+const props = withDefaults(defineProps<IAuthorProps>(), {
+  handleClick: true
+});
 
 function handleClickFn() {
-  if (handleClick && author?.link) {
-    props.props.linkHandler?.(author.link);
+  if (props.handleClick && props.author?.link) {
+    const handler = props.linkHandler || window.open;
+    handler(props.author.link);
   }
 }
 </script>

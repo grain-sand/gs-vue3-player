@@ -7,14 +7,12 @@
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
         </svg>
       </a>
-      <div v-if="currentAuthor" class="gs-info-author">
-        <component
-            :is="GsAuthor"
-            :core="props.core"
-            :cxt="props.cxt"
-            :props="props.props"
-        />
-      </div>
+      <GsAuthor
+          v-if="currentAuthor"
+          :author="currentAuthor"
+          :link-handler="props.props.linkHandler"
+          class="gs-info-author"
+      />
     </div>
     <div class="gs-info-content">
       <div class="gs-info-title" v-text="currentTitle"></div>

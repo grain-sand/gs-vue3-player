@@ -27,8 +27,9 @@
 	"@vitest/browser": "^3",
 	"@vue/language-plugin-pug": "^3.2.6",
 	"@vue/test-utils": "^2.4.6",
+	"gs-rollup-plugin-vue-dts": "D:\\WorkSpace\\grain-sand\\gs-rollup-plugin-vue-dts\\dist",
 	"gs-rollup": "^1.0.10",
-	"gs-rollup-plugin-vue-dts": "^1.0.0",
+	"postcss-scss": "^4.0.9",
 	"rollup-plugin-dts": "^6.4.1",
 	"rollup-plugin-vue": "^6.0.0",
 	"sass": "^1.97.2",
@@ -49,5 +50,8 @@
 	"customizable",
 	"internationalization",
 	"playlist"
-  ]
+  ],
+  "resolutions": {
+	"gs-rollup-plugin-vue-dts": "1.0.1"
+  }
 }

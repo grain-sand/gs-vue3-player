@@ -1,4 +1,3 @@
-
 export interface IAuthor {
 	profileImage?: string;
 	name: string;
@@ -7,8 +6,9 @@ export interface IAuthor {
 
 export interface IAuthorProps {
 
-	author?: IAuthor
+	author?: IAuthor;
 
 	handleClick?: boolean;
 
+	linkHandler?: (url: string) => void;
 }
