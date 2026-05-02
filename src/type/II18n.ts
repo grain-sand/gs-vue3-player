@@ -35,10 +35,18 @@ export interface II18n {
     speed: string;
     /** 全屏 */
     fullscreen: string;
+    /** 退出全屏 */
+    exitFullscreen: string;
     /** 网页全屏 */
     webFullscreen: string;
     /** 弹出小窗 */
     pip: string;
+    /** 退出弹出小窗 */
+    exitPip: string;
+    /** 显示列表 */
+    showList: string;
+    /** 隐藏列表 */
+    hideList: string;
   };
   /** 播放列表标题 */
   playlist?: string;

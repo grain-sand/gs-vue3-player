@@ -18,7 +18,11 @@ export const koKR: II18n = {
     mute: '음소거',
     speed: '재생 속도',
     fullscreen: '전체 화면',
+    exitFullscreen: '전체 화면 종료',
     webFullscreen: '웹 전체 화면',
-    pip: '피아피'
+    pip: '피아피',
+    exitPip: '피아피 종료',
+    showList: '목록 표시',
+    hideList: '목록 숨기기'
   }
 };

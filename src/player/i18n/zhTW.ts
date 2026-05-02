@@ -18,7 +18,11 @@ export const zhTW: II18n = {
     mute: '靜音',
     speed: '播放速度',
     fullscreen: '全屏',
+    exitFullscreen: '退出全屏',
     webFullscreen: '網頁全屏',
-    pip: '彈出小窗'
+    pip: '彈出小窗',
+    exitPip: '退出小窗',
+    showList: '顯示列表',
+    hideList: '隱藏列表'
   }
 };

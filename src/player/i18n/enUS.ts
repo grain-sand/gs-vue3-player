@@ -18,7 +18,11 @@ export const enUS: II18n = {
     mute: 'Mute',
     speed: 'Playback Speed',
     fullscreen: 'Fullscreen',
+    exitFullscreen: 'Exit Fullscreen',
     webFullscreen: 'Web Fullscreen',
-    pip: 'Picture in Picture'
+    pip: 'Picture in Picture',
+    exitPip: 'Exit Picture in Picture',
+    showList: 'Show List',
+    hideList: 'Hide List'
   }
 };

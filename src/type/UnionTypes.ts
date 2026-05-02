@@ -18,7 +18,7 @@ export const DefaultAspectRatios: AspectRatio[] = [[16, 9], [4, 3], [9, 16], [3,
 
 export const DefaultAspectRatio: AspectRatio = DefaultAspectRatios[0];
 
-export const LayoutModes = ['vertical','horizontal'] as const;
+export const LayoutModes = ['vertical', 'horizontal'] as const;
 
 export type LayoutMode = (typeof LayoutModes)[number];
 
@@ -72,6 +72,10 @@ export const ControlDefaultItems = [
 	 */
 	'volume',
 	/**
+	 * 播放模式切换按钮
+	 */
+	'mode',
+	/**
 	 * 全屏菜单
 	 * - 按钮为 web全屏切换
 	 * - 菜单中包含 pip 与 fullscreen 按钮
@@ -80,6 +84,7 @@ export const ControlDefaultItems = [
 ] as const;
 
 export const ControlItemNames = [...ControlDefaultItems,
+
 	/**
 	 * 浏览器原生弹出视频小窗模式
 	 */

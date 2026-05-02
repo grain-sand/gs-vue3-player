@@ -18,7 +18,11 @@ export const zhCN: II18n = {
     mute: '静音',
     speed: '播放速度',
     fullscreen: '全屏',
+    exitFullscreen: '退出全屏',
     webFullscreen: '网页全屏',
-    pip: '弹出小窗'
+    pip: '弹出小窗',
+    exitPip: '退出小窗',
+    showList: '显示列表',
+    hideList: '隐藏列表'
   }
 };

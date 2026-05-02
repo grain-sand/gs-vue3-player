@@ -13,7 +13,9 @@ import loopAll from './loop-all.svg';
 import shuffle from './shuffle.svg';
 import WebFullscreenSvg from './web-fullscreen.svg';
 import FullscreenSvg from './fullscreen.svg';
+import ExitFullscreenSvg from './exit-fullscreen.svg';
 import PipSvg from './pip.svg';
+import ExitPipSvg from './exit-pip.svg';
 import {PlaybackMode} from "../type";
 import TrashSvg from './trash.svg';
 import OutLinkSvg from './out-link.svg';
@@ -47,7 +49,9 @@ export {
 	NextSvg,
 	WebFullscreenSvg,
 	FullscreenSvg,
+	ExitFullscreenSvg,
 	PipSvg,
+	ExitPipSvg,
 	PlayOverlaySvg,
 	MuteSvg,
 	TrashSvg,

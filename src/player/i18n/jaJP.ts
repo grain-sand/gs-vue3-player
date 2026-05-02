@@ -18,7 +18,11 @@ export const jaJP: II18n = {
     mute: 'ミュート',
     speed: '再生速度',
     fullscreen: '全画面',
+    exitFullscreen: '全画面を終了',
     webFullscreen: 'ウェブ全画面',
-    pip: 'ピクチャーインピクチャー'
+    pip: 'ピクチャーインピクチャー',
+    exitPip: 'ピクチャーインピクチャーを終了',
+    showList: 'リストを表示',
+    hideList: 'リストを非表示'
   }
 };
