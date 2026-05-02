@@ -57,6 +57,9 @@ function switchToNextSrc() {
 watch(() => playerRef.value?.layout, (layout) => {
   console.log(layout)
 })
+watch(() => playerRef.value?.isFullscreen, (isFullscreen) => {
+  console.log('isFullscreen',isFullscreen)
+})
 
 </script>
 

@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import {PlayerCore} from '../core';
 import {
   AspectRatioMode,
@@ -109,7 +109,7 @@ import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widge
 import {isVueComponent} from '../util';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
-  i18n: () => zhCN,
+  i18n: () => 'auto',
   aspectRatio: <any>DefaultAspectRatio,
   layout: DefaultLayoutMode,
   handleClick: true,
@@ -134,10 +134,12 @@ const isWebFullscreen = ref(false);
 const currentLayout = ref<LayoutMode>(props.layout);
 const originalLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
-const forceUpdate = ref(0);
 const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
+
+const containerWidth = ref(0);
+const containerHeight = ref(0);
 
 const i18nConfig = computed<II18n>(() => {
   if (typeof props.i18n === 'string') {
@@ -160,13 +162,14 @@ const i18nConfig = computed<II18n>(() => {
 const exposedCore = computed(() => coreRef.value);
 
 const isFullscreen = computed(() => {
+  containerWidth.value
+  containerHeight.value
   return isWebFullscreen.value || !!document.fullscreenElement;
 });
 
 const layout = computed(() => {
-  forceUpdate.value;
   if (isFullscreen.value) {
-    const containerAspectRatio = window.innerWidth / window.innerHeight;
+    const containerAspectRatio = containerWidth.value / containerHeight.value;
     return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
   }
   return currentLayout.value;
@@ -182,6 +185,11 @@ const isControlsVisible = computed(() => {
   return isHovering.value;
 });
 
+const updateContainerSize = (width: number, height: number) => {
+  containerWidth.value = width;
+  containerHeight.value = height;
+};
+
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -195,6 +203,13 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get container() {
     return containerRef.value as HTMLElement;
   },
+  get containerWidth() {
+    return containerWidth.value;
+  },
+  get containerHeight() {
+    return containerHeight.value;
+  },
+  updateContainerSize,
   get layout() {
     return layout.value;
   },
@@ -213,10 +228,8 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   fullscreen() {
     containerRef.value?.requestFullscreen?.();
   },
-  async webFullscreen() {
+  webFullscreen() {
     isWebFullscreen.value = true;
-    await nextTick();
-    forceUpdate.value++;
   },
   exitFullscreen() {
     if (document.fullscreenElement) {
@@ -333,6 +346,12 @@ defineExpose<IGsPlayerExpose>({
   },
   get container() {
     return containerRef.value!;
+  },
+  get containerWidth() {
+    return containerWidth.value;
+  },
+  get containerHeight() {
+    return containerHeight.value;
   },
   get layout() {
     return layout.value;

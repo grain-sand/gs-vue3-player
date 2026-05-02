@@ -32,6 +32,21 @@ export interface IGsWidgetContext {
 	 */
 	readonly container: HTMLElement;
 
+	/**
+	 * 容器宽度（实时）
+	 */
+	readonly containerWidth: number;
+
+	/**
+	 * 容器高度（实时）
+	 */
+	readonly containerHeight: number;
+
+	/**
+	 * 更新容器实时尺寸（内部使用）
+	 */
+	updateContainerSize(width: number, height: number): void;
+
 	/** 桌面全屏 */
 	fullscreen(): void;
 
