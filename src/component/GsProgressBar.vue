@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {IGsWidgetProps} from '../../type';
+import {IGsWidgetProps} from '../type';
 
 const props = defineProps<IGsWidgetProps>();
 

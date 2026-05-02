@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {IGsWidgetProps} from '../../type';
-import GsButton from './GsButton.vue';
+import GsButton from '../../component/GsButton.vue';
 import {FullscreenSvg, ExitFullscreenSvg} from '../../svgs';
 
 const props = defineProps<IGsWidgetProps>();

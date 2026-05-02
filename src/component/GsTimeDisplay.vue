@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import {formatTime} from "../../util";
-import {IGsWidgetProps} from "../../type";
+import {formatTime} from "../util";
+import {IGsWidgetProps} from "../type";
 
 defineProps<IGsWidgetProps>();
 </script>

@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 import {IGsWidgetProps} from '../../type';
-import GsButton from './GsButton.vue';
+import GsButton from '../../component/GsButton.vue';
 import ListSvg from '../../svgs/list.svg';
 
 const props = defineProps<IGsWidgetProps>();

@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../type';
-import GsButton from './GsButton.vue';
+import GsButton from '../../component/GsButton.vue';
 import {computed} from "vue";
 
 const props = defineProps<IGsWidgetProps>();

@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import {PlayStateIcons} from '../../svgs';
-import GsButton from './GsButton.vue';
+import GsButton from '../../component/GsButton.vue';
 import {IGsWidgetProps} from '../../type';
 
 defineProps<IGsWidgetProps>();

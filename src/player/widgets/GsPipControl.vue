@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../type';
-import GsButton from './GsButton.vue';
+import GsButton from '../../component/GsButton.vue';
 import {PipSvg, ExitPipSvg} from '../../svgs';
 
 const props = defineProps<IGsWidgetProps>();

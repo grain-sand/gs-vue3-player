@@ -1,8 +1,3 @@
-export {default as GsButton} from './GsButton.vue';
-export {default as GsDropdown} from './GsDropdown.vue';
-export {default as GsDropdownItem} from './GsDropdownItem.vue';
-export {default as GsTimeDisplay} from './GsTimeDisplay.vue';
-export {default as GsProgressBar} from './GsProgressBar.vue';
 export {default as GsPlayOverlay} from './GsPlayOverlay.vue';
 export {default as GsPlayButton} from './GsPlayButton.vue';
 export {default as GsPreButton} from './GsPreButton.vue';

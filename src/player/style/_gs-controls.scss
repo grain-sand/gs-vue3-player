@@ -9,14 +9,6 @@
   transition: var(--gs-transition);
   z-index: 2;
 
-  .gs-time-display {
-    color: var(--gs-text);
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-    opacity: 0.9;
-    padding: 2px 4px;
-  }
-
   .gs-btn {
     color: var(--gs-text);
     cursor: pointer;
