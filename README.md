@@ -115,7 +115,7 @@ yarn add gs-vue3-player
   import {GsPlayer, II18n} from 'gs-vue3-player';
   import 'gs-vue3-player/lib/main.css';
 
-  const customI18n : II18n = {
+  const customI18n: II18n = {
     errorMessage: 'Request Error',
     playbackModes: {
       sequence: 'Play Sequence',
@@ -133,9 +133,15 @@ yarn add gs-vue3-player
       mute: 'Mute',
       speed: 'Playback Speed',
       fullscreen: 'Fullscreen',
+      exitFullscreen: 'Exit Fullscreen',
       webFullscreen: 'Web Fullscreen',
-      pip: 'Picture-in-Picture'
-    }
+      pip: 'Picture-in-Picture',
+      exitPip: 'Exit Picture-in-Picture',
+      showList: 'Show List',
+      hideList: 'Hide List'
+    },
+    playlist: 'Playlist',
+    remove: 'Remove'
   };
 </script>
 ```
@@ -164,130 +170,63 @@ You can use them directly:
 </script>
 ```
 
-#### Slot Customization
-
-```vue
-
-<template>
-  <GsPlayer src="https://example.com/video.mp4">
-    <!-- Custom footer control area -->
-    <template #footer="{ isPlaying, togglePlay, currentTime, duration, formatTime }">
-      <div class="custom-footer">
-        <button @click="togglePlay">
-          {{ isPlaying ? 'Pause' : 'Play' }}
-        </button>
-        <div class="custom-time">
-          {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
-        </div>
-      </div>
-    </template>
-
-    <!-- Custom progress bar -->
-    <template #progress="{ progress, handleProgressClick }">
-      <div class="custom-progress" @click="handleProgressClick">
-        <div class="custom-progress-track">
-          <div class="custom-progress-fill" :style="{ width: `${progress}%` }"></div>
-        </div>
-      </div>
-    </template>
-
-    <!-- Custom controls -->
-    <template #buttons="{ isPlaying, togglePlay, volume, setVolume }">
-      <div class="custom-controls">
-        <button @click="togglePlay">
-          {{ isPlaying ? 'Pause' : 'Play' }}
-        </button>
-        <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            :value="volume"
-            @input="setVolume(parseFloat(($event.target as HTMLInputElement).value))"
-        />
-      </div>
-    </template>
-  </GsPlayer>
-</template>
-
-<script setup lang="ts">
-  import {GsPlayer} from 'gs-vue3-player';
-  import 'gs-vue3-player/lib/main.css';
-</script>
-
-<style scoped>
-  .custom-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-  }
-
-  .custom-progress {
-    width: 100%;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-  }
-
-  .custom-progress-fill {
-    height: 100%;
-    background: #ff6b6b;
-  }
-
-  .custom-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-</style>
-```
-
 ## Props
 
-| Prop                 | Type                 | Default                                                                      | Description                 |
-|----------------------|----------------------|------------------------------------------------------------------------------|-----------------------------|
-| src                  | PlayerSource         | undefined                                                                    | Video source                |
-| playlist             | PlayerSource[]       | []                                                                           | Playlist                    |
-| mode                 | PlaybackMode         | 'sequence'                                                                   | Playback mode               |
-| rates                | number[]             | [0.8, 1.0, 1.2, 1.5, 2.0, 3.0]                                              | Playback rates              |
-| visibleItems         | ControlItemType[]    | ['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'playOverlay', 'infoPanel', 'playlist'] | Visible controls            |
-| hiddenItems          | ControlItemType[]    | []                                                                           | Hidden controls             |
-| showControls         | boolean              | true                                                                         | Show controls               |
-| showError            | boolean              | true                                                                         | Show error message          |
-| handleClick          | boolean              | true                                                                         | Handle player click         |
-| handleDblClick       | boolean              | true                                                                         | Handle player double click  |
-| webFullscreenTarget  | string  HTMLElement  | 'body'                                                                       | Web fullscreen target       |
-| fullscreenButtonMode | FullscreenButtonMode | 'submenu'                                                                    | Fullscreen button mode      |
-| hlsConfig            | object               | undefined                                                                    | HLS config                  |
-| quality              | object               | undefined                                                                    | Quality config              |
-| useBrowserHls        | boolean              | false                                                                        | Use browser HLS             |
-| i18n                 | II18n                | zhCN                                                                         | Internationalization config |
-| keyboardTarget       | string  HTMLElement  false | '.gs-player'                                                           | Keyboard event target       |
-| preSrc               | PlayerSource         | undefined                                                                    | Previous video source       |
-| nextSrc              | PlayerSource         | undefined                                                                    | Next video source           |
-| disableWheelNavigation | boolean              | false                                                                         | Disable wheel navigation     |
+### IPlayerCoreProps
+
+| Prop           | Type                 | Default              | Description                 |
+|----------------|----------------------|----------------------|-----------------------------|
+| src            | PlaySource           | undefined            | Video source                |
+| playlist       | PlaySource[]         | []                   | Playlist                    |
+| mode           | PlaybackMode         | 'sequence'           | Playback mode               |
+| hlsConfig      | Partial\<HlsConfig\> | undefined            | HLS config                  |
+| quality        | IVideoQuality        | undefined            | Quality config              |
+| useBrowserHls  | boolean              | false                | Use browser HLS             |
+| rate           | number               | 1.0                  | Initial playback rate       |
+| autoplay       | boolean              | false                | Auto play                   |
+| volume         | number               | 0.8                  | Initial volume (0-1)        |
+| controls       | boolean              | true                 | Show native controls        |
+| muted          | boolean              | false                | Initial muted state         |
+| preSrc         | PlaySource           | undefined            | Previous video source       |
+| nextSrc        | PlaySource           | undefined            | Next video source           |
+
+### IGsPlayerProps
+
+| Prop                | Type                                   | Default              | Description                 |
+|---------------------|----------------------------------------|----------------------|-----------------------------|
+| i18n                | I18nName \| II18n                      | 'zh-CN'              | Internationalization config |
+| aspectRatio         | AspectRatioMode                        | '16:9'               | Video aspect ratio          |
+| layout              | LayoutMode                             | 'vertical'           | Layout mode                 |
+| handleClick         | boolean                                | true                 | Handle player click         |
+| handleDblClick      | boolean                                | true                 | Handle player double click  |
+| rates               | number[]                               | [0.8, 1, 1.2, 1.5, 2.0, 3.0] | Playback rates |
+| webFullscreenTarget | string \| HTMLElement                  | 'body'               | Web fullscreen target       |
+| keyboardTarget      | HTMLElement \| Document \| null \| string \| false | '.gs-player' | Keyboard event target |
+| disableWheelNavigation | boolean                          | false                | Disable wheel navigation    |
+| variableWriteTarget | HTMLElement                            | undefined            | CSS variable write target   |
+| controlBar          | null \| IGsWidget \| IControlBarOption | undefined            | Control bar component       |
+| controlVisibility   | VisibilityMode                         | 'hover'              | Control visibility mode     |
+| infoPanel           | null \| IGsWidget                      | undefined            | Info panel component        |
+| listContainer       | null \| IGsWidget \| IListContainerOption | undefined        | List container component    |
+| listVisibility      | VisibilityMode                         | 'always'             | List visibility mode        |
+| playOverlay         | null \| IGsWidget                      | undefined            | Play overlay component      |
+| logics              | IGsLogic[]                             | undefined            | Logic components            |
+| appendLogics        | IGsLogic[]                             | undefined            | Append logic components     |
+| appendInnerWidgets  | IGsWidget \| IGsWidget[] \| null       | undefined            | Append inner widgets        |
+| appendOuterWidgets  | IGsWidget \| IGsWidget[] \| null       | undefined            | Append outer widgets        |
+| linkHandler         | (url: string) => void                  | window.open          | Link handler                |
+| socioWordHandler    | (word: string) => void                 | undefined            | Social word handler         |
 
 ## Events
 
-| Event              | Description                        | Parameters        |
-|--------------------|------------------------------------|-------------------|
-| srcChange          | Emitted when source changes        | src: INavPlayerSource |
-| volumeChange       | Emitted when volume changes        | volume: number    |
-| rateChange         | Emitted when playback rate changes | rate: number      |
-| modeChange         | Emitted when playback mode changes | mode: string      |
-
-## List and Navigation
-
-| Slot       | Description         | Props             |
-|------------|---------------------|-------------------|
-| footer     | Footer slot         | slotProps         |
-| progress   | Progress bar slot   | progressSlotProps |
-| controls   | Controls slot       | slotProps         |
-| infoPanel  | Info panel slot     | playlistSlotProps |
-| playlist   | Playlist slot       | playlistSlotProps |
+| Event              | Description                        | Parameters                     |
+|--------------------|------------------------------------|--------------------------------|
+| srcChange          | Emitted when source changes        | src: ISourceWrapper            |
+| srcRemove          | Emitted when source is removed     | src: ISourceWrapper            |
+| volumeChange       | Emitted when volume changes        | volume: number                 |
+| mutedChange        | Emitted when muted state changes   | muted: boolean                 |
+| rateChange         | Emitted when playback rate changes | rate: number                   |
+| modeChange         | Emitted when playback mode changes | mode: PlaybackMode             |
 
 ## Keyboard Shortcuts
 
@@ -310,26 +249,64 @@ You can use them directly:
 
 | Property          | Type                 | Description                 |
 |-------------------|----------------------|-----------------------------|
-| player            | HTMLVideoElement     | Video element instance      |
-| volume            | number               | Current volume              |
-| muted             | boolean              | Mute status                 |
-| time              | number               | Current playback time       |
-| duration          | number               | Video duration              |
-| rate              | number               | Playback rate               |
-| playing           | boolean              | Playing status              |
-| error             | MediaError           | Error information           |
-| index             | number               | Current playlist index      |
+| core              | IPlayerCoreExpose    | Core player instance        |
+| controlVisibility | VisibilityMode       | Control visibility mode     |
+| listVisibility    | VisibilityMode       | Playlist visibility mode    |
+| layout            | LayoutMode           | Current layout mode         |
+| aspectRatio       | AspectRatioMode      | Video aspect ratio          |
+| i18n              | II18n                | Current i18n config         |
+| isFullscreen      | boolean              | Fullscreen status           |
+| container         | HTMLElement          | Container element           |
+| containerWidth    | number               | Container width             |
+| containerHeight   | number               | Container height            |
+
+#### Core Properties (core.*)
+
+| Property          | Type                 | Description                 |
+|-------------------|----------------------|-----------------------------|
+| core.el           | HTMLVideoElement     | Video element instance      |
+| core.volume       | number               | Current volume (0-1)        |
+| core.muted        | boolean              | Mute status                 |
+| core.time         | number               | Current playback time       |
+| core.duration     | number               | Video duration              |
+| core.rate         | number               | Playback rate               |
+| core.src          | ISourceWrapper       | Current source              |
+| core.mode         | PlaybackMode         | Playback mode               |
+| core.playing      | boolean              | Playing status              |
+| core.error        | MediaError           | Error information           |
+| core.playlist     | ISourceWrapper[]     | Playlist items              |
+| core.index        | number               | Current playlist index      |
+| core.nextSrc      | PlaySource           | Next source                 |
+| core.preSrc       | PlaySource           | Previous source             |
+| core.hasPre       | boolean              | Has previous video          |
+| core.hasNext      | boolean              | Has next video              |
+| core.bestQuality  | IVideoQuality        | Best quality info           |
+| core.pipState     | boolean              | Picture-in-Picture state    |
+| core.supportsPip  | boolean              | PiP support status          |
 
 ### Methods
 
 | Method            | Description                 | Parameters                  |
 |-------------------|-----------------------------|-----------------------------|
-| play              | Play video                  | src?: number  PlayerSource |
-| playPre           | Play previous video         | -                           |
-| playNext          | Play next video             | -                           |
-| setSrc            | Set video source            | src: number  PlayerSource |
-| setVolume         | Set volume                  | volume: number              |
-| setRate           | Set playback rate           | rate: number                |
-| fullscreen        | Toggle fullscreen           | -                           |
+| fullscreen        | Toggle desktop fullscreen   | -                           |
 | webFullscreen     | Toggle web fullscreen       | -                           |
-| toBestQuality     | Switch to best quality      | reference: { width?: number, height?: number }, now?: boolean |
+| exitFullscreen    | Exit fullscreen             | -                           |
+| setLayout         | Set layout mode             | layout: LayoutMode          |
+| toggleListVisibility | Toggle playlist visibility | -                        |
+
+#### Core Methods (core.*)
+
+| Method            | Description                 | Parameters                  |
+|-------------------|-----------------------------|-----------------------------|
+| core.play         | Play video                  | src?: PlaySource            |
+| core.pause        | Pause video                 | -                           |
+| core.togglePlay   | Toggle play/pause           | -                           |
+| core.playPre      | Play previous video         | -                           |
+| core.playNext     | Play next video             | -                           |
+| core.setSrc       | Set video source            | src: PlaySource             |
+| core.removeSrc    | Remove from playlist        | src: PlaySource \| ISourceWrapper |
+| core.toBestQuality | Switch to best quality    | reference: IVideoQuality, now?: boolean |
+| core.autoQualityHls | Auto quality for HLS      | -                           |
+| core.enterPip     | Enter Picture-in-Picture    | -                           |
+| core.exitPip      | Exit Picture-in-Picture     | -                           |
+| core.togglePip    | Toggle Picture-in-Picture   | -                           |

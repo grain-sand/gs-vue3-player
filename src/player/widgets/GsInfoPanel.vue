@@ -13,16 +13,10 @@
       />
     </div>
     <div
-        v-if="cxt.layout === 'vertical'"
         class="gs-info-content"
         :title="title"
-        v-html="core.src?.description || core.src?.title?.replace(/\n/g, '<br/>')"
-    ></div>
-    <div
-        v-else
-        class="gs-info-content"
-        :title="title"
-        v-text="title"
+        v-html="html"
+        @click.stop.prevent="handleContentClick"
     ></div>
   </div>
 </template>
@@ -35,4 +29,29 @@ import {computed} from "vue";
 const p = defineProps<IGsWidgetProps>();
 
 const title = computed(() => p.core?.src?.description?.replace(/<[^>]+>/g, '') || p.core?.src?.title)
+
+const html = computed(() => {
+  const text = p.core?.src?.description || p.core?.src?.title?.replace(/\n/g, '<br/>');
+  if (!text || !p.props.socioWordHandler) {
+    return text;
+  }
+  return parseSocioWords(text);
+});
+
+function parseSocioWords(text: string): string {
+  let result = text;
+  result = result.replace(/#(\w+)/g, '<span class="gs-socio-word gs-hashtag">#$1</span>');
+  result = result.replace(/@(\w+)/g, '<span class="gs-socio-word gs-mention">@$1</span>');
+  return result;
+}
+
+function handleContentClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  if (target.classList.contains('gs-socio-word')) {
+    const word = target.textContent || '';
+    if (p.props.socioWordHandler) {
+      p.props.socioWordHandler(word);
+    }
+  }
+}
 </script>
