@@ -5,8 +5,22 @@
         :playlist="videoList"
         @src-change="eventChange('src-change',$event)"
         :keyboard-target="tar"
-    >
-    </gs-player>
+        :list-container="{
+          tabs:[
+              {
+                title: '列表',
+                body: ['author','-','time',TestBtn]
+              }
+          ],
+          appendTabs: [
+              {
+                title: 'TestBtn',
+                body: TestBtn,
+                position: 1
+              }
+          ]
+        }"
+    />
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
     list: {{ playerRef?.core?.playlist?.length }}<br/>
@@ -20,6 +34,7 @@ import '../../src/player/style/main.scss'
 import {ref, watch} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose, IStringSource} from "../../src";
+import TestBtn from './TestBtn.vue'
 
 const playerRef = ref<IGsPlayerExpose>()
 

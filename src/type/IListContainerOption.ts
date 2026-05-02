@@ -21,7 +21,7 @@ export interface IListContainerTab {
 }
 
 export interface IListContainerAppendTab extends IListContainerTab {
-	position: number;
+	position?: number;
 }
 
 export interface IListContainerOption {

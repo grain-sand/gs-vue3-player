@@ -55,22 +55,22 @@ export const ControlDefaultItems = [
 	 */
 	'-',
 	/**
-	 * 播放速度切换按钮
+	 * 切换列表显示模式
+	 * - `layout=horizontal` 时，自动隐藏此按钮
+	 */
+	'list',
+	/**
+	 * 播放速度菜单切换按钮
 	 * - 悬停时出现切换菜单
 	 * - 悬停时响应鼠标中键滚动调整播放速度
 	 */
 	'speed',
 	/**
-	 * 音量切换按钮
+	 * 音量切换菜单按钮
 	 * - 悬停时出现音量调整菜单
 	 * - 悬停时响应鼠标中键滚动调整音量
 	 */
 	'volume',
-	/**
-	 * 切换列表显示模式
-	 * - `layout=horizontal` 时，自动隐藏此按钮
-	 */
-	'list',
 	/**
 	 * 全屏菜单
 	 * - 按钮为 web全屏切换
@@ -79,7 +79,20 @@ export const ControlDefaultItems = [
 	'fullscreen-menu'
 ] as const;
 
-export const ControlItemNames = [...ControlDefaultItems, 'pip', 'fullscreen', 'webFullscreen'] as const;
+export const ControlItemNames = [...ControlDefaultItems,
+	/**
+	 * 浏览器原生弹出视频小窗模式
+	 */
+	'pip',
+	/**
+	 * 原生全屏
+	 */
+	'fullscreen',
+	/**
+	 * 网页全屏
+	 */
+	'webFullscreen'
+] as const;
 
 export type ControlItemName = (typeof ControlItemNames)[number];
 
