@@ -1,13 +1,13 @@
 <template>
   <div class="gs-time-display">
-    <span>{{ formatTime(core?.time ?? 0) }}</span>
-    <span v-if="core?.duration"> / {{ formatTime(core.duration) }}</span>
+    <span>{{ formatTime(time) }}</span>
+    <span v-if="duration"> / {{ formatTime(duration) }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 import {formatTime} from "../util";
-import {IGsWidgetProps} from "../type";
+import {IGsTimeDisplayProps} from "../type";
 
-defineProps<IGsWidgetProps>();
+defineProps<IGsTimeDisplayProps>();
 </script>

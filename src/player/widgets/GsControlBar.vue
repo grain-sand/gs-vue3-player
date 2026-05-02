@@ -6,16 +6,23 @@
        @wheel.stop=''
        @dblclick.stop.prevent=""
   >
-    <component
-        v-if="progressBarComponent"
-        :is="progressBarComponent"
-        :core="props.core"
-        :cxt="props.cxt"
-        :props="props.props"
+    <!--suppress TypeScriptValidateTypes -->
+    <!--   @vue-ignore  -->
+    <GsProgressBar
+        v-if="showProgressBar"
+        :time="props.core?.time ?? 0"
+        :duration="props.core?.duration ?? 0"
+        :buffered="props.core?.el?.buffered"
+        @seek="handleProgressSeek"
     />
     <div class="gs-controls" @click.stop.prevent>
       <template v-for="(item, index) in resolvedItems" :key="index">
         <div v-if="item === '-'" class="space"></div>
+        <GsTimeDisplay
+            v-else-if="item === 'time'"
+            :time="props.core?.time ?? 0"
+            :duration="props.core?.duration ?? 0"
+        />
         <component
             v-else-if="getComponent(item)"
             :is="getComponent(item)"
@@ -52,11 +59,18 @@ defineEmits<{
   (e: 'mouseleave', event: MouseEvent): void;
 }>();
 
+const showProgressBar = computed(() => {
+  const pb = props.props.controlBar?.progressBar;
+  if (pb === false) return false;
+  return !(pb && typeof pb !== 'boolean');
+
+});
+
 const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
   play: GsPlayButton,
   pre: GsPreButton,
   next: GsNextButton,
-  time: GsTimeDisplay,
+  time: null,
   '-': null,
   speed: GsSpeedControl,
   volume: GsVolumeControl,
@@ -67,13 +81,6 @@ const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
   fullscreen: GsFullscreenControl,
   webFullscreen: GsWebFullscreenControl
 };
-
-const progressBarComponent = computed(() => {
-  const pb = props.props.controlBar?.progressBar;
-  if (pb === false) return null;
-  if (pb && typeof pb !== 'boolean') return pb;
-  return GsProgressBar;
-});
 
 const resolvedItems = computed(() => {
   const items = Array.isArray(props.props.controlBar?.items)
@@ -86,5 +93,9 @@ const resolvedItems = computed(() => {
 
 const getComponent = (item: ControlItemName | IGsWidget) => {
   return typeof item === 'string' ? defaultComponents[item] : item;
+};
+
+const handleProgressSeek = (time: number) => {
+  props.core!.time = time;
 };
 </script>

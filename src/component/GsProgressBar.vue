@@ -18,22 +18,24 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {IGsWidgetProps} from '../type';
+import {IGsProgressBarEmits, IGsProgressBarProps} from '../type';
 
-const props = defineProps<IGsWidgetProps>();
+const props = defineProps<IGsProgressBarProps>();
+
+const emit = defineEmits<IGsProgressBarEmits>();
 
 const showProgressTooltip = ref(false);
 const tooltipPosition = ref(0);
 const tooltipTime = ref(0);
 
 const progress = computed(() => {
-  const duration = props.core?.duration ?? 0;
-  return duration ? ((props.core?.time ?? 0) / duration) * 100 : 0;
+  const duration = props.duration ?? 0;
+  return duration ? (props.time / duration) * 100 : 0;
 });
 
 const bufferedPercent = computed(() => {
-  const duration = props.core?.duration ?? 0;
-  const buffered = props.core?.el?.buffered;
+  const duration = props.duration ?? 0;
+  const buffered = props.buffered;
   if (!duration || !buffered || buffered.length === 0) return 0;
   return (buffered.end(buffered.length - 1) / duration) * 100;
 });
@@ -52,13 +54,14 @@ const getProgressRatio = (e: MouseEvent, el: HTMLElement) => {
 };
 
 const handleProgressClick = (e: MouseEvent) => {
-  props.core!.time = getProgressRatio(e, e.currentTarget as HTMLElement) * (props.core?.duration || 0);
+  // @ts-ignore
+  emit('seek', getProgressRatio(e, e.currentTarget as HTMLElement) * (props.duration || 0));
 };
 
 const handleProgressMouseMove = (e: MouseEvent) => {
   const ratio = getProgressRatio(e, e.currentTarget as HTMLElement);
   showProgressTooltip.value = true;
   tooltipPosition.value = clamp(ratio * 100, 5, 95);
-  tooltipTime.value = ratio * (props.core?.duration || 0);
+  tooltipTime.value = ratio * (props.duration || 0);
 };
 </script>

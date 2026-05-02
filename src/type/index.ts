@@ -3,6 +3,10 @@ export * from './DefaultHlsConfig';
 
 export * from './IAuthorProps';
 export * from './IGsSpacerProps';
+export * from './IGsButton';
+export * from './IGsDropdownItem';
+export * from './IGsTimeDisplay';
+export * from './IGsProgressBar';
 
 export * from './IPlayerCoreProps';
 export * from './IPlayerCoreEmits';

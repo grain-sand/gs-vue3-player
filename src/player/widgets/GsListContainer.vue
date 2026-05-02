@@ -5,7 +5,9 @@
         `visibility-${cxt.listVisibility}`,
         `layout-${cxt.layout}`
       ]"
-      @click.stop.prevent
+      @click.stop.prevent=""
+      @wheel.stop=''
+      @dblclick.stop.prevent=""
   >
     <div class="gs-list-container-wrapper">
       <div v-if="showHeader" class="gs-list-header">

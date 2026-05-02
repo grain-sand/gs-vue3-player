@@ -1,4 +1,6 @@
 <template>
+  <!--  @vue-ignore  -->
+  <!--suppress TypeScriptValidateTypes -->
   <button
       class="gs-dropdown-item"
       :class="{ active: active }"
@@ -12,20 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import {DefineComponent} from 'vue';
+import {IGsDropdownItemProps} from '../type';
 
-interface Props {
-  icon?: DefineComponent;
-  text?: string;
-  title?: string;
-  active?: boolean;
-}
-
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<IGsDropdownItemProps>(), {
   active: false
 });
 
-defineEmits<{
-  (e: 'click', event: MouseEvent): void
-}>();
+defineEmits<{ click: (event: MouseEvent) => void }>();
 </script>

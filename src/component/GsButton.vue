@@ -1,5 +1,7 @@
 <template>
   <div class="gs-btn-wrapper" :class="{ 'gs-dropdown-host': hasDropdown }">
+    <!--  @vue-ignore  -->
+    <!--suppress TypeScriptValidateTypes -->
     <button
         class="gs-btn"
         :class="{ 'gs-text-btn': text, active: active }"
@@ -16,24 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import {DefineComponent} from 'vue';
+import {IGsButtonProps} from '../type';
 
-interface Props {
-  icon?: DefineComponent | any;
-  text?: string;
-  title?: string;
-  disabled?: boolean;
-  hasDropdown?: boolean;
-  active?: boolean;
-}
-
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<IGsButtonProps>(), {
   disabled: false,
   hasDropdown: false,
   active: false
 });
 
-defineEmits<{
-  (e: 'click', event: MouseEvent): void
-}>();
+defineEmits<{ click: (event: MouseEvent) => void }>();
 </script>
