@@ -2,7 +2,7 @@
   <div
       class="gs-list-container"
       :class="[
-        `visibility-${cxt.listContainerVisibility}`,
+        `visibility-${cxt.listVisibility}`,
         `layout-${cxt.layout}`
       ]"
       @click.stop.prevent
@@ -20,7 +20,7 @@
             {{ tab.title }}
           </button>
         </div>
-        <button class="gs-list-pin" @click="isPinned = !isPinned">
+        <button class="gs-list-pin" @click="cxt.toggleListVisibility()">
           <PinSvg/>
         </button>
       </div>
@@ -28,9 +28,9 @@
       <component
           v-if="activeTab"
           :is="getTabBodyComponent(activeTab)"
-          :core="props.core"
-          :cxt="props.cxt"
-          :props="props.props"
+          :core="core"
+          :cxt="cxt"
+          :props="props"
           class="gs-list-tab-body active"
       />
     </div>
@@ -44,27 +44,26 @@ import {IListContainerTab, PlaylistItemPart} from '../../type';
 import GsPlaylist from './GsPlaylist.vue';
 import {PinSvg} from '../../svgs';
 
-const props = defineProps<IGsWidgetProps>();
+const {props, core, cxt} = defineProps<IGsWidgetProps>();
 
 const activeTabIndex = ref(0);
-const isPinned = ref(false);
 
 const showHeader = computed(() => {
-  const headerVisible = props.props.listContainer?.headerVisible;
+  const headerVisible = props.listContainer?.headerVisible;
   if (headerVisible === 'visible') return true;
   if (headerVisible === 'hidden') return false;
-  if (props.cxt.layout === 'horizontal') return true;
+  if (cxt.layout === 'horizontal') return true;
   return tabs.value.length > 1;
 });
 
 const tabs = computed<IListContainerTab[]>(() => {
   const defaultTab: IListContainerTab = {
-    title: props.cxt.i18n.playlist || 'Playlist',
+    title: cxt.i18n.playlist || 'Playlist',
     body: ['author', '-', 'time'] as PlaylistItemPart[]
   };
 
-  const customTabs = props.props.listContainer?.tabs || [];
-  const appendTabs = props.props.listContainer?.appendTabs || [];
+  const customTabs = props.listContainer?.tabs || [];
+  const appendTabs = props.listContainer?.appendTabs || [];
 
   const allTabs = [...customTabs.length ? customTabs : [defaultTab]];
 
@@ -85,4 +84,5 @@ const getTabBodyComponent = (tab: IListContainerTab): IGsWidget => {
   }
   return GsPlaylist;
 };
+
 </script>

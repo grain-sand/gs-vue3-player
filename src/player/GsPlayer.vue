@@ -3,7 +3,7 @@
     <div
         class="gs-player"
         :class="[
-          `layout-${effectiveLayout}`,
+          `layout-${layout}`,
           {
             'is-web-fullscreen': isWebFullscreen,
             'gs-controls-visible': isControlsVisible
@@ -136,8 +136,8 @@ const originalLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
 const forceUpdate = ref(0);
 const isHovering = ref(false);
-const currentControlVisibility = ref<VisibilityMode>(props.controlVisibility);
-const currentListContainerVisibility = ref<VisibilityMode>(props.listContainerVisibility || 'always');
+const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
+const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 
 const i18nConfig = computed<II18n>(() => {
   if (typeof props.i18n === 'string') {
@@ -164,7 +164,7 @@ const isFullscreen = computed(() => {
       document.fullscreenElement !== null;
 });
 
-const effectiveLayout = computed(() => {
+const layout = computed(() => {
   forceUpdate.value;
   if (isFullscreen.value && containerRef.value) {
     const containerAspectRatio = containerRef.value.clientWidth / containerRef.value.clientHeight;
@@ -174,7 +174,10 @@ const effectiveLayout = computed(() => {
 });
 
 const isControlsVisible = computed(() => {
-  if (currentControlVisibility.value === 'always') {
+  if (
+      controlVisibility.value === 'always'
+      || listVisibility.value === 'always'&& layout.value === 'horizontal'
+  ) {
     return true;
   }
   return isHovering.value;
@@ -194,19 +197,19 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return containerRef.value as HTMLElement;
   },
   get layout() {
-    return effectiveLayout.value;
+    return layout.value;
   },
   get controlVisibility() {
-    return currentControlVisibility.value;
+    return controlVisibility.value;
   },
   set controlVisibility(value: VisibilityMode) {
-    currentControlVisibility.value = value;
+    controlVisibility.value = value;
   },
-  get listContainerVisibility() {
-    return currentListContainerVisibility.value;
+  get listVisibility() {
+    return listVisibility.value;
   },
-  set listContainerVisibility(value: VisibilityMode) {
-    currentListContainerVisibility.value = value;
+  set listVisibility(value: VisibilityMode) {
+    listVisibility.value = value;
   },
   fullscreen() {
     containerRef.value?.requestFullscreen?.();
@@ -227,7 +230,8 @@ const widgetContext = shallowRef<IGsWidgetContext>({
       currentLayout.value = layout;
       originalLayout.value = layout;
     }
-  }
+  },
+  toggleListVisibility
 });
 
 watch(isFullscreen, (newVal, oldVal) => {
@@ -290,6 +294,9 @@ const mergedLogics = computed(() => {
   return [...baseLogics, ...(props.appendLogics || [])];
 });
 
+function toggleListVisibility() {
+  listVisibility.value = listVisibility.value === 'hover' ? 'always' : 'hover';
+}
 
 onMounted(async () => {
   for (const logic of mergedLogics.value) {
@@ -329,19 +336,19 @@ defineExpose<IGsPlayerExpose>({
     return containerRef.value!;
   },
   get layout() {
-    return effectiveLayout.value;
+    return layout.value;
   },
   get controlVisibility() {
-    return currentControlVisibility.value;
+    return controlVisibility.value;
   },
   set controlVisibility(value: VisibilityMode) {
-    currentControlVisibility.value = value;
+    controlVisibility.value = value;
   },
-  get listContainerVisibility() {
-    return currentListContainerVisibility.value;
+  get listVisibility() {
+    return listVisibility.value;
   },
-  set listContainerVisibility(value: VisibilityMode) {
-    currentListContainerVisibility.value = value;
+  set listVisibility(value: VisibilityMode) {
+    listVisibility.value = value;
   },
   get i18n() {
     return i18nConfig.value;
@@ -349,6 +356,7 @@ defineExpose<IGsPlayerExpose>({
   fullscreen: () => widgetContext.value.fullscreen(),
   webFullscreen: () => widgetContext.value.webFullscreen(),
   exitFullscreen: () => widgetContext.value.exitFullscreen(),
-  setLayout: (layout: LayoutMode) => widgetContext.value.setLayout(layout)
+  setLayout: (layout: LayoutMode) => widgetContext.value.setLayout(layout),
+  toggleListVisibility,
 });
 </script>

@@ -37,11 +37,11 @@
     transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
     z-index: 10;
 
-    .gs-player:hover & {
-      transform: translateX(0);
-      opacity: 1;
-      visibility: visible;
-    }
+    //.gs-player:hover & {
+    //  transform: translateX(0);
+    //  opacity: 1;
+    //  visibility: visible;
+    //}
   }
 
   &.visibility-hover.layout-vertical {

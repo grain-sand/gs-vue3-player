@@ -103,7 +103,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 *   - `layout=vertical`时，始终隐藏
 	 *   - `layout=horizontal`时，浮动于右侧，鼠标悬停右侧100px内时显示
 	 */
-	listContainerVisibility?: VisibilityMode;
+	listVisibility?: VisibilityMode;
 
 	/**
 	 * 播放暂停时覆盖层

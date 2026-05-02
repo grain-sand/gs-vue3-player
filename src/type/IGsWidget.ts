@@ -9,7 +9,7 @@ export interface IGsWidgetContext {
 
 	controlVisibility: VisibilityMode;
 
-	listContainerVisibility: VisibilityMode;
+	listVisibility: VisibilityMode;
 
 	readonly layout: LayoutMode;
 
@@ -45,6 +45,7 @@ export interface IGsWidgetContext {
 
 	setLayout(layout: LayoutMode): void;
 
+	toggleListVisibility(): void;
 }
 
 export interface IGsWidgetProps {
