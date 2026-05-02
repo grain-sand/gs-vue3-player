@@ -48,10 +48,15 @@ const handleVolumeSliderClick = (e: MouseEvent) => {
 };
 
 const handleVolumeWheel = (e: WheelEvent) => {
+  e.stopPropagation();
   e.preventDefault();
   setVolume(volume.value + (e.deltaY > 0 ? -0.1 : 0.1));
 };
 
-const bindWheel = () => document.addEventListener('wheel', handleVolumeWheel, {passive: false});
-const unbindWheel = () => document.removeEventListener('wheel', handleVolumeWheel);
+const option = {
+  passive: false,
+  capture: true,
+};
+const bindWheel = () => document.addEventListener('wheel', handleVolumeWheel, option);
+const unbindWheel = () => document.removeEventListener('wheel', handleVolumeWheel, option);
 </script>

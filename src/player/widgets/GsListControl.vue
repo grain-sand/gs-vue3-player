@@ -1,8 +1,9 @@
 <template>
   <GsButton
       v-if="cxt.layout !== 'horizontal'"
-      :icon="isListVisible ? PinSvg : ListSvg"
+      :icon="ListSvg"
       :title="isListVisible ? cxt.i18n.titles.hideList : cxt.i18n.titles.showList"
+      :active="isListVisible"
       @click="cxt.toggleListVisibility()"
   />
 </template>
@@ -11,7 +12,6 @@
 import {computed} from 'vue';
 import {IGsWidgetProps} from '../../type';
 import GsButton from './GsButton.vue';
-import {PinSvg} from '../../svgs';
 import ListSvg from '../../svgs/list.svg';
 
 const props = defineProps<IGsWidgetProps>();

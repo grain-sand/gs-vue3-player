@@ -2,7 +2,7 @@
   <div class="gs-btn-wrapper" :class="{ 'gs-dropdown-host': hasDropdown }">
     <button
         class="gs-btn"
-        :class="{ 'gs-text-btn': text }"
+        :class="{ 'gs-text-btn': text, active: active }"
         :title="title"
         @click="$emit('click', $event)"
         :disabled="disabled"
@@ -24,11 +24,13 @@ interface Props {
   title?: string;
   disabled?: boolean;
   hasDropdown?: boolean;
+  active?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   disabled: false,
-  hasDropdown: false
+  hasDropdown: false,
+  active: false
 });
 
 defineEmits<{

@@ -160,14 +160,13 @@ const i18nConfig = computed<II18n>(() => {
 const exposedCore = computed(() => coreRef.value);
 
 const isFullscreen = computed(() => {
-  return isWebFullscreen.value ||
-      document.fullscreenElement !== null;
+  return isWebFullscreen.value || !!document.fullscreenElement;
 });
 
 const layout = computed(() => {
   forceUpdate.value;
-  if (isFullscreen.value && containerRef.value) {
-    const containerAspectRatio = containerRef.value.clientWidth / containerRef.value.clientHeight;
+  if (isFullscreen.value) {
+    const containerAspectRatio = window.innerWidth / window.innerHeight;
     return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
   }
   return currentLayout.value;
@@ -176,7 +175,7 @@ const layout = computed(() => {
 const isControlsVisible = computed(() => {
   if (
       controlVisibility.value === 'always'
-      || listVisibility.value === 'always'&& layout.value === 'horizontal'
+      || listVisibility.value === 'always' && layout.value === 'horizontal'
   ) {
     return true;
   }
