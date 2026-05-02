@@ -24,5 +24,7 @@ export const zhCN: II18n = {
     exitPip: '退出小窗',
     showList: '显示列表',
     hideList: '隐藏列表'
-  }
+  },
+  playlist: '播放列表',
+  remove: '移除'
 };

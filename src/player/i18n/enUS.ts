@@ -24,5 +24,7 @@ export const enUS: II18n = {
     exitPip: 'Exit Picture in Picture',
     showList: 'Show List',
     hideList: 'Hide List'
-  }
+  },
+  playlist: 'Playlist',
+  remove: 'Remove'
 };

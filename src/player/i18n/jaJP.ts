@@ -6,7 +6,7 @@ export const jaJP: II18n = {
     sequence: '順番再生',
     disabled: '無効',
     loop: '単一ループ',
-    loopAll: '全ループ',
+    loopAll: '全てループ',
     shuffle: 'シャッフル',
     deleteAfterPlay: '再生後削除'
   },
@@ -20,9 +20,11 @@ export const jaJP: II18n = {
     fullscreen: '全画面',
     exitFullscreen: '全画面を終了',
     webFullscreen: 'ウェブ全画面',
-    pip: 'ピクチャーインピクチャー',
-    exitPip: 'ピクチャーインピクチャーを終了',
+    pip: 'ピクチャインピクチャ',
+    exitPip: 'ピクチャインピクチャを終了',
     showList: 'リストを表示',
     hideList: 'リストを非表示'
-  }
+  },
+  playlist: 'プレイリスト',
+  remove: '削除'
 };

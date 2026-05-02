@@ -49,7 +49,7 @@ export interface II18n {
     hideList: string;
   };
   /** 播放列表标题 */
-  playlist?: string;
+  playlist: string;
   /** 移除按钮标题 */
-  remove?: string;
+  remove: string;
 }
