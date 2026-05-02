@@ -1,9 +1,9 @@
 <template>
   <GsButton
-      v-if="core?.index > 0"
+      v-if="core?.hasPre"
       :icon="PreSvg"
       :title="cxt.i18n.titles.pre"
-      @click="core?.playPre()"
+      @click="core.playPre()"
   />
 </template>
 
@@ -12,6 +12,5 @@ import {PreSvg} from '../../svgs';
 import GsButton from './GsButton.vue';
 import {IGsWidgetProps} from '../../type';
 
-const props = defineProps<IGsWidgetProps>();
-
+defineProps<IGsWidgetProps>();
 </script>

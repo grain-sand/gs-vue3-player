@@ -1,9 +1,9 @@
 <template>
   <GsButton
-      v-if="core?.playlist?.[core?.index+1]"
+      v-if="core?.hasNext"
       :icon="NextSvg"
       :title="cxt.i18n.titles.next"
-      @click="core?.playNext()"
+      @click="core.playNext()"
   />
 </template>
 

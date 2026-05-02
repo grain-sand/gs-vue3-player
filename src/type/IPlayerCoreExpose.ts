@@ -34,6 +34,12 @@ export interface IPlayerCoreExpose {
 	/** 上一个输入源 */
 	readonly preSrc?: PlaySource;
 
+	/** 是否有上一个可播放 */
+	readonly hasPre: boolean;
+
+	/** 是否有下一个可播放 */
+	readonly hasNext: boolean;
+
 	readonly bestQuality: Partial<IVideoQuality> | undefined
 
 	play(src?: PlaySource): Promise<void>
@@ -64,5 +70,30 @@ export interface IPlayerCoreExpose {
 	playPre(): Promise<void>
 
 	playNext(): Promise<void>
+
+	/**
+	 * 当前是否在画中画模式
+	 */
+	readonly pipState: boolean;
+
+	/**
+	 * 是否支持画中画功能
+	 */
+	readonly supportsPip: boolean;
+
+	/**
+	 * 进入画中画模式
+	 */
+	enterPip(): Promise<void>;
+
+	/**
+	 * 退出画中画模式
+	 */
+	exitPip(): Promise<void>;
+
+	/**
+	 * 切换画中画模式
+	 */
+	togglePip(): Promise<void>;
 
 }

@@ -4,6 +4,7 @@
        @mouseleave="$emit('mouseleave', $event)"
        @click.stop.prevent=""
        @wheel.stop=''
+       @dblclick.stop.prevent=""
   >
     <component
         v-if="progressBarComponent"

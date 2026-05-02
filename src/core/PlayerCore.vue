@@ -14,6 +14,8 @@
       @timeupdate="time = videoRef?.currentTime || 0"
       @loadedmetadata="loadedmetadata"
       @ended="onEnded"
+      @enterpictureinpicture="onEnterPip"
+      @leavepictureinpicture="onLeavePip"
   ></video>
 </template>
 
@@ -61,6 +63,7 @@ const time = ref(0)
 const innerSrc = ref<ISourceWrapper>()
 const currentMode = ref<PlaybackMode>(DefaultPlaybackMode)
 const bestQuality = ref<Partial<IVideoQuality>>()
+const pipState = ref(false)
 
 const playlist = ref<ISourceWrapper[]>([]);
 const wrapperMap = new Map<PlaySource, ISourceWrapper>();
@@ -112,6 +115,29 @@ function getPreSrc(predefinedPreSrc?: PlaySource): PlaySource | undefined {
   }
   const i = getIndex();
   return playlist.value[i > 0 ? i - 1 : playlist.value.length - 1]?.src;
+}
+
+function hasPre(): boolean {
+  if (props.preSrc) return true;
+  if (!playlist.value.length) return false;
+  const mode = currentMode.value;
+  if (mode === 'loop' || mode === 'loopAll' || mode === 'shuffle') {
+    return playlist.value.length > 1;
+  }
+  return getIndex() > 0;
+}
+
+function hasNext(): boolean {
+  if (props.nextSrc) return true;
+  if (!playlist.value.length) return false;
+  const mode = currentMode.value;
+  if (mode === 'loop' || mode === 'loopAll') {
+    return true;
+  }
+  if (mode === 'shuffle') {
+    return playlist.value.length > 1;
+  }
+  return getIndex() < playlist.value.length - 1;
 }
 
 function switchToNextInPlaylist(): PlaySource | undefined {
@@ -551,6 +577,38 @@ const onEnded = () => {
   }
 };
 
+function onEnterPip() {
+  pipState.value = true;
+}
+
+function onLeavePip() {
+  pipState.value = false;
+}
+
+function supportsPip(): boolean {
+  return !!videoRef.value?.requestPictureInPicture;
+}
+
+async function enterPip(): Promise<void> {
+  if (videoRef.value) {
+    await videoRef.value.requestPictureInPicture();
+  }
+}
+
+async function exitPip(): Promise<void> {
+  if (document.exitPictureInPicture) {
+    await document.exitPictureInPicture();
+  }
+}
+
+async function togglePip(): Promise<void> {
+  if (pipState.value) {
+    await exitPip();
+  } else {
+    await enterPip();
+  }
+}
+
 const playPre = async () => {
   const source = navTo(props.preSrc, -1, props.preSrc, props.nextSrc);
   await changeSourceAndPlay(source);
@@ -625,6 +683,12 @@ defineExpose<IPlayerCoreExpose>({
   get preSrc() {
     return getPreSrc(props.preSrc)
   },
+  get hasPre() {
+    return hasPre()
+  },
+  get hasNext() {
+    return hasNext()
+  },
   async togglePlay() {
     const {value: el} = videoRef;
     if (el.paused) {
@@ -660,6 +724,15 @@ defineExpose<IPlayerCoreExpose>({
   },
   removeSrc,
   playPre,
-  playNext
+  playNext,
+  get pipState() {
+    return pipState.value;
+  },
+  get supportsPip() {
+    return supportsPip();
+  },
+  enterPip,
+  exitPip,
+  togglePip
 })
 </script>
