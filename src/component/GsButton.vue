@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {IGsButtonProps} from '../type';
+import {IGsButtonEmits, IGsButtonProps} from '../type';
 
 withDefaults(defineProps<IGsButtonProps>(), {
   disabled: false,
@@ -26,5 +26,5 @@ withDefaults(defineProps<IGsButtonProps>(), {
   active: false
 });
 
-defineEmits<{ click: (event: MouseEvent) => void }>();
+defineEmits<IGsButtonEmits>();
 </script>

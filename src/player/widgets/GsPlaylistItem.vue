@@ -13,14 +13,12 @@
       <div class="gs-playlist-item-parts">
         <template v-for="(part, index) in parts" :key="index">
           <component
-              v-if="part !== '-'"
               :is="getPartComponent(part)"
               :current="current"
               :core="core"
               :cxt="cxt"
               :props="widgetProps"
           />
-          <div v-else class="gs-playlist-item-spacer"></div>
         </template>
       </div>
     </div>
@@ -30,7 +28,7 @@
 <script setup lang="ts">
 import {computed, defineComponent, h} from 'vue';
 import {IPlaylistItemProps, PlaylistItemPart} from '../../type';
-import {GsAuthor} from '../../component';
+import {GsAuthor, GsSpacer} from '../../component';
 import {PlayStateIcons} from '../../svgs';
 import {wrapComponent} from '../../util';
 
@@ -56,6 +54,8 @@ const parts = computed<PlaylistItemPart[]>(() => {
 function getPartComponent(part: PlaylistItemPart) {
   if (typeof part === 'string') {
     switch (part) {
+      case '-':
+        return GsSpacer
       case 'author':
         return wrapComponent(GsAuthor, {
           author: current.author,

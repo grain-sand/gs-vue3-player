@@ -17,9 +17,8 @@
     />
     <div class="gs-controls" @click.stop.prevent>
       <template v-for="(item, index) in resolvedItems" :key="index">
-        <div v-if="item === '-'" class="space"></div>
         <GsTimeDisplay
-            v-else-if="item === 'time'"
+            v-if="item === 'time'"
             :time="props.core?.time ?? 0"
             :duration="props.core?.duration ?? 0"
         />
@@ -37,13 +36,11 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {IGsWidgetProps, IGsWidget} from '../../type';
-import {ControlItemName, ControlDefaultItems} from '../../type';
+import {ControlDefaultItems, ControlItemName, IGsWidget, IGsWidgetProps} from '../../type';
 import GsPlayButton from './GsPlayButton.vue';
 import GsPreButton from './GsPreButton.vue';
 import GsNextButton from './GsNextButton.vue';
-import GsTimeDisplay from '../../component/GsTimeDisplay.vue';
-import GsProgressBar from '../../component/GsProgressBar.vue';
+import {GsProgressBar, GsTimeDisplay, GsSpacer} from '../../component';
 import GsSpeedControl from './GsSpeedControl.vue';
 import GsVolumeControl from './GsVolumeControl.vue';
 import GsModeControl from './GsModeControl.vue';
@@ -66,12 +63,11 @@ const showProgressBar = computed(() => {
 
 });
 
-const defaultComponents: Record<ControlItemName, IGsWidget | null> = {
+const defaultComponents: Partial<Record<ControlItemName, IGsWidget>> = {
   play: GsPlayButton,
   pre: GsPreButton,
   next: GsNextButton,
-  time: null,
-  '-': null,
+  '-': GsSpacer,
   speed: GsSpeedControl,
   volume: GsVolumeControl,
   mode: GsModeControl,
