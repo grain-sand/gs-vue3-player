@@ -2,6 +2,8 @@
   <div class="gs-player-footer"
        @mouseenter="$emit('mouseenter', $event)"
        @mouseleave="$emit('mouseleave', $event)"
+       @click.stop.prevent=""
+       @wheel.stop=''
   >
     <component
         v-if="progressBarComponent"

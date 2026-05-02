@@ -91,7 +91,6 @@ import {
   DefaultControlVisibility,
   DefaultLayoutMode,
   DefaultRates,
-  I18nName,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
@@ -103,7 +102,7 @@ import {
   LayoutMode,
   VisibilityMode
 } from '../type';
-import {enUS, jaJP, koKR, zhCN, zhTW} from './i18n';
+import {getI18nConfig} from './i18n';
 import {defaultLogics} from './logics';
 import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
 import {isVueComponent} from '../util';
@@ -141,23 +140,7 @@ const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const containerWidth = ref(0);
 const containerHeight = ref(0);
 
-const i18nConfig = computed<II18n>(() => {
-  if (typeof props.i18n === 'string') {
-    const i18nMap: Record<I18nName, II18n> = {
-      'zh-CN': zhCN,
-      'zh-TW': zhTW,
-      'en': enUS,
-      'ja': jaJP,
-      'ko': koKR,
-      'auto': zhCN
-    };
-    const lang = props.i18n === 'auto' ?
-        (navigator.language as I18nName) || 'zh-CN' :
-        props.i18n;
-    return i18nMap[lang] || zhCN;
-  }
-  return props.i18n;
-});
+const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
 const exposedCore = computed(() => coreRef.value);
 
