@@ -1,6 +1,10 @@
 import {II18n} from '../../type';
-import {zhCN, zhTW, enUS, jaJP, koKR} from './index';
 import type {I18nName} from '../../type';
+import {zhCN} from "./zhCN";
+import {zhTW} from "./zhTW";
+import {enUS} from "./enUS";
+import {jaJP} from "./jaJP";
+import {koKR} from "./koKR";
 
 const i18nMap: Partial<Record<I18nName, II18n>> = {
 	'zh-CN': zhCN,

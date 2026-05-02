@@ -18,8 +18,9 @@
   }
 
   .gs-play-overlay-button {
-	width: 80px;
-	height: 80px;
+	--btn-size: min(max(40px, calc(var(--player-core-width) * 0.15)), 80px);
+	width: var(--btn-size);
+	height: var(--btn-size);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -28,8 +29,9 @@
 	transition: transform 0.2s, background 0.2s;
 
 	svg {
-	  width: 44px;
-	  height: 44px;
+	  --btn-svg-size: calc(var(--btn-size) * 0.55);
+	  width: var(--btn-svg-size);
+	  height: var(--btn-svg-size);
 	  color: #fff;
 	}
   }

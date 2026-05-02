@@ -43,8 +43,8 @@ export function styleVariableLogic() {
 		let playerCoreWidth: number | string;
 
 		if (floating) {
-			playerCoreHeight = '100%';
-			playerCoreWidth = '100%';
+			playerCoreHeight = rect.height;
+			playerCoreWidth = rect.width;
 		} else if (isHorizontal) {
 			playerCoreHeight = rect.height;
 			const [w = 16, h = 9] = Array.isArray(aspectRatio) ? aspectRatio : [];

@@ -29,7 +29,7 @@ export default [
 			},
 			after(pkg) {
 				delete pkg.main;
-				['variables.scss', 'component.scss', 'player.scss', 'main.css']
+				['variables.scss', 'component.scss', 'player.scss','reset.scss','pre.scss', 'main.css']
 					.forEach(e => pkg.exports[`./lib/${e}`] = `./lib/${e}`);
 			}
 		},
@@ -39,6 +39,7 @@ export default [
 				'src/component/style/variables.scss',
 				'src/component/style/reset.scss',
 				'src/component/style/component.scss',
+				'src/component/style/pre.scss',
 			])
 		],
 		vueDts: {
