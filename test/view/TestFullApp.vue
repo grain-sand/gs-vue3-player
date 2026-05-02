@@ -6,13 +6,7 @@
         @src-change="eventChange('src-change',$event)"
         :keyboard-target="tar"
         :list-container="{
-          tabs:[
-              {
-                title: '列表',
-                body: ['author','-','time',TestBtn]
-              }
-          ],
-          appendTabs: [
+          appendTabs: playerRef?.layout === 'vertical' ?undefined: [
               {
                 title: 'TestBtn',
                 body: TestBtn,
@@ -58,7 +52,7 @@ watch(() => playerRef.value?.layout, (layout) => {
   console.log(layout)
 })
 watch(() => playerRef.value?.isFullscreen, (isFullscreen) => {
-  console.log('isFullscreen',isFullscreen)
+  console.log('isFullscreen', isFullscreen)
 })
 
 </script>
