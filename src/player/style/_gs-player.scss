@@ -12,113 +12,102 @@
   }
 
   .gs-player-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 2;
 
-    .gs-controls, .gs-progress-container {
-      transition-delay: var(--gs-progress-out-delay);
-    }
-    .gs-progress-container{
-      z-index: 1;
-    }
+	.gs-controls, .gs-progress-container {
+	  transition-delay: var(--gs-progress-out-delay);
+	}
+
+	.gs-progress-container {
+	  z-index: 1;
+	}
   }
 
   .gs-playlist,
   .gs-info-panel section {
-    border-top: 1px solid var(--border-light);
-
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.5);
-    }
+	border-top: 1px solid var(--border-light);
   }
 
   &.layout-vertical {
-    .gs-player-panels {
-      order: 2;
-      display: flex;
-      flex-direction: column;
-    }
+	.gs-player-panels {
+	  order: 2;
+	  display: flex;
+	  flex-direction: column;
+	}
 
-    .gs-player-main {
-      order: 1;
-    }
+	.gs-player-main {
+	  order: 1;
+	}
   }
 
   &.layout-horizontal {
-    flex-direction: row;
+	flex-direction: row;
 
-    .gs-player-main {
-      flex: 60% 3 1;
-      position: relative;
-      width: auto;
-      height: auto;
-      min-height: var(--player-core-height, 240px);
-    }
+	.gs-player-main {
+	  flex: 60% 3 1;
+	  position: relative;
+	  width: auto;
+	  height: auto;
+	  min-height: var(--player-core-height, 240px);
+	}
 
-    .gs-player-panels {
-      position: absolute;
-      left: 16px;
-      bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 16px);
-      width: 280px;
-      max-height: calc(100% - var(--gs-ctrl-h) - var(--gs-progress-min-h) - 48px);
-      overflow-y: auto;
-      background: none;
-      backdrop-filter: none;
-      transition: var(--gs-transition);
-    }
+	.gs-player-panels {
+	  bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 8px);
+	  max-height: calc(100% - var(--gs-ctrl-h) - var(--gs-progress-min-h) - 48px);
+	  position: absolute;
+	  left: 2px;
+	  overflow-y: auto;
+	  background: none;
+	  backdrop-filter: none;
+	  transition: var(--gs-transition);
+	  width: 100%;
+	  pointer-events: none;
+
+	  > * {
+		pointer-events: auto;
+	  }
+	}
   }
 
-  &.is-web-fullscreen {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: #000;
-    margin: 0;
-    padding: 0;
-  }
+  &.is-web-fullscreen, :fullscreen {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	background: #000;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
 
-  &.is-web-fullscreen .gs-player-main {
-    padding-bottom: 0;
+	.gs-player-main {
+	  padding-bottom: 0;
+	}
   }
 
   &:not(.gs-controls-visible) {
-    .gs-progress-container, &.layout-horizontal .gs-player-panels {
-      transform: translateY(calc(var(--gs-ctrl-h) + 2px));
-      transition-delay: var(--gs-progress-out-delay);
-    }
-    .gs-controls {
-      transform: translateY(100%);
-      transition-delay: var(--gs-progress-out-delay);
-    }
+	.gs-progress-container, &.layout-horizontal .gs-player-panels {
+	  transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+	  transition-delay: var(--gs-progress-out-delay);
+	}
+
+	.gs-controls {
+	  transform: translateY(100%);
+	  transition-delay: var(--gs-progress-out-delay);
+	}
   }
 
   &.gs-controls-visible {
-    .gs-controls {
-      transform: translateY(0%);
-      transition-delay: 0s !important;
-    }
+	.gs-controls {
+	  transform: translateY(0%);
+	  transition-delay: 0s !important;
+	}
 
-    &.layout-horizontal .gs-player-panels, .gs-progress-container {
-      transform: translateY(3px);
-      transition-delay: 0s !important;
-    }
+	&.layout-horizontal .gs-player-panels, .gs-progress-container {
+	  transform: translateY(3px);
+	  transition-delay: 0s !important;
+	}
   }
 }

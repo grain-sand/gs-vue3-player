@@ -14,9 +14,10 @@
     </div>
     <div
         class="gs-info-content"
-        :title="title"
         v-html="html"
+        ref="contentRef"
         @click.stop.prevent="handleContentClick"
+        @mouseleave="onMouseleave"
     ></div>
   </div>
 </template>
@@ -24,11 +25,11 @@
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../type';
 import {GsAuthor} from "../../component";
-import {computed} from "vue";
+import {computed, ref} from "vue";
+
+const contentRef = ref<HTMLDivElement>();
 
 const p = defineProps<IGsWidgetProps>();
-
-const title = computed(() => p.core?.src?.description?.replace(/<[^>]+>/g, '') || p.core?.src?.title)
 
 const html = computed(() => {
   const text = p.core?.src?.description || p.core?.src?.title?.replace(/\n/g, '<br/>');
@@ -53,5 +54,15 @@ function handleContentClick(event: MouseEvent) {
       p.props.socioWordHandler(word);
     }
   }
+}
+
+function onMouseleave() {
+  const {value: el} = contentRef;
+  if (!el) return;
+  el.scroll({
+    left: 0,
+    top: 0,
+    behavior: 'smooth',
+  })
 }
 </script>

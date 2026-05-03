@@ -25,12 +25,16 @@ export function mouseEventLogic() {
   };
 
   const handleWheel = (props: IGsWidgetProps['props'], core: IGsWidgetProps['core'], e: WheelEvent) => {
-    if (props.disableWheelNavigation) return;
+    if (props.disableWheelNavigation || !core) return;
     e.preventDefault();
     if (e.deltaY < 0) {
-      core?.playPre();
+		if(core.hasPre) {
+			core.playPre();
+		}
     } else {
-      core?.playNext();
+		if(core.hasNext) {
+			core.playNext();
+		}
     }
   };
 

@@ -3,7 +3,7 @@
       v-if="author"
       class="gs-author"
       :class="{ 'gs-author-clickable': handleClick && author.link }"
-      @click.stop="handleClickFn"
+      @click="handleClickFn"
   >
     <div class="gs-author-avatar">
       <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">

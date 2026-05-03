@@ -1,4 +1,6 @@
 .gs-list-container {
+  display: flex;
+  flex-direction: column;
 
   &, & > .gs-list-container-wrapper {
 	transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
@@ -10,7 +12,7 @@
 	backdrop-filter: blur(4px);
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	max-height: 100%;
 
 	> .gs-list-header {
 	  display: flex;
@@ -100,9 +102,10 @@
 	  background: var(--bg-secondary);
 	  border-left: 1px solid var(--border-light);
 	  overflow: hidden;
-	  display: flex;
-	  flex-direction: column;
-	  height: auto;
+
+	  > .gs-list-container-wrapper {
+		flex: 1;
+	  }
 	}
   }
 
@@ -119,19 +122,25 @@
 	  min-width: 100px;
 	  background: transparent;
 	  border-left: 1px solid var(--border-light);
-	  display: flex;
-	  flex-direction: column;
 	  z-index: 10;
+	  justify-content: center;
+	  max-height: calc(100% - 48px);
 
-	  > .gs-list-container-wrapper {
-		transform: translateX(100%);
+	  &:not(:hover) {
+		max-width: 100px;
+
+		> .gs-list-container-wrapper {
+		  transform: translateX(100%) scaleX(0);
+		}
 	  }
 
 	  &:hover {
 		min-width: 280px;
+		max-width: min(336px, 30%);
+		overflow: hidden;
 
 		> .gs-list-container-wrapper {
-		  transform: translateX(0);
+		  transform: translateX(0) scaleX(1);
 		}
 	  }
 	}

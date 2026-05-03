@@ -317,6 +317,19 @@ onBeforeUnmount(() => {
   }
 });
 
+watch(() => isFullscreen, async (v) => {
+  const core = coreRef.value;
+  if (!core)
+    if (v) {
+      core.toBestQuality({
+        width: containerWidth.value,
+        height: containerHeight.value,
+      })
+    } else {
+      core.autoQualityHls();
+    }
+})
+
 defineExpose<IGsPlayerExpose>({
   get core() {
     return coreRef.value!;
