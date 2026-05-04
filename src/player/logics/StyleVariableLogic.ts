@@ -1,57 +1,60 @@
-import {IGsWidgetProps} from "../../type";
+import {AspectRatio, IGsWidgetContext, IGsWidgetProps, IPlayerCoreExpose} from "../../type";
 import {setStyleVars} from "../../util";
-import {AspectRatioMode, DefaultAspectRatio} from "../../type";
 import {Timer} from "gs-base/timer";
+import {watch} from "vue";
 
 export function styleVariableLogic() {
+	let stopAspectRatioWatch: Function;
+	let stopVideoSizeWatch: Function;
 	let target: HTMLElement | null = null;
 	let resizeObserver: ResizeObserver | null = null;
 	const timer = new Timer(300);
-	let rect: DOMRectReadOnly = {} as DOMRectReadOnly;
-	let aspectRatio: AspectRatioMode = DefaultAspectRatio;
+	let core: IPlayerCoreExpose;
+	let cxt: IGsWidgetContext;
+	let containerSize: AspectRatio;
 
-	const calculateHeight = (core: IGsWidgetProps['core']): number => {
-		const {width} = rect;
+
+	const calculateHeight = (): number => {
+		const [width] = containerSize;
 		if (!width) return 240;
 
-		if (aspectRatio === 'auto') {
-			const src = core.src as any;
-			const ratio = src?.aspectRatio;
+		if (cxt.aspectRatio === 'auto') {
+			const ratio = core.size;
 			if (ratio && Array.isArray(ratio)) {
 				return width * ratio[1] / ratio[0] + 2;
 			} else {
 				return width * 9 / 16 + 2;
 			}
 		} else {
-			const [w = 16, h = 9] = aspectRatio;
+			const [w = 16, h = 9] = cxt.aspectRatio;
 			return width * (Number(h) / Number(w)) + 2;
 		}
 	};
 
-	const handleResize = async (cxt: IGsWidgetProps['cxt'], core: IGsWidgetProps['core'], [entry]: ResizeObserverEntry[]) => {
-		if (entry.contentRect) {
-			rect = entry.contentRect;
+	const handleResize = async () => {
+		if (!containerSize) {
+			return;
 		}
-		cxt.updateContainerSize(rect.width, rect.height);
 		await timer.reWait();
+		const [width, height] = containerSize;
 
 		const isHorizontal = cxt.layout === 'horizontal';
 		const isFullscreen = cxt.isFullscreen;
-		const floating = isFullscreen && rect.width > rect.height;
+		const floating = isFullscreen && width > height;
 
 		let playerCoreHeight: number | string;
 		let playerCoreWidth: number | string;
 
 		if (floating) {
-			playerCoreHeight = rect.height;
-			playerCoreWidth = rect.width;
+			playerCoreHeight = height;
+			playerCoreWidth = width;
 		} else if (isHorizontal) {
-			playerCoreHeight = rect.height;
-			const [w = 16, h = 9] = Array.isArray(aspectRatio) ? aspectRatio : [];
-			playerCoreWidth = rect.height * (Number(w) / Number(h)) + 2;
+			playerCoreHeight = height;
+			const [w = 16, h = 9] = Array.isArray(cxt.aspectRatio) ? cxt.aspectRatio : [];
+			playerCoreWidth = height * (Number(w) / Number(h)) + 2;
 		} else {
-			playerCoreHeight = calculateHeight(core);
-			playerCoreWidth = rect.width;
+			playerCoreHeight = calculateHeight();
+			playerCoreWidth = width;
 		}
 
 		if (target) {
@@ -60,7 +63,9 @@ export function styleVariableLogic() {
 	};
 
 	return {
-		mount({props, cxt, core}: IGsWidgetProps): void {
+		mount({props, cxt: cxtProp, core: coreProp}: IGsWidgetProps): void {
+			cxt = cxtProp;
+			core = coreProp;
 			const {variableWriteTarget} = props;
 
 			if (variableWriteTarget instanceof HTMLElement) {
@@ -68,18 +73,33 @@ export function styleVariableLogic() {
 			} else {
 				target = cxt.container;
 			}
-
-			aspectRatio = props.aspectRatio || DefaultAspectRatio;
-
 			if (target) {
-				resizeObserver = new ResizeObserver(handleResize.bind(null, cxt, core));
+				resizeObserver = new ResizeObserver(async ([entry]: ResizeObserverEntry[]) => {
+					const {width, height} = entry.contentRect;
+					containerSize = [width, height];
+					cxt.updateContainerSize(width, height);
+					await handleResize();
+				});
 				resizeObserver.observe(cxt.container);
 			}
+
+			stopAspectRatioWatch = watch(() => cxt.aspectRatio, handleResize);
+			stopVideoSizeWatch = watch(() => core.size, handleResize);
+
 		},
 		unmount(): void {
 			if (resizeObserver) {
 				resizeObserver.disconnect();
 				resizeObserver = null;
+			}
+			try {
+				stopAspectRatioWatch?.();
+			} catch {
+			}
+			try {
+
+				stopVideoSizeWatch?.();
+			} catch {
 			}
 			target = null;
 		}
