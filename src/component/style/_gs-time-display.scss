@@ -1,7 +1,9 @@
 .gs-time-display {
   color: var(--gs-text);
-  font-size: 13px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
   opacity: 0.9;
   padding: 2px 4px;
+  white-space: nowrap;
+  overflow: hidden;
 }
