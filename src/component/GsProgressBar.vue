@@ -5,10 +5,19 @@
        @mouseleave="showProgressTooltip = false">
     <div class="gs-progress-bar">
       <div class="gs-progress-track">
-        <div class="gs-progress-buffered" :style="{ width: bufferedPercent + '%' }"/>
+        <template v-for="(segment, index) in bufferedSegments" :key="'buffered-' + index">
+          <div class="gs-progress-buffered"
+               :style="{ left: segment.left + '%', width: segment.width + '%' }"/>
+        </template>
         <div class="gs-progress-fill" :style="{ width: progress + '%' }"></div>
         <div class="gs-progress-handle" :style="{ left: `${progress}%` }"></div>
-        <div v-show="showProgressTooltip" class="gs-progress-tooltip" :style="{ left: `${tooltipPosition}%` }">
+        <div v-show="showProgressTooltip" class="gs-progress-tooltip-duration">
+          {{ formatTime(props.duration) }}
+        </div>
+        <div v-show="showProgressTooltip" class="gs-progress-tooltip-handle" :style="{ left: `${Math.max(0, Math.min(100, progress))}%` }">
+          {{ formatTime(props.time) }}
+        </div>
+        <div v-show="showProgressTooltip" class="gs-progress-tooltip" :style="{ left: `${Math.max(0, Math.min(100, tooltipPosition))}%` }">
           {{ formatTime(tooltipTime) }}
         </div>
       </div>
@@ -33,12 +42,19 @@ const progress = computed(() => {
   return duration ? (props.time / duration) * 100 : 0;
 });
 
-const bufferedPercent = computed(() => {
+const getBufferedSegments = (buffer: number[][] | undefined): { left: number; width: number }[] => {
   const duration = props.duration ?? 0;
-  const buffered = props.buffered;
-  if (!duration || !buffered || buffered.length === 0) return 0;
-  return (buffered.end(buffered.length - 1) / duration) * 100;
-});
+  if (!duration || !buffer || buffer.length === 0) return [];
+
+  return buffer
+    .filter(segment => segment.length >= 2 && segment[0] < duration && segment[1] > 0)
+    .map(segment => ({
+      left: Math.max(0, (segment[0] / duration) * 100),
+      width: Math.min(100, ((segment[1] - segment[0]) / duration) * 100)
+    }));
+};
+
+const bufferedSegments = computed(() => getBufferedSegments(props.buffered));
 
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 

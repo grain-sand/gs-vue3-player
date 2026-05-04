@@ -1,7 +1,7 @@
 export interface IGsProgressBarProps {
   time: number;
   duration: number;
-  buffered?: TimeRanges;
+  buffered?: number[][];
 }
 
 export interface IGsProgressBarEmits {

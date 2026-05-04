@@ -9,11 +9,17 @@
     <!--suppress TypeScriptValidateTypes -->
     <!--   @vue-ignore  -->
     <GsProgressBar
-        v-if="showProgressBar"
+        v-if="progressBar===undefined"
         :time="props.core?.time ?? 0"
         :duration="props.core?.duration ?? 0"
-        :buffered="props.core?.el?.buffered"
+        :buffered="props.core?.buffered"
         @seek="handleProgressSeek"
+    />
+    <component v-else-if="progressBar"
+         :is="progressBar"
+         :core="props.core"
+         :cxt="props.cxt"
+         :props="props.props"
     />
     <div class="gs-controls" @click.stop.prevent>
       <template v-for="(item, index) in resolvedItems" :key="index">
@@ -56,12 +62,7 @@ defineEmits<{
   (e: 'mouseleave', event: MouseEvent): void;
 }>();
 
-const showProgressBar = computed(() => {
-  const pb = props.props.controlBar?.progressBar;
-  if (pb === false) return false;
-  return !(pb && typeof pb !== 'boolean');
-
-});
+const progressBar = computed(() => props.props.controlBar?.progressBar);
 
 const defaultComponents: Partial<Record<ControlItemName, IGsWidget>> = {
   play: GsPlayButton,

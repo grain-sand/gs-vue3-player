@@ -13,7 +13,7 @@
       @pause="playing = false"
       @timeupdate="time = videoRef?.currentTime || 0"
       @loadedmetadata="loadedmetadata"
-      @progress="updateVideoBuffer"
+      @progress="updateBuffer"
       @ended="onEnded"
       @enterpictureinpicture="onEnterPip"
       @leavepictureinpicture="onLeavePip"
@@ -66,8 +66,7 @@ const currentMode = ref<PlaybackMode>(DefaultPlaybackMode)
 const bestQuality = ref<Partial<IVideoQuality>>()
 const pipState = ref(false)
 
-const videoBuffer = ref<number[][]>([])
-const hlsBuffer = ref<number[][]>([])
+const buffered = ref<number[][]>([])
 
 const playlist = ref<ISourceWrapper[]>([]);
 const wrapperMap = new Map<PlaySource, ISourceWrapper>();
@@ -288,32 +287,18 @@ watch(
     },
     {immediate: true})
 
-function updateVideoBuffer() {
+function updateBuffer() {
   const video = videoRef.value;
   if (!video) {
-    videoBuffer.value = [];
+    buffered.value = [];
     return;
   }
-  const buffered = video.buffered;
+  const buf = video.buffered;
   const result: number[][] = [];
-  for (let i = 0; i < buffered.length; i++) {
-    result.push([buffered.start(i), buffered.end(i)]);
+  for (let i = 0; i < buf.length; i++) {
+    result.push([buf.start(i), buf.end(i)]);
   }
-  videoBuffer.value = result;
-}
-
-function updateHlsBuffer() {
-  if (!hls.value || !videoRef.value) {
-    hlsBuffer.value = [];
-    return;
-  }
-  const video = videoRef.value;
-  const buffered = video.buffered;
-  const result: number[][] = [];
-  for (let i = 0; i < buffered.length; i++) {
-    result.push([buffered.start(i), buffered.end(i)]);
-  }
-  hlsBuffer.value = result;
+  buffered.value = result;
 }
 
 onMounted(() => {
@@ -423,8 +408,6 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
       newHls.attachMedia(video);
       newHls.on(Hls.Events.MANIFEST_PARSED, () => adjustHlsQuality());
       newHls.on(Hls.Events.LEVEL_SWITCHED, () => adjustHlsQuality());
-      newHls.on(Hls.Events.BUFFER_APPENDED, updateHlsBuffer);
-      newHls.on(Hls.Events.BUFFER_FLUSHED, updateHlsBuffer);
       hls.value = newHls;
     } else {
       throw new Error('Browser not supported hls')
@@ -760,11 +743,8 @@ defineExpose<IPlayerCoreExpose>({
   enterPip,
   exitPip,
   togglePip,
-  get videoBuffer() {
-    return videoBuffer.value
-  },
-  get hlsBuffer() {
-    return hlsBuffer.value
+  get buffered() {
+    return buffered.value
   }
 })
 </script>

@@ -17,9 +17,7 @@
     />
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
-    list: {{ playerRef?.core?.playlist?.length }}<br/>
-    aspectRatio: {{ playerRef?.aspectRatio }}<br/>
-    layout: {{ playerRef?.layout }}<br/>
+    buffered: {{ playerRef?.core?.buffered }}<br/>
   </div>
 </template>
 

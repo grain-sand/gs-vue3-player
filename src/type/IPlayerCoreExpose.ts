@@ -99,11 +99,6 @@ export interface IPlayerCoreExpose {
 	/**
 	 * video 元素已经缓冲的详细时间片段，格式如 [[1,5],[15,30]]
 	 */
-	readonly videoBuffer: number[][];
-
-	/**
-	 * hls 已经缓冲的详细时间片段，格式如 [[1,5],[15,30]]
-	 */
-	readonly hlsBuffer: number[][];
+	readonly buffered: number[][];
 
 }
