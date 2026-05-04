@@ -23,7 +23,8 @@ export const zhCN: II18n = {
     pip: '弹出小窗',
     exitPip: '退出小窗',
     showList: '显示列表',
-    hideList: '隐藏列表'
+    hideList: '隐藏列表',
+    aspectRatioAuto: '跟随视频'
   },
   playlist: '播放列表',
   remove: '移除'

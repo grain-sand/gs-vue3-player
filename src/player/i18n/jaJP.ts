@@ -23,7 +23,8 @@ export const jaJP: II18n = {
     pip: 'ピクチャインピクチャ',
     exitPip: 'ピクチャインピクチャを終了',
     showList: 'リストを表示',
-    hideList: 'リストを非表示'
+    hideList: 'リストを非表示',
+    aspectRatioAuto: 'ビデオに従う'
   },
   playlist: 'プレイリスト',
   remove: '削除'

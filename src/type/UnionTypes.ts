@@ -80,6 +80,10 @@ export const ControlDefaultItems = [
 	 */
 	'mode',
 	/**
+	 * 比例切换菜单按钮
+	 */
+	'aspect-ratio',
+	/**
 	 * 全屏菜单
 	 * - 按钮为 web全屏切换
 	 * - 菜单中包含 pip 与 fullscreen 按钮

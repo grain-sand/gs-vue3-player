@@ -23,7 +23,8 @@ export const zhTW: II18n = {
     pip: '彈出小窗',
     exitPip: '退出小窗',
     showList: '顯示列表',
-    hideList: '隱藏列表'
+    hideList: '隱藏列表',
+    aspectRatioAuto: '跟隨影片'
   },
   playlist: '播放列表',
   remove: '移除'

@@ -23,7 +23,8 @@ export const enUS: II18n = {
     pip: 'Picture in Picture',
     exitPip: 'Exit Picture in Picture',
     showList: 'Show List',
-    hideList: 'Hide List'
+    hideList: 'Hide List',
+    aspectRatioAuto: 'Follow Video'
   },
   playlist: 'Playlist',
   remove: 'Remove'

@@ -22,6 +22,7 @@ import OutLinkSvg from './out-link.svg';
 import {DefineComponent} from "vue";
 import PinSvg from './pin.svg';
 import LinkSvg from './link.svg';
+import AutoSvg from './auto.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
@@ -58,4 +59,5 @@ export {
 	OutLinkSvg,
 	PinSvg,
 	LinkSvg,
+	AutoSvg,
 };

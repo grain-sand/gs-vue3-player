@@ -18,18 +18,30 @@ export class SourceWrapper implements ISourceWrapper {
 		this._raw.type = this._type = v;
 	}
 
+	private _aspectRatio?: AspectRatio | undefined
+
+	get aspectRatio(): AspectRatio | undefined {
+		return this._aspectRatio || this._raw.aspectRatio;
+	}
+
+	set aspectRatio(v: AspectRatio | undefined) {
+		if (typeof this._raw === 'object') {
+			this._raw.aspectRatio = v
+		}
+		this._aspectRatio = v;
+	}
+
 	private _duration?: number
 
 	get duration(): number {
-		return this._raw.duration || this._duration || 0
+		return this._duration || this._raw.duration || 0
 	}
 
 	set duration(v: number) {
 		if (typeof this._raw === 'object') {
 			this._raw.duration = v
-		} else {
-			this._duration = v
 		}
+		this._duration = v
 	}
 
 	get poster(): string {
@@ -61,10 +73,6 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get index(): number {
 		return this._raw.index || 0;
-	}
-
-	get aspectRatio(): AspectRatio | undefined {
-		return this._raw.aspectRatio;
 	}
 
 	get description(): string {

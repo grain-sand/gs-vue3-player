@@ -23,7 +23,8 @@ export const koKR: II18n = {
     pip: '화면 안 화면',
     exitPip: '화면 안 화면 종료',
     showList: '목록 표시',
-    hideList: '목록 숨기기'
+    hideList: '목록 숨기기',
+    aspectRatioAuto: '비디오 따르기'
   },
   playlist: '재생 목록',
   remove: '제거'

@@ -47,6 +47,8 @@ export interface II18n {
     showList: string;
     /** 隐藏列表 */
     hideList: string;
+    /** 跟随视频比例 */
+    aspectRatioAuto: string;
   };
   /** 播放列表标题 */
   playlist: string;
