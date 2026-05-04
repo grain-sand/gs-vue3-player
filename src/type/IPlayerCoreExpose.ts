@@ -1,5 +1,5 @@
 import {ISourceWrapper, IVideoQuality, PlaySource} from "./IPlayerSource";
-import {PlaybackMode} from "./UnionTypes";
+import {AspectRatio, PlaybackMode} from "./UnionTypes";
 
 export interface IPlayerCoreExpose {
 
@@ -100,5 +100,10 @@ export interface IPlayerCoreExpose {
 	 * video 元素已经缓冲的详细时间片段，格式如 [[1,5],[15,30]]
 	 */
 	readonly buffered: number[][];
+
+	/**
+	 * 当前视频的实时尺寸（宽高比）
+	 */
+	readonly size: AspectRatio;
 
 }

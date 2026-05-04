@@ -17,6 +17,7 @@
       @ended="onEnded"
       @enterpictureinpicture="onEnterPip"
       @leavepictureinpicture="onLeavePip"
+      @resize="updateSize"
   ></video>
 </template>
 
@@ -68,11 +69,13 @@ const pipState = ref(false)
 
 const buffered = ref<number[][]>([])
 
+const size = ref<[number, number]>([0, 0])
+
 const playlist = ref<ISourceWrapper[]>([]);
 const wrapperMap = new Map<PlaySource, ISourceWrapper>();
 let idCounter = 0;
 
-defineOptions({inheritAttrs: false });
+defineOptions({inheritAttrs: false});
 
 watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode, {immediate: true})
 
@@ -313,11 +316,22 @@ onMounted(() => {
   }
 })
 
+function updateSize() {
+  const video = videoRef.value;
+  if (video && video.videoWidth > 0 && video.videoHeight > 0) {
+    size.value = [video.videoWidth, video.videoHeight];
+  }
+  if (innerSrc.value && !innerSrc.value.aspectRatio) {
+    innerSrc.value.aspectRatio = size.value;
+  }
+}
+
 function loadedmetadata() {
   duration.value = videoRef.value.duration
   if (innerSrc.value) {
     innerSrc.value.duration = duration.value
   }
+  updateSize();
   if (isFirstLoadedmetadata) {
     isFirstLoadedmetadata = false;
     watch(() => props.rate, (r = 1.0) => {
@@ -407,7 +421,10 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
       newHls.loadSource(srcStr);
       newHls.attachMedia(video);
       newHls.on(Hls.Events.MANIFEST_PARSED, () => adjustHlsQuality());
-      newHls.on(Hls.Events.LEVEL_SWITCHED, () => adjustHlsQuality());
+      newHls.on(Hls.Events.LEVEL_SWITCHED, () => {
+        adjustHlsQuality();
+        updateSize();
+      });
       hls.value = newHls;
     } else {
       throw new Error('Browser not supported hls')
@@ -745,6 +762,9 @@ defineExpose<IPlayerCoreExpose>({
   togglePip,
   get buffered() {
     return buffered.value
+  },
+  get size() {
+    return size.value
   }
 })
 </script>

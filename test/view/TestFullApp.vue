@@ -18,7 +18,8 @@
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
     buffered: {{ playerRef?.core?.buffered }}<br/>
-  </div>
+    size: {{ playerRef?.core?.size }}<br/>
+     </div>
 </template>
 
 <script lang="ts" setup>
