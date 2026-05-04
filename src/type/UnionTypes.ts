@@ -10,6 +10,10 @@ export type PlaybackMode = (typeof PlaybackModes)[number];
 
 export const DefaultPlaybackMode: PlaybackMode = PlaybackModes[0];
 
+/**
+ * 视频宽高比
+ * - 格式：[width, height]
+ */
 export type AspectRatio = [number, number];
 
 export type AspectRatioMode = AspectRatio | 'auto';

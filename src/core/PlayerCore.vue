@@ -181,9 +181,9 @@ function changeSource(src: undefined | number | PlaySource, pos: number = 0): Pl
   return wrapper;
 }
 
-function navTo(src: undefined | number | PlaySource, dir: -1 | 1, predefinedPreSrc?: PlaySource, predefinedNextSrc?: PlaySource): PlaySource | undefined {
+function navTo(dir: -1 | 1, predefinedSrc?: PlaySource): PlaySource | undefined {
   const i = getIndex();
-  let source: PlaySource | undefined = dir === -1 ? predefinedPreSrc : predefinedNextSrc;
+  let source: PlaySource | undefined = predefinedSrc;
 
   if (!source && playlist.value.length) {
     if (dir === -1) {
@@ -619,12 +619,12 @@ async function togglePip(): Promise<void> {
 }
 
 const playPre = async () => {
-  const source = navTo(props.preSrc, -1, props.preSrc, props.nextSrc);
+  const source = navTo(-1, props.preSrc);
   await changeSourceAndPlay(source);
 }
 
 const playNext = async () => {
-  const source = navTo(props.nextSrc, 1, props.preSrc, props.nextSrc);
+  const source = navTo(1, props.nextSrc);
   await changeSourceAndPlay(source);
 }
 
