@@ -16,7 +16,7 @@ export interface IGsWidgetContext {
 	/**
 	 * 视频比例
 	 */
-	readonly aspectRatio: AspectRatioMode
+	aspectRatio: AspectRatioMode
 
 	readonly i18n: II18n;
 

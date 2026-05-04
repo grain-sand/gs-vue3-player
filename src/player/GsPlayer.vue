@@ -132,7 +132,7 @@ const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
 const currentLayout = ref<LayoutMode>(props.layout);
 const originalLayout = ref<LayoutMode>(props.layout);
-const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio);
+const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio||DefaultAspectRatio);
 const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
@@ -176,6 +176,9 @@ const updateContainerSize = (width: number, height: number) => {
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
     return currentAspectRatio.value;
+  },
+  set aspectRatio(value: AspectRatioMode) {
+    currentAspectRatio.value = value;
   },
   get i18n() {
     return i18nConfig.value;
@@ -336,6 +339,9 @@ defineExpose<IGsPlayerExpose>({
   },
   get aspectRatio() {
     return currentAspectRatio.value;
+  },
+  set aspectRatio(value: AspectRatioMode) {
+    currentAspectRatio.value = value;
   },
   get isFullscreen() {
     return isFullscreen.value;
