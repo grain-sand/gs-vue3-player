@@ -1,6 +1,13 @@
 import {IGsWidget} from "./IGsWidget";
+import {ContextMenuItemName} from "./UnionTypes";
 
-export type ContextMenuItem = IContextMenuOption | IGsWidget
+/**
+ * 上下文菜单项
+ * - `ContextMenuItemName` 内置菜单项名称
+ * - `IContextMenuOption` 创建二级菜单的容器
+ * - `IGsWidget` 自定义菜单组件
+ */
+export type ContextMenuItem = ContextMenuItemName | IContextMenuOption | IGsWidget
 
 export interface IInsertContextMenuItem {
 	position?: number;
@@ -19,6 +26,7 @@ export interface IContextMenuOption {
 	/**
 	 * 子菜单项
 	 * - 设置此项将会覆盖默认值
+	 * - 默认值为 `ContextMenuItemDefaultNames`
 	 */
 	items?: ContextMenuItem[];
 

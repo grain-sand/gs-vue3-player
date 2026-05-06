@@ -51,7 +51,7 @@ const parts = computed<PlaylistItemPart[]>(() => {
       return activeTab.body;
     }
   }
-  return PlaylistItemPartNames as PlaylistItemPart[];
+  return PlaylistItemPartNames as any;
 });
 
 function getPartComponent(part: PlaylistItemPart) {
