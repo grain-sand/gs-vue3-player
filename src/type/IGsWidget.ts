@@ -4,6 +4,15 @@ import {DefineComponent} from "vue";
 import {IGsPlayerProps} from "./IGsPlayerProps";
 import {II18n} from "./II18n";
 
+export interface ITransformState {
+	draggable: boolean;
+	flipHorizontal: boolean;
+	flipVertical: boolean;
+	rotation: number;
+	scaleMode: 'fit' | '2x' | '1.5x' | 'auto';
+	translateX: number;
+	translateY: number;
+}
 
 export interface IGsWidgetContext {
 
@@ -61,6 +70,46 @@ export interface IGsWidgetContext {
 	setLayout(layout: LayoutMode): void;
 
 	toggleListVisibility(): void;
+
+	/**
+	 * 变换状态
+	 */
+	readonly transformState: ITransformState;
+
+	/**
+	 * 重置所有变换
+	 */
+	resetTransform(): void;
+
+	/**
+	 * 切换拖动模式
+	 */
+	toggleDraggable(): void;
+
+	/**
+	 * 切换左右镜像
+	 */
+	toggleFlipHorizontal(): void;
+
+	/**
+	 * 切换上下镜像
+	 */
+	toggleFlipVertical(): void;
+
+	/**
+	 * 旋转90度
+	 */
+	rotate90(): void;
+
+	/**
+	 * 设置缩放模式
+	 */
+	setScaleMode(mode: ITransformState['scaleMode']): void;
+
+	/**
+	 * 更新拖动位置
+	 */
+	updateTranslate(x: number, y: number): void;
 }
 
 export interface IGsWidgetProps {

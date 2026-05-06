@@ -80,6 +80,10 @@ export const ControlDefaultItems = [
 	 */
 	'mode',
 	/**
+	 * 变换控制菜单
+	 */
+	'transform',
+	/**
 	 * 比例切换菜单按钮
 	 */
 	'aspect-ratio',
@@ -104,7 +108,7 @@ export const ControlItemNames = [...ControlDefaultItems,
 	/**
 	 * 网页全屏
 	 */
-	'webFullscreen'
+	'webFullscreen',
 ] as const;
 
 export type ControlItemName = (typeof ControlItemNames)[number];

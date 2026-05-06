@@ -99,6 +99,7 @@ import {
   IGsWidgetProps,
   II18n,
   IPlayerCoreExpose,
+  ITransformState,
   LayoutMode,
   VisibilityMode
 } from '../type';
@@ -141,6 +142,53 @@ const containerWidth = ref(0);
 const containerHeight = ref(0);
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
+
+const transformState = ref<ITransformState>({
+  draggable: false,
+  flipHorizontal: false,
+  flipVertical: false,
+  rotation: 0,
+  scaleMode: 'auto',
+  translateX: 0,
+  translateY: 0
+});
+
+const resetTransform = () => {
+  transformState.value = {
+    draggable: false,
+    flipHorizontal: false,
+    flipVertical: false,
+    rotation: 0,
+    scaleMode: 'auto',
+    translateX: 0,
+    translateY: 0
+  };
+};
+
+const toggleDraggable = () => {
+  transformState.value.draggable = !transformState.value.draggable;
+};
+
+const toggleFlipHorizontal = () => {
+  transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
+};
+
+const toggleFlipVertical = () => {
+  transformState.value.flipVertical = !transformState.value.flipVertical;
+};
+
+const rotate90 = () => {
+  transformState.value.rotation = (transformState.value.rotation + 90) % 360;
+};
+
+const setScaleMode = (mode: ITransformState['scaleMode']) => {
+  transformState.value.scaleMode = mode;
+};
+
+const updateTranslate = (x: number, y: number) => {
+  transformState.value.translateX = x;
+  transformState.value.translateY = y;
+};
 
 const exposedCore = computed(() => coreRef.value);
 
@@ -229,7 +277,17 @@ const widgetContext = shallowRef<IGsWidgetContext>({
       originalLayout.value = layout;
     }
   },
-  toggleListVisibility
+  toggleListVisibility,
+  get transformState() {
+    return transformState.value;
+  },
+  resetTransform,
+  toggleDraggable,
+  toggleFlipHorizontal,
+  toggleFlipVertical,
+  rotate90,
+  setScaleMode,
+  updateTranslate
 });
 
 watch(isFullscreen, (newVal, oldVal) => {
@@ -378,5 +436,15 @@ defineExpose<IGsPlayerExpose>({
   exitFullscreen: () => widgetContext.value.exitFullscreen(),
   setLayout: (layout: LayoutMode) => widgetContext.value.setLayout(layout),
   toggleListVisibility,
+  get transformState() {
+    return transformState.value;
+  },
+  resetTransform,
+  toggleDraggable,
+  toggleFlipHorizontal,
+  toggleFlipVertical,
+  rotate90,
+  setScaleMode,
+  updateTranslate
 });
 </script>

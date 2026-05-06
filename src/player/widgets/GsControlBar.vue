@@ -56,6 +56,7 @@ import GsPipControl from './GsPipControl.vue';
 import GsFullscreenControl from './GsFullscreenControl.vue';
 import GsWebFullscreenControl from './GsWebFullscreenControl.vue';
 import GsAspectRatioControl from './GsAspectRatioControl.vue';
+import GsTransformControl from './GsTransformControl.vue';
 
 const props = defineProps<IGsWidgetProps>();
 defineEmits<{
@@ -78,7 +79,8 @@ const defaultComponents: Partial<Record<ControlItemName, IGsWidget>> = {
   'fullscreen-menu': GsFullscreenMenu,
   pip: GsPipControl,
   fullscreen: GsFullscreenControl,
-  webFullscreen: GsWebFullscreenControl
+  webFullscreen: GsWebFullscreenControl,
+  transform: GsTransformControl
 };
 
 const resolvedItems = computed(() => {

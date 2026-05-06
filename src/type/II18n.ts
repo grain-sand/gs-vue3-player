@@ -49,6 +49,24 @@ export interface II18n {
     hideList: string;
     /** 跟随视频比例 */
     aspectRatioAuto: string;
+    /** 变换控制 */
+    transform: string;
+    /** 允许拖动 */
+    draggable: string;
+    /** 左右镜像 */
+    flipHorizontal: string;
+    /** 上下镜像 */
+    flipVertical: string;
+    /** 旋转 */
+    rotate: string;
+    /** 适应尺寸 */
+    scaleFit: string;
+    /** 2倍缩放 */
+    scale2x: string;
+    /** 1.5倍缩放 */
+    scale15x: string;
+    /** 原始尺寸 */
+    scaleAuto: string;
   };
   /** 播放列表标题 */
   playlist: string;

@@ -16,3 +16,4 @@ export {default as GsPipControl} from './GsPipControl.vue';
 export {default as GsFullscreenControl} from './GsFullscreenControl.vue';
 export {default as GsWebFullscreenControl} from './GsWebFullscreenControl.vue';
 export {default as GsAspectRatioControl} from './GsAspectRatioControl.vue';
+export {default as GsTransformControl} from './GsTransformControl.vue';

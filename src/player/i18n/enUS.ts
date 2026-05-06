@@ -24,7 +24,16 @@ export const enUS: II18n = {
     exitPip: 'Exit Picture in Picture',
     showList: 'Show List',
     hideList: 'Hide List',
-    aspectRatioAuto: 'Follow Video'
+    aspectRatioAuto: 'Follow Video',
+    transform: 'Transform',
+    draggable: 'Draggable',
+    flipHorizontal: 'Flip Horizontal',
+    flipVertical: 'Flip Vertical',
+    rotate: 'Rotate',
+    scaleFit: 'Fit Container',
+    scale2x: '2x Scale',
+    scale15x: '1.5x Scale',
+    scaleAuto: 'Original Size'
   },
   playlist: 'Playlist',
   remove: 'Remove'

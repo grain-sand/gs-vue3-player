@@ -24,7 +24,16 @@ export const zhTW: II18n = {
     exitPip: '退出小窗',
     showList: '顯示列表',
     hideList: '隱藏列表',
-    aspectRatioAuto: '跟隨影片'
+    aspectRatioAuto: '跟隨影片',
+    transform: '變換控制',
+    draggable: '允許拖動',
+    flipHorizontal: '左右鏡像',
+    flipVertical: '上下鏡像',
+    rotate: '旋轉',
+    scaleFit: '適應尺寸',
+    scale2x: '2倍縮放',
+    scale15x: '1.5倍縮放',
+    scaleAuto: '原始尺寸'
   },
   playlist: '播放列表',
   remove: '移除'

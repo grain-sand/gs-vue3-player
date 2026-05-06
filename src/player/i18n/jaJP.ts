@@ -24,7 +24,16 @@ export const jaJP: II18n = {
     exitPip: 'ピクチャインピクチャを終了',
     showList: 'リストを表示',
     hideList: 'リストを非表示',
-    aspectRatioAuto: 'ビデオに従う'
+    aspectRatioAuto: 'ビデオに従う',
+    transform: '変換',
+    draggable: 'ドラッグ可能',
+    flipHorizontal: '水平反転',
+    flipVertical: '垂直反転',
+    rotate: '回転',
+    scaleFit: 'コンテナに合わせる',
+    scale2x: '2倍拡大',
+    scale15x: '1.5倍拡大',
+    scaleAuto: '元のサイズ'
   },
   playlist: 'プレイリスト',
   remove: '削除'
