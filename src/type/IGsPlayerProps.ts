@@ -4,6 +4,7 @@ import {AspectRatioMode, VisibilityMode, I18nName, LayoutMode} from "./UnionType
 import {IGsLogic, IGsWidget} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
+import {PlaySource} from "./IPlayerSource";
 
 export interface IGsPlayerProps extends IPlayerCoreProps {
 
@@ -113,7 +114,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `null` 不包含暂停时覆盖层
 	 * - `IGsWidget`自定义播放暂停时覆盖层
 	 */
-	playOverlay?: null | IGsWidget ;
+	playOverlay?: null | IGsWidget;
 
 	/**
 	 * 无界面逻辑组件
@@ -145,15 +146,21 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 链接处理函数
 	 * - 默认值为 `window.open`
 	 */
-	linkHandler?: (url: string) => void | Promise<void>;
+	linkHandler?: (url: string, src: PlaySource) => void | Promise<void>;
 
 	/**
 	 *  社交关键词处理函数
+	 * - 默认值为 `undefined`，即不处理社交关键词
 	 * - 当信息面板包含：#hashtag、@user等被点击时，会调用此函数，
-	 * - 默认不处理
 	 * - 可以根据需要自定义处理函数
 	 * @param word
 	 */
-	socioWordHandler?: (word: string) => void | Promise<void>
+	socioWordHandler?: (word: string, src: PlaySource) => void | Promise<void>
+
+	/**
+	 * 下载视频处理函数
+	 * - 默认值为 `undefined`，即不处理下载
+	 */
+	downloadHandler?: (url: string, src: PlaySource) => void;
 
 }

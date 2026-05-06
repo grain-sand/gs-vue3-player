@@ -63,6 +63,11 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 	 * - 始终使用 `v-html` 渲染
 	 */
 	description?: string;
+
+	/**
+	 * 视频下载链接
+	 */
+	downloadUrl?: string;
 }
 
 // 指定类型与URL

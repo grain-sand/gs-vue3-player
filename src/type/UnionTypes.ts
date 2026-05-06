@@ -143,3 +143,24 @@ export const PlaylistItemPartNames = [
 ] as const;
 
 export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];
+
+export const ContextMenuItemDefaultNames = [
+	/**
+	 * 弹出详细信息面板
+	 */
+	'detail',
+	/** 切换 信息面板的 显示/隐藏 */
+	'info',
+	ControlDefaultItems[4],
+	/** 模式切换->二级菜单 */
+	ControlDefaultItems[7],
+	ControlDefaultItems[8],
+	ControlDefaultItems[9]
+] as const;
+export const ContextMenuItemNames = [
+	...ContextMenuItemDefaultNames,
+	/**
+	 * 分隔线
+	 */
+	'|'
+] as const;
