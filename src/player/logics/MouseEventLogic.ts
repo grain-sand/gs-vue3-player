@@ -14,10 +14,10 @@ export function mouseEventLogic() {
 		} finally {
 			lastClickTime = Date.now();
 		}
-		if (!props.handleClick || !core) return;
+		if (!cxt.handleClick || !core) return;
 		await timer.wait();
 		if (core.muted) {
-			core.unmute().then(() => core.play());
+			core.unmute();
 		} else {
 			core.togglePlay();
 		}

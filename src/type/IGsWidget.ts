@@ -22,6 +22,10 @@ export interface IGsWidgetContext {
 
 	readonly layout: LayoutMode;
 
+	/** 是否处理播放器单击，默认为true，为静音时，为取消静音，否则为切换播放 */
+
+	handleClick: boolean;
+
 	/**
 	 * 视频比例
 	 */

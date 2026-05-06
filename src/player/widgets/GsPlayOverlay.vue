@@ -1,18 +1,19 @@
 <template>
   <div
-      v-show="!core?.playing"
+      v-show="core?.muted||!core?.playing"
       class="gs-player-play-overlay"
-      :class="{ 'muted': core?.muted }"
+      :class="{ 'muted': core?.playing && core?.muted }"
       @click.stop.prevent="core.unmute().then(() => core.play())"
   >
     <div class="gs-play-overlay-button">
-      <component :is="PlayStateIcons['false']"/>
+      <PauseSvg v-if="!core?.playing"/>
+      <MuteSvg v-else-if="core?.muted"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {PlayStateIcons} from '../../svgs';
+import {PauseSvg, MuteSvg} from '../../svgs';
 import {IGsWidgetProps} from '../../type';
 
 defineProps<IGsWidgetProps>();

@@ -143,6 +143,7 @@ const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio||DefaultAspect
 const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
+const handleClick = ref(props.handleClick);
 
 const containerWidth = ref(0);
 const containerHeight = ref(0);
@@ -257,6 +258,12 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   },
   set listVisibility(value: VisibilityMode) {
     listVisibility.value = value;
+  },
+  get handleClick() {
+    return handleClick.value;
+  },
+  set handleClick(value: boolean) {
+    handleClick.value = value;
   },
   fullscreen,
   webFullscreen,
@@ -411,6 +418,12 @@ defineExpose<IGsPlayerExpose>({
   },
   set listVisibility(value: VisibilityMode) {
     listVisibility.value = value;
+  },
+  get handleClick() {
+    return handleClick.value;
+  },
+  set handleClick(value: boolean) {
+    handleClick.value = value;
   },
   get i18n() {
     return i18nConfig.value;

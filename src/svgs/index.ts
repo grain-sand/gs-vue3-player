@@ -70,4 +70,5 @@ export {
 	FlipSvg,
 	RotateSvg,
 	FitSvg,
+	PauseSvg
 };
