@@ -7,6 +7,7 @@ export interface IGsButtonProps {
   disabled?: boolean;
   hasDropdown?: boolean;
   active?: boolean;
+  class?: string | object;
 }
 
 export interface IGsButtonEmits {

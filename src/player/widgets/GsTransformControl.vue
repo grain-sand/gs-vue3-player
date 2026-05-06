@@ -3,18 +3,12 @@
       :icon="TransformSvg"
       :title="cxt.i18n.titles.transform"
       :has-dropdown="true"
-      @click="handleButtonClick"
+      :class="{ 'clean': cxt.hasTransformChanged }"
+      :active="cxt.hasTransformChanged"
+      @click="cxt.resetTransform()"
   >
     <template #dropdown>
       <div class="gs-dropdown">
-        <button
-            class="gs-dropdown-item"
-            :class="{ active: cxt.transformState.draggable }"
-            :title="cxt.i18n.titles.draggable"
-            @click.stop="cxt.toggleDraggable"
-        >
-          <component :is="MoveSvg"/>
-        </button>
         <button
             class="gs-dropdown-item"
             :class="{ active: cxt.transformState.flipHorizontal }"
@@ -83,11 +77,7 @@
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../type';
 import {GsButton} from '../../component';
-import {AutoSvg, TransformSvg, MoveSvg, FlipSvg, RotateSvg, FitSvg} from '../../svgs';
+import {AutoSvg, FitSvg, FlipSvg, RotateSvg, TransformSvg} from '../../svgs';
 
-const props = defineProps<IGsWidgetProps>();
-
-const handleButtonClick = () => {
-  props.cxt.resetTransform();
-};
+defineProps<IGsWidgetProps>();
 </script>

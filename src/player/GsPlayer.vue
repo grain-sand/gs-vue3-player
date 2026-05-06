@@ -39,9 +39,6 @@
             @rate-change="trigger('rateChange', $event)"
             @mode-change="trigger('modeChange', $event)"
             @mousedown="onMouseDown"
-            @mousemove="onMouseMove"
-            @mouseup="onMouseUp"
-            @mouseleave="onMouseLeave"
             @touchstart="onTouchStart"
             @touchmove="onTouchMove"
             @touchend="onTouchEnd"
@@ -152,7 +149,7 @@ const containerHeight = ref(0);
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
-const transformState = ref<ITransformState>({
+const DEFAULT_TRANSFORM_STATE: Readonly<ITransformState> = Object.freeze({
   draggable: false,
   flipHorizontal: false,
   flipVertical: false,
@@ -162,20 +159,20 @@ const transformState = ref<ITransformState>({
   translateY: 0
 });
 
+const transformState = ref<ITransformState>({ ...DEFAULT_TRANSFORM_STATE });
+
 const isDragging = ref(false);
 const startPos = ref({ x: 0, y: 0 });
 const startTranslate = ref({ x: 0, y: 0 });
 
+const hasTransformChanged = computed(() => {
+  const state = transformState.value;
+  return state.flipHorizontal || state.flipVertical || state.rotation !== 0 ||
+         state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
+});
+
 const resetTransform = () => {
-  transformState.value = {
-    draggable: false,
-    flipHorizontal: false,
-    flipVertical: false,
-    rotation: 0,
-    scaleMode: 'auto',
-    translateX: 0,
-    translateY: 0
-  };
+  transformState.value = { ...DEFAULT_TRANSFORM_STATE };
   updateTransformStyle();
 };
 
@@ -243,14 +240,6 @@ const updateTransformStyle = () => {
   core.style.transform = transforms.join(' ');
 };
 
-const onMouseDown = (e: MouseEvent) => {
-  if (!transformState.value.draggable) return;
-  isDragging.value = true;
-  startPos.value = { x: e.clientX, y: e.clientY };
-  startTranslate.value = { x: transformState.value.translateX, y: transformState.value.translateY };
-  e.preventDefault();
-};
-
 const onMouseMove = (e: MouseEvent) => {
   if (!isDragging.value) return;
   const dx = e.clientX - startPos.value.x;
@@ -261,15 +250,23 @@ const onMouseMove = (e: MouseEvent) => {
 };
 
 const onMouseUp = () => {
+  if (!isDragging.value) return;
   isDragging.value = false;
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
 };
 
-const onMouseLeave = () => {
-  isDragging.value = false;
+const onMouseDown = (e: MouseEvent) => {
+  isDragging.value = true;
+  startPos.value = { x: e.clientX, y: e.clientY };
+  startTranslate.value = { x: transformState.value.translateX, y: transformState.value.translateY };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  e.preventDefault();
 };
 
 const onTouchStart = (e: TouchEvent) => {
-  if (!transformState.value.draggable || e.touches.length === 0) return;
+  if (e.touches.length === 0) return;
   isDragging.value = true;
   const touch = e.touches[0];
   startPos.value = { x: touch.clientX, y: touch.clientY };
@@ -322,6 +319,28 @@ const updateContainerSize = (width: number, height: number) => {
   containerHeight.value = height;
 };
 
+const fullscreen = () => {
+  containerRef.value?.requestFullscreen?.();
+};
+
+const webFullscreen = () => {
+  isWebFullscreen.value = true;
+};
+
+const exitFullscreen = () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen?.();
+  }
+  isWebFullscreen.value = false;
+};
+
+const setLayout = (layout: LayoutMode) => {
+  if (!isFullscreen.value) {
+    currentLayout.value = layout;
+    originalLayout.value = layout;
+  }
+};
+
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -360,30 +379,18 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   set listVisibility(value: VisibilityMode) {
     listVisibility.value = value;
   },
-  fullscreen() {
-    containerRef.value?.requestFullscreen?.();
-  },
-  webFullscreen() {
-    isWebFullscreen.value = true;
-  },
-  exitFullscreen() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.();
-    }
-    isWebFullscreen.value = false;
-  },
-  setLayout(layout: LayoutMode) {
-    if (!isFullscreen.value) {
-      currentLayout.value = layout;
-      originalLayout.value = layout;
-    }
-  },
+  fullscreen,
+  webFullscreen,
+  exitFullscreen,
+  setLayout,
   toggleListVisibility,
   get transformState() {
     return transformState.value;
   },
+  get hasTransformChanged() {
+    return hasTransformChanged.value;
+  },
   resetTransform,
-  toggleDraggable,
   toggleFlipHorizontal,
   toggleFlipVertical,
   rotate90,
@@ -532,16 +539,18 @@ defineExpose<IGsPlayerExpose>({
   get i18n() {
     return i18nConfig.value;
   },
-  fullscreen: () => widgetContext.value.fullscreen(),
-  webFullscreen: () => widgetContext.value.webFullscreen(),
-  exitFullscreen: () => widgetContext.value.exitFullscreen(),
-  setLayout: (layout: LayoutMode) => widgetContext.value.setLayout(layout),
+  fullscreen,
+  webFullscreen,
+  exitFullscreen,
+  setLayout,
   toggleListVisibility,
   get transformState() {
     return transformState.value;
   },
+  get hasTransformChanged() {
+    return hasTransformChanged.value;
+  },
   resetTransform,
-  toggleDraggable,
   toggleFlipHorizontal,
   toggleFlipVertical,
   rotate90,

@@ -77,14 +77,14 @@ export interface IGsWidgetContext {
 	readonly transformState: ITransformState;
 
 	/**
+	 * 变换状态是否被改变
+	 */
+	readonly hasTransformChanged: boolean;
+
+	/**
 	 * 重置所有变换
 	 */
 	resetTransform(): void;
-
-	/**
-	 * 切换拖动模式
-	 */
-	toggleDraggable(): void;
 
 	/**
 	 * 切换左右镜像

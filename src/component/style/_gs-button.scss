@@ -1,0 +1,140 @@
+.gs-btn {
+  color: var(--gs-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--gs-radius);
+  transition: background 0.2s;
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &.gs-text-btn {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 8px;
+  }
+
+  &:hover {
+    background: var(--gs-hover-bg);
+  }
+
+  &:active {
+    background: var(--gs-hover-bg);
+  }
+
+  &.active {
+    background: rgba(64, 158, 255, 0.1);
+    color: var(--gs-primary);
+  }
+
+  &.clean{
+	position: relative;
+
+	&::after {
+	  content: '\2572';
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  font-size: 18px;
+	  font-weight: bold;
+	  color: inherit;
+	  font-family: 'Segoe UI Symbol', 'Segoe MDL2 Assets', 'Microsoft YaHei UI', sans-serif;
+	  transform: translate(-50%, -50%);
+	}
+  }
+}
+
+.gs-btn-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+
+  .gs-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .gs-text-btn {
+    width: auto;
+  }
+}
+
+.gs-dropdown-host {
+  .gs-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 8px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom center;
+    background: var(--gs-panel-bg);
+    border-radius: var(--gs-radius);
+    padding: 4px 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--gs-transition);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+
+  &:hover .gs-dropdown {
+    transform: translateX(-50%) scaleY(1);
+    opacity: 1;
+    visibility: visible;
+    z-index: 100;
+  }
+
+  &:hover .gs-btn {
+    background: var(--gs-hover-bg);
+  }
+}
+
+.gs-dropdown-item {
+  padding: 6px 16px;
+  color: var(--gs-text);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  text-align: left;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--gs-hover-bg);
+  }
+
+  &.active {
+    font-weight: bold;
+    background: rgba(64, 158, 255, 0.1);
+  }
+}
+
+.gs-dropdown-divider {
+  height: 1px;
+  margin: 2px 0 6px;
+  background: var(--gs-track-bg);
+}
+
+.flip-vertical-icon svg {
+  transform: rotate(90deg);
+}
