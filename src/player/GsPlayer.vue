@@ -32,7 +32,7 @@
             :pre-src="props.preSrc"
             :playlist="props.playlist"
             :mode="props.mode"
-            @src-change="trigger('srcChange', $event)"
+            @src-change="handleSrcChange"
             @src-remove="trigger('srcRemove', $event)"
             @volume-change="trigger('volumeChange', $event)"
             @muted-change="trigger('mutedChange', $event)"
@@ -134,6 +134,15 @@ function trigger<T extends keyof IGsPlayerEmits>(e: T, arg: Parameters<IGsPlayer
   emit(e, arg);
 }
 
+function handleSrcChange(src: any) {
+  trigger('srcChange', src);
+  if (transformState.value.scaleMode === 'fit') {
+    setTimeout(() => {
+      updateTransformStyle();
+    }, 100);
+  }
+}
+
 const containerRef = ref<HTMLDivElement>();
 const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
@@ -211,14 +220,41 @@ const updateTransformStyle = () => {
   if (!core) return;
 
   const state = transformState.value;
-  const scale = state.scaleMode === '2x' ? 2 : state.scaleMode === '1.5x' ? 1.5 : 1;
-
   const transforms: string[] = [];
 
+  transforms.push('scale(1)');
   if (state.scaleMode === 'fit') {
-    transforms.push('scale(1)');
+    const [videoWidth, videoHeight] = core.size;
+    const containerW = containerWidth.value;
+    const containerH = containerHeight.value;
+
+    if (videoWidth > 0 && videoHeight > 0 && containerW > 0 && containerH > 0) {
+      const videoRatio = videoWidth / videoHeight;
+      const containerRatio = containerW / containerH;
+
+      if (videoRatio > containerRatio) {
+        core.style.width = '100%';
+        core.style.height = 'auto';
+      } else {
+        core.style.width = 'auto';
+        core.style.height = '100%';
+      }
+    } else {
+      core.style.width = 'auto';
+      core.style.height = 'auto';
+    }
+  } else if (state.scaleMode === '2x') {
+    core.style.width = 'auto';
+    core.style.height = 'auto';
+    transforms.push('scale(2)');
+  } else if (state.scaleMode === '1.5x') {
+    core.style.width = 'auto';
+    core.style.height = 'auto';
+    transforms.push('scale(1.5)');
   } else {
-    transforms.push(`scale(${scale})`);
+    core.style.width = 'auto';
+    core.style.height = 'auto';
+    transforms.push('scale(1)');
   }
 
   if (state.flipHorizontal) {
