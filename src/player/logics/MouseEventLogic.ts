@@ -9,13 +9,15 @@ export function mouseEventLogic() {
 	let lastClickTime = 0;
 
 	const handleClick = async () => {
-		try{
-			if(Date.now() - lastClickTime < 500) return;
+		try {
+			if (Date.now() - lastClickTime < 500) return;
 		} finally {
 			lastClickTime = Date.now();
 		}
 		if (!cxt.handleClick || !core) return;
+		const lastTime = core.time;
 		await timer.wait();
+		core.time = lastTime;
 		if (core.muted) {
 			core.unmute();
 		} else {

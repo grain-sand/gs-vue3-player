@@ -17,7 +17,7 @@
     />
     <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
-    transformState: {{ playerRef?.transformState }}<br/>
+    handleClick: {{ playerRef?.handleClick }}<br/>
      </div>
 </template>
 
