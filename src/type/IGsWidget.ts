@@ -9,7 +9,7 @@ export interface ITransformState {
 	flipHorizontal: boolean;
 	flipVertical: boolean;
 	rotation: number;
-	scaleMode: 'fit' | '2x' | '1.5x' | 'auto';
+	scaleMode: 'fit' | 'auto' | number;
 	translateX: number;
 	translateY: number;
 }

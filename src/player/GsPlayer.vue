@@ -38,10 +38,6 @@
             @muted-change="trigger('mutedChange', $event)"
             @rate-change="trigger('rateChange', $event)"
             @mode-change="trigger('modeChange', $event)"
-            @mousedown="onMouseDown"
-            @touchstart="onTouchStart"
-            @touchmove="onTouchMove"
-            @touchend="onTouchEnd"
         />
 
         <component
@@ -136,11 +132,6 @@ function trigger<T extends keyof IGsPlayerEmits>(e: T, arg: Parameters<IGsPlayer
 
 function handleSrcChange(src: any) {
   trigger('srcChange', src);
-  if (transformState.value.scaleMode === 'fit') {
-    setTimeout(() => {
-      updateTransformStyle();
-    }, 100);
-  }
 }
 
 const containerRef = ref<HTMLDivElement>();
@@ -170,159 +161,11 @@ const DEFAULT_TRANSFORM_STATE: Readonly<ITransformState> = Object.freeze({
 
 const transformState = ref<ITransformState>({ ...DEFAULT_TRANSFORM_STATE });
 
-const isDragging = ref(false);
-const startPos = ref({ x: 0, y: 0 });
-const startTranslate = ref({ x: 0, y: 0 });
-
 const hasTransformChanged = computed(() => {
   const state = transformState.value;
   return state.flipHorizontal || state.flipVertical || state.rotation !== 0 ||
          state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
 });
-
-const resetTransform = () => {
-  transformState.value = { ...DEFAULT_TRANSFORM_STATE };
-  updateTransformStyle();
-};
-
-const toggleDraggable = () => {
-  transformState.value.draggable = !transformState.value.draggable;
-};
-
-const toggleFlipHorizontal = () => {
-  transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
-  updateTransformStyle();
-};
-
-const toggleFlipVertical = () => {
-  transformState.value.flipVertical = !transformState.value.flipVertical;
-  updateTransformStyle();
-};
-
-const rotate90 = () => {
-  transformState.value.rotation = (transformState.value.rotation + 90) % 360;
-  updateTransformStyle();
-};
-
-const setScaleMode = (mode: ITransformState['scaleMode']) => {
-  transformState.value.scaleMode = mode;
-  updateTransformStyle();
-};
-
-const updateTranslate = (x: number, y: number) => {
-  transformState.value.translateX = x;
-  transformState.value.translateY = y;
-  updateTransformStyle();
-};
-
-const updateTransformStyle = () => {
-  const core = coreRef.value;
-  if (!core) return;
-
-  const state = transformState.value;
-  const transforms: string[] = [];
-
-  transforms.push('scale(1)');
-  if (state.scaleMode === 'fit') {
-    const [videoWidth, videoHeight] = core.size;
-    const containerW = containerWidth.value;
-    const containerH = containerHeight.value;
-
-    if (videoWidth > 0 && videoHeight > 0 && containerW > 0 && containerH > 0) {
-      const videoRatio = videoWidth / videoHeight;
-      const containerRatio = containerW / containerH;
-
-      if (videoRatio > containerRatio) {
-        core.style.width = '100%';
-        core.style.height = 'auto';
-      } else {
-        core.style.width = 'auto';
-        core.style.height = '100%';
-      }
-    } else {
-      core.style.width = 'auto';
-      core.style.height = 'auto';
-    }
-  } else if (state.scaleMode === '2x') {
-    core.style.width = 'auto';
-    core.style.height = 'auto';
-    transforms.push('scale(2)');
-  } else if (state.scaleMode === '1.5x') {
-    core.style.width = 'auto';
-    core.style.height = 'auto';
-    transforms.push('scale(1.5)');
-  } else {
-    core.style.width = 'auto';
-    core.style.height = 'auto';
-    transforms.push('scale(1)');
-  }
-
-  if (state.flipHorizontal) {
-    transforms.push('scaleX(-1)');
-  }
-
-  if (state.flipVertical) {
-    transforms.push('scaleY(-1)');
-  }
-
-  if (state.rotation !== 0) {
-    transforms.push(`rotate(${state.rotation}deg)`);
-  }
-
-  if (state.translateX !== 0 || state.translateY !== 0) {
-    transforms.push(`translate(${state.translateX}px, ${state.translateY}px)`);
-  }
-
-  core.style.transform = transforms.join(' ');
-};
-
-const onMouseMove = (e: MouseEvent) => {
-  if (!isDragging.value) return;
-  const dx = e.clientX - startPos.value.x;
-  const dy = e.clientY - startPos.value.y;
-  transformState.value.translateX = startTranslate.value.x + dx;
-  transformState.value.translateY = startTranslate.value.y + dy;
-  updateTransformStyle();
-};
-
-const onMouseUp = () => {
-  if (!isDragging.value) return;
-  isDragging.value = false;
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
-};
-
-const onMouseDown = (e: MouseEvent) => {
-  isDragging.value = true;
-  startPos.value = { x: e.clientX, y: e.clientY };
-  startTranslate.value = { x: transformState.value.translateX, y: transformState.value.translateY };
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-  e.preventDefault();
-};
-
-const onTouchStart = (e: TouchEvent) => {
-  if (e.touches.length === 0) return;
-  isDragging.value = true;
-  const touch = e.touches[0];
-  startPos.value = { x: touch.clientX, y: touch.clientY };
-  startTranslate.value = { x: transformState.value.translateX, y: transformState.value.translateY };
-  e.preventDefault();
-};
-
-const onTouchMove = (e: TouchEvent) => {
-  if (!isDragging.value || e.touches.length === 0) return;
-  const touch = e.touches[0];
-  const dx = touch.clientX - startPos.value.x;
-  const dy = touch.clientY - startPos.value.y;
-  transformState.value.translateX = startTranslate.value.x + dx;
-  transformState.value.translateY = startTranslate.value.y + dy;
-  updateTransformStyle();
-};
-
-const onTouchEnd = () => {
-  isDragging.value = false;
-};
 
 const exposedCore = computed(() => coreRef.value);
 
@@ -426,12 +269,25 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get hasTransformChanged() {
     return hasTransformChanged.value;
   },
-  resetTransform,
-  toggleFlipHorizontal,
-  toggleFlipVertical,
-  rotate90,
-  setScaleMode,
-  updateTranslate
+  resetTransform: () => {
+    transformState.value = { ...DEFAULT_TRANSFORM_STATE };
+  },
+  toggleFlipHorizontal: () => {
+    transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
+  },
+  toggleFlipVertical: () => {
+    transformState.value.flipVertical = !transformState.value.flipVertical;
+  },
+  rotate90: () => {
+    transformState.value.rotation = (transformState.value.rotation + 90) % 360;
+  },
+  setScaleMode: (mode: ITransformState['scaleMode']) => {
+    transformState.value.scaleMode = mode;
+  },
+  updateTranslate: (x: number, y: number) => {
+    transformState.value.translateX = x;
+    transformState.value.translateY = y;
+  }
 });
 
 watch(isFullscreen, (newVal, oldVal) => {
@@ -499,23 +355,23 @@ function toggleListVisibility() {
 }
 
 onMounted(async () => {
+  const widgetProps: IGsWidgetProps = {
+    core: coreRef.value!,
+    cxt: widgetContext.value,
+    props: props
+  };
   for (const logic of mergedLogics.value) {
-    const widgetProps: IGsWidgetProps = {
-      core: coreRef.value!,
-      cxt: widgetContext.value,
-      props: props
-    };
     await logic.mount(widgetProps);
   }
 });
 
 onBeforeUnmount(() => {
+  const widgetProps: IGsWidgetProps = {
+    core: coreRef.value!,
+    cxt: widgetContext.value,
+    props: props
+  };
   for (const logic of mergedLogics.value) {
-    const widgetProps: IGsWidgetProps = {
-      core: coreRef.value!,
-      cxt: widgetContext.value,
-      props: props
-    };
     if (logic.unmount) {
       logic.unmount(widgetProps);
     }
@@ -586,11 +442,24 @@ defineExpose<IGsPlayerExpose>({
   get hasTransformChanged() {
     return hasTransformChanged.value;
   },
-  resetTransform,
-  toggleFlipHorizontal,
-  toggleFlipVertical,
-  rotate90,
-  setScaleMode,
-  updateTranslate
+  resetTransform: () => {
+    transformState.value = { ...DEFAULT_TRANSFORM_STATE };
+  },
+  toggleFlipHorizontal: () => {
+    transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
+  },
+  toggleFlipVertical: () => {
+    transformState.value.flipVertical = !transformState.value.flipVertical;
+  },
+  rotate90: () => {
+    transformState.value.rotation = (transformState.value.rotation + 90) % 360;
+  },
+  setScaleMode: (mode: ITransformState['scaleMode']) => {
+    transformState.value.scaleMode = mode;
+  },
+  updateTranslate: (x: number, y: number) => {
+    transformState.value.translateX = x;
+    transformState.value.translateY = y;
+  }
 });
 </script>

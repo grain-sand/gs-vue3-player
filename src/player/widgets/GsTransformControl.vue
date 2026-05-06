@@ -47,17 +47,17 @@
 
         <button
             class="gs-dropdown-item"
-            :class="{ active: cxt.transformState.scaleMode === '2x' }"
+            :class="{ active: cxt.transformState.scaleMode === 2 }"
             :title="cxt.i18n.titles.scale2x"
-            @click.stop="cxt.setScaleMode('2x')"
+            @click.stop="cxt.setScaleMode(2)"
         >
           2x
         </button>
         <button
             class="gs-dropdown-item"
-            :class="{ active: cxt.transformState.scaleMode === '1.5x' }"
+            :class="{ active: cxt.transformState.scaleMode === 1.5 }"
             :title="cxt.i18n.titles.scale15x"
-            @click.stop="cxt.setScaleMode('1.5x')"
+            @click.stop="cxt.setScaleMode(1.5)"
         >
           1.5x
         </button>

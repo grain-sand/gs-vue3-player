@@ -24,17 +24,31 @@ export function mouseEventLogic() {
     }
   };
 
-  const handleWheel = (props: IGsWidgetProps['props'], core: IGsWidgetProps['core'], e: WheelEvent) => {
+  const handleWheel = (props: IGsWidgetProps['props'], core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: WheelEvent) => {
     if (props.disableWheelNavigation || !core) return;
     e.preventDefault();
-    if (e.deltaY < 0) {
-		if(core.hasPre) {
-			core.playPre();
-		}
+
+    if (e.ctrlKey || e.metaKey) {
+      const currentScale = cxt.transformState.scaleMode;
+      let newScale: number | 'fit' | 'auto' = currentScale === 'fit' || currentScale === 'auto' ? 1 : currentScale;
+
+      if (e.deltaY < 0) {
+        newScale = Math.min(newScale * 1.2, 10);
+      } else {
+        newScale = Math.max(newScale / 1.2, 0.2);
+      }
+
+      cxt.setScaleMode(newScale);
     } else {
-		if(core.hasNext) {
-			core.playNext();
-		}
+      if (e.deltaY < 0) {
+        if(core.hasPre) {
+          core.playPre();
+        }
+      } else {
+        if(core.hasNext) {
+          core.playNext();
+        }
+      }
     }
   };
 
@@ -44,7 +58,7 @@ export function mouseEventLogic() {
 
       boundClick = handleClick.bind(null, props, core);
       boundDblClick = handleDblClick.bind(null, props, cxt);
-      boundWheel = handleWheel.bind(null, props, core);
+      boundWheel = handleWheel.bind(null, props, core, cxt);
 
       container.addEventListener('click', boundClick);
       container.addEventListener('dblclick', boundDblClick);
