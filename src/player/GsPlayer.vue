@@ -272,22 +272,6 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   resetTransform: () => {
     transformState.value = { ...DEFAULT_TRANSFORM_STATE };
   },
-  toggleFlipHorizontal: () => {
-    transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
-  },
-  toggleFlipVertical: () => {
-    transformState.value.flipVertical = !transformState.value.flipVertical;
-  },
-  rotate90: () => {
-    transformState.value.rotation = (transformState.value.rotation + 90) % 360;
-  },
-  setScaleMode: (mode: ITransformState['scaleMode']) => {
-    transformState.value.scaleMode = mode;
-  },
-  updateTranslate: (x: number, y: number) => {
-    transformState.value.translateX = x;
-    transformState.value.translateY = y;
-  }
 });
 
 watch(isFullscreen, (newVal, oldVal) => {
@@ -445,21 +429,5 @@ defineExpose<IGsPlayerExpose>({
   resetTransform: () => {
     transformState.value = { ...DEFAULT_TRANSFORM_STATE };
   },
-  toggleFlipHorizontal: () => {
-    transformState.value.flipHorizontal = !transformState.value.flipHorizontal;
-  },
-  toggleFlipVertical: () => {
-    transformState.value.flipVertical = !transformState.value.flipVertical;
-  },
-  rotate90: () => {
-    transformState.value.rotation = (transformState.value.rotation + 90) % 360;
-  },
-  setScaleMode: (mode: ITransformState['scaleMode']) => {
-    transformState.value.scaleMode = mode;
-  },
-  updateTranslate: (x: number, y: number) => {
-    transformState.value.translateX = x;
-    transformState.value.translateY = y;
-  }
 });
 </script>

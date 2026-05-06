@@ -42,10 +42,6 @@ export const ControlDefaultItems = [
 	 */
 	'play',
 	/**
-	 * 切换上一个输入源按钮
-	 */
-	'pre',
-	/**
 	 * 切换下一个输入源按钮
 	 */
 	'next',
@@ -96,7 +92,10 @@ export const ControlDefaultItems = [
 ] as const;
 
 export const ControlItemNames = [...ControlDefaultItems,
-
+	/**
+	 * 切换上一个输入源按钮
+	 */
+	'pre',
 	/**
 	 * 浏览器原生弹出视频小窗模式
 	 */

@@ -86,30 +86,6 @@ export interface IGsWidgetContext {
 	 */
 	resetTransform(): void;
 
-	/**
-	 * 切换左右镜像
-	 */
-	toggleFlipHorizontal(): void;
-
-	/**
-	 * 切换上下镜像
-	 */
-	toggleFlipVertical(): void;
-
-	/**
-	 * 旋转90度
-	 */
-	rotate90(): void;
-
-	/**
-	 * 设置缩放模式
-	 */
-	setScaleMode(mode: ITransformState['scaleMode']): void;
-
-	/**
-	 * 更新拖动位置
-	 */
-	updateTranslate(x: number, y: number): void;
 }
 
 export interface IGsWidgetProps {

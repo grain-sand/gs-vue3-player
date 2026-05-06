@@ -38,7 +38,7 @@ export function mouseEventLogic() {
         newScale = Math.max(newScale / 1.2, 0.2);
       }
 
-      cxt.setScaleMode(newScale);
+      cxt.transformState.scaleMode = newScale;
     } else {
       if (e.deltaY < 0) {
         if(core.hasPre) {
