@@ -106,4 +106,9 @@ export interface IPlayerCoreExpose {
 	 */
 	readonly size: AspectRatio;
 
+	/**
+	 * video 元素的 style 属性
+	 */
+	readonly style: CSSStyleDeclaration;
+
 }

@@ -1,6 +1,6 @@
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {IGsWidgetContext} from "./IGsWidget";
-import {IPlayerCoreEmits} from "./IPlayerCoreEmits";
+import {IPlayerCoreMediaEmits} from "./IPlayerCoreEmits";
 
 
 export interface IGsPlayerExpose extends Omit<IGsWidgetContext, 'updateContainerSize'> {
@@ -9,5 +9,5 @@ export interface IGsPlayerExpose extends Omit<IGsWidgetContext, 'updateContainer
 
 }
 
-export interface IGsPlayerEmits extends IPlayerCoreEmits {
+export interface IGsPlayerEmits extends IPlayerCoreMediaEmits {
 }

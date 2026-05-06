@@ -18,6 +18,13 @@
       @enterpictureinpicture="onEnterPip"
       @leavepictureinpicture="onLeavePip"
       @resize="updateSize"
+      @mousedown="onMouseDown"
+      @mousemove="onMouseMove"
+      @mouseup="onMouseUp"
+      @mouseleave="onMouseLeave"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
   ></video>
 </template>
 
@@ -635,6 +642,34 @@ async function togglePip(): Promise<void> {
   }
 }
 
+function onMouseDown(e: MouseEvent) {
+  trigger('mousedown', e);
+}
+
+function onMouseMove(e: MouseEvent) {
+  trigger('mousemove', e);
+}
+
+function onMouseUp(e: MouseEvent) {
+  trigger('mouseup', e);
+}
+
+function onMouseLeave(e: MouseEvent) {
+  trigger('mouseleave', e);
+}
+
+function onTouchStart(e: TouchEvent) {
+  trigger('touchstart', e);
+}
+
+function onTouchMove(e: TouchEvent) {
+  trigger('touchmove', e);
+}
+
+function onTouchEnd(e: TouchEvent) {
+  trigger('touchend', e);
+}
+
 const playPre = async () => {
   const source = navTo(-1, props.preSrc);
   await changeSourceAndPlay(source);
@@ -765,6 +800,9 @@ defineExpose<IPlayerCoreExpose>({
   },
   get size() {
     return size.value
+  },
+  get style() {
+    return videoRef.value?.style || {} as CSSStyleDeclaration;
   }
 })
 </script>
