@@ -124,6 +124,16 @@
     }
   }
 
+  .gs-dropdown-divider {
+    height: 1px;
+    margin: 2px 0 6px;
+    background: var(--gs-track-bg);
+  }
+
+  .flip-vertical-icon svg {
+    transform: rotate(90deg);
+  }
+
   .gs-volume-panel {
     padding: 12px 8px;
     display: flex;

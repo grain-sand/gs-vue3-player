@@ -23,6 +23,11 @@ import {DefineComponent} from "vue";
 import PinSvg from './pin.svg';
 import LinkSvg from './link.svg';
 import AutoSvg from './auto.svg';
+import TransformSvg from './transform.svg';
+import MoveSvg from './move.svg';
+import FlipSvg from './flip.svg';
+import RotateSvg from './rotate.svg';
+import FitSvg from './fit.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
@@ -60,4 +65,9 @@ export {
 	PinSvg,
 	LinkSvg,
 	AutoSvg,
+	TransformSvg,
+	MoveSvg,
+	FlipSvg,
+	RotateSvg,
+	FitSvg,
 };
