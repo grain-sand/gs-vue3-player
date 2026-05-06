@@ -81,7 +81,9 @@ import {
   AspectRatioMode,
   DefaultAspectRatio,
   DefaultControlVisibility,
+  DefaultI18nName,
   DefaultLayoutMode,
+  DefaultListContainerVisibility,
   DefaultRates,
   IGsPlayerEmits,
   IGsPlayerExpose,
@@ -101,7 +103,7 @@ import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widge
 import {isVueComponent} from '../util';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
-  i18n: () => 'auto',
+  i18n: () => DefaultI18nName,
   aspectRatio: <any>DefaultAspectRatio,
   layout: DefaultLayoutMode,
   handleClick: true,
@@ -110,7 +112,8 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   controlVisibility: DefaultControlVisibility,
   webFullscreenTarget: () => document.body,
   keyboardTarget: '.gs-player',
-  disableWheelNavigation: false
+  disableWheelNavigation: false,
+  listVisibility: DefaultListContainerVisibility,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();

@@ -33,7 +33,9 @@ export const jaJP: II18n = {
     scaleFit: 'コンテナに合わせる',
     scale2x: '2倍拡大',
     scale15x: '1.5倍拡大',
-    scaleAuto: '元のサイズ'
+    scaleAuto: '元のサイズ',
+    openLink: 'リンクを開く',
+    download: 'ダウンロード'
   },
   playlist: 'プレイリスト',
   remove: '削除'

@@ -33,7 +33,9 @@ export const enUS: II18n = {
     scaleFit: 'Fit Container',
     scale2x: '2x Scale',
     scale15x: '1.5x Scale',
-    scaleAuto: 'Original Size'
+    scaleAuto: 'Original Size',
+    openLink: 'Open Link',
+    download: 'Download'
   },
   playlist: 'Playlist',
   remove: 'Remove'

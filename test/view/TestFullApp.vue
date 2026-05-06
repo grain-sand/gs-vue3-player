@@ -14,11 +14,11 @@
               }
           ]
         }"
+        :download-handler="download"
     />
-    <button @click="switchToNextSrc">switchToNextSrc</button>
     <hr/>
     handleClick: {{ playerRef?.handleClick }}<br/>
-     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -42,16 +42,16 @@ function eventChange(name: string, data: any) {
   console.log(name, data)
 }
 
-function switchToNextSrc() {
-  // playerRef.value.setVolume(.1)
-}
-
 watch(() => playerRef.value?.layout, (layout) => {
   console.log(layout)
 })
 watch(() => playerRef.value?.isFullscreen, (isFullscreen) => {
   console.log('isFullscreen', isFullscreen)
 })
+
+function download(url, src) {
+  console.log(url, src)
+}
 
 </script>
 

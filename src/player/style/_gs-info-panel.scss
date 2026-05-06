@@ -14,12 +14,24 @@
 
 	> .gs-info-header {
 	  display: flex;
-	  justify-content: space-between;
 	  align-items: center;
+	  gap: 1.5%;
 
-	  > .gs-info-author {
+	  > .gs-author {
 		font-size: 13px;
 		opacity: 0.7;
+		flex-shrink: 0;
+		margin-right: 8px;
+	  }
+
+	  > .gs-btn-wrapper > .gs-btn {
+		width: 28px;
+		height: 28px;
+
+		svg {
+		  width: 18px;
+		  height: 18px;
+		}
 	  }
 	}
 

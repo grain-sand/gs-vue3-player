@@ -33,7 +33,9 @@ export const zhCN: II18n = {
     scaleFit: '适应尺寸',
     scale2x: '2倍缩放',
     scale15x: '1.5倍缩放',
-    scaleAuto: '原始尺寸'
+    scaleAuto: '原始尺寸',
+    openLink: '打开链接',
+    download: '下载'
   },
   playlist: '播放列表',
   remove: '移除'

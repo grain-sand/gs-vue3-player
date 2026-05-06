@@ -41,8 +41,7 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {IGsWidgetProps, IGsWidget} from '../../type';
-import {IListContainerTab, PlaylistItemPart} from '../../type';
+import {DefaultListHeaderVisible, IGsWidget, IGsWidgetProps, IListContainerTab, PlaylistItemPart} from '../../type';
 import GsPlaylist from './GsPlaylist.vue';
 import {PinSvg} from '../../svgs';
 
@@ -51,7 +50,7 @@ const {props, core, cxt} = defineProps<IGsWidgetProps>();
 const activeTabIndex = ref(0);
 
 const showHeader = computed(() => {
-  const headerVisible = props.listContainer?.headerVisible;
+  const headerVisible = props.listContainer?.headerVisible || DefaultListHeaderVisible;
   if (headerVisible === 'visible') return true;
   if (headerVisible === 'hidden') return false;
   if (cxt.layout === 'horizontal') return true;

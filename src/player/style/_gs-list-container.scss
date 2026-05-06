@@ -119,15 +119,14 @@
 	  right: 0;
 	  top: 0;
 	  bottom: 48px;
-	  min-width: 100px;
+	  min-width: 48px;
 	  background: transparent;
-	  border-left: 1px solid var(--border-light);
 	  z-index: 10;
 	  justify-content: center;
-	  max-height: calc(100% - 48px);
+	  max-height: calc(100% - 96px);
 
 	  &:not(:hover) {
-		max-width: 100px;
+		max-width: 48px;
 
 		> .gs-list-container-wrapper {
 		  transform: translateX(100%) scaleX(0);

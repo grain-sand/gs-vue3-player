@@ -28,6 +28,8 @@ import MoveSvg from './move.svg';
 import FlipSvg from './flip.svg';
 import RotateSvg from './rotate.svg';
 import FitSvg from './fit.svg';
+import DownloadSvg from './download.svg';
+import UserSvg from './user.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
@@ -70,5 +72,7 @@ export {
 	FlipSvg,
 	RotateSvg,
 	FitSvg,
-	PauseSvg
+	PauseSvg,
+	DownloadSvg,
+	UserSvg
 };

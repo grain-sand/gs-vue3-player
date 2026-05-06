@@ -154,7 +154,9 @@ export const ContextMenuItemDefaultNames = [
 	ControlDefaultItems[4],
 	/** 模式切换->二级菜单 */
 	ControlDefaultItems[7],
+	/** 变换->二级菜单 */
 	ControlDefaultItems[8],
+	/** 切换显示比例->二级菜单 */
 	ControlDefaultItems[9]
 ] as const;
 export const ContextMenuItemNames = [

@@ -4,12 +4,24 @@
        @wheel.stop=''
        @dblclick.stop.prevent=""
   >
-    <div class="gs-info-header"
-         v-if="core.src?.author">
+    <div class="gs-info-header">
       <GsAuthor
+          v-if="core.src?.author"
           :author="core.src.author"
-          :link-handler="(url)=>props.linkHandler?.(url, core.src)"
+          :link-handler="(url)=>p.props.linkHandler?.(url, core.src)"
           class="gs-info-author"
+      />
+      <GsButton
+          v-if="core.src?.link"
+          :icon="LinkSvg"
+          :title="cxt.i18n.titles.openLink"
+          @click="handleLinkClick"
+      />
+      <GsButton
+          v-if="core.src?.downloadUrl&&p.props.downloadHandler"
+          :icon="DownloadSvg"
+          :title="cxt.i18n.titles.download"
+          @click="p.props.downloadHandler(core?.src?.downloadUrl, core?.src)"
       />
     </div>
     <div
@@ -24,7 +36,8 @@
 
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../type';
-import {GsAuthor} from "../../component";
+import {GsAuthor, GsButton} from "../../component";
+import {LinkSvg, DownloadSvg} from "../../svgs";
 import {computed, ref} from "vue";
 
 const contentRef = ref<HTMLDivElement>();
@@ -55,6 +68,19 @@ function handleContentClick(event: MouseEvent) {
     }
   }
 }
+
+function handleLinkClick() {
+  const url = p.core?.src?.link;
+  if (url) {
+    const handler = p.props.linkHandler;
+    if (handler) {
+      handler(url, p.core?.src);
+    } else {
+      window.open(url);
+    }
+  }
+}
+
 
 function onMouseleave() {
   const {value: el} = contentRef;

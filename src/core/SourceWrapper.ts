@@ -78,4 +78,8 @@ export class SourceWrapper implements ISourceWrapper {
 	get description(): string {
 		return this._raw.description || '';
 	}
+
+	get downloadUrl(): string | undefined {
+		return this._raw.downloadUrl;
+	}
 }

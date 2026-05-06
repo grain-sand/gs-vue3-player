@@ -7,10 +7,7 @@
   >
     <div class="gs-author-avatar">
       <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">
-      <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="8" r="5"/>
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-      </svg>
+      <UserSvg v-else />
     </div>
     <figcaption class="gs-author-name">{{ author.name }}</figcaption>
   </figure>
@@ -18,6 +15,7 @@
 
 <script setup lang="ts">
 import {IAuthorProps} from '../type';
+import {UserSvg} from '../svgs';
 
 defineOptions({inheritAttrs: false});
 
