@@ -139,7 +139,11 @@ export const PlaylistItemPartNames = [
 	/**
 	 * 时间信息组件
 	 */
-	'time'
+	'time',
+	/**
+	 * 移除按钮组件
+	 */
+	'remove'
 ] as const;
 
 export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];

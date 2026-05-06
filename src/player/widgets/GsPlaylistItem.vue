@@ -3,6 +3,7 @@
       class="gs-playlist-item"
       :class="{ active: current._id === core.src._id }"
       @click="core?.play(current)"
+      ref="itemRef"
   >
     <div class="gs-playlist-item-thumb">
       <img v-if="current.poster" :src="current.poster" class="gs-playlist-item-poster" alt="poster" loading="lazy"/>
@@ -26,12 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineComponent, h} from 'vue';
-import {IPlaylistItemProps, PlaylistItemPart} from '../../type';
+import {computed, defineComponent, h, ref} from 'vue';
+import {IPlaylistItemProps, PlaylistItemPart, PlaylistItemPartNames} from '../../type';
 import {GsAuthor, GsSpacer} from '../../component';
 import {PlayStateIcons} from '../../svgs';
 import {wrapComponent} from '../../util';
 
+
+const itemRef = ref<HTMLLIElement>();
 const props = defineProps<IPlaylistItemProps>();
 const {core, cxt, current} = props;
 
@@ -48,7 +51,7 @@ const parts = computed<PlaylistItemPart[]>(() => {
       return activeTab.body;
     }
   }
-  return ['author', '-', 'time'] as PlaylistItemPart[];
+  return PlaylistItemPartNames as PlaylistItemPart[];
 });
 
 function getPartComponent(part: PlaylistItemPart) {
@@ -69,7 +72,22 @@ function getPartComponent(part: PlaylistItemPart) {
             if (!duration) return null;
             const minutes = Math.floor(duration / 60);
             const seconds = Math.floor(duration % 60);
-            return h('span', `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+            return h('span', {class: 'gs-playlist-item-time'}, `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+          }
+        } as any);
+      case 'remove':
+        return defineComponent({
+          inheritAttrs: false,
+          render: () => {
+            if (current._id === core.src._id) return null;
+            return h('button', {
+              class: 'gs-playlist-item-remove',
+              onClick: (e: Event) => {
+                e.stopPropagation();
+                core.removeSrc(current);
+              },
+              title: cxt.i18n.remove
+            }, h('span', '\u00D7'));
           }
         } as any);
       default:
