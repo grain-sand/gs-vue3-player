@@ -8,7 +8,7 @@
          v-if="core.src?.author">
       <GsAuthor
           :author="core.src.author"
-          :link-handler="props.linkHandler"
+          :link-handler="(url)=>props.linkHandler?.(url, core.src)"
           class="gs-info-author"
       />
     </div>
@@ -51,7 +51,7 @@ function handleContentClick(event: MouseEvent) {
   if (target.classList.contains('gs-socio-word')) {
     const word = target.textContent || '';
     if (p.props.socioWordHandler) {
-      p.props.socioWordHandler(word);
+      p.props.socioWordHandler(word, p.core?.src);
     }
   }
 }

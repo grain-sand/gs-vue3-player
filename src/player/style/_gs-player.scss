@@ -6,11 +6,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
 
-  .gs-player-panels {
-	display: flex;
-	flex-direction: column;
-  }
-
   .gs-player-footer {
 	position: absolute;
 	bottom: 0;
@@ -33,10 +28,9 @@
   }
 
   &.layout-vertical {
-	.gs-player-panels {
+	.gs-info-panel {
 	  order: 2;
 	  display: flex;
-	  flex-direction: column;
 	}
 
 	.gs-player-main {
@@ -55,21 +49,9 @@
 	  min-height: var(--player-core-height, 240px);
 	}
 
-	.gs-player-panels {
+	.gs-info-panel {
 	  bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 8px);
 	  max-height: calc(100% - var(--gs-ctrl-h) - var(--gs-progress-min-h) - 48px);
-	  position: absolute;
-	  left: 2px;
-	  overflow-y: auto;
-	  background: none;
-	  backdrop-filter: none;
-	  transition: var(--gs-transition);
-	  width: 100%;
-	  pointer-events: none;
-
-	  > * {
-		pointer-events: auto;
-	  }
 	}
   }
 
@@ -88,7 +70,7 @@
   }
 
   &:not(.gs-controls-visible) {
-	.gs-progress-container, &.layout-horizontal .gs-player-panels {
+	.gs-progress-container, &.layout-horizontal .gs-info-panel {
 	  transform: translateY(calc(var(--gs-ctrl-h) + 2px));
 	  transition-delay: var(--gs-progress-out-delay);
 	}
@@ -105,7 +87,7 @@
 	  transition-delay: 0s !important;
 	}
 
-	&.layout-horizontal .gs-player-panels, .gs-progress-container {
+	&.layout-horizontal .gs-progress-container {
 	  transform: translateY(3px);
 	  transition-delay: 0s !important;
 	}

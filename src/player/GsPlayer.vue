@@ -40,46 +40,36 @@
             @mode-change="trigger('modeChange', $event)"
         />
 
+        <template v-if="exposedCore">
+          <component
+              v-if="controlBarWidget"
+              :is="controlBarWidget"
+              :core="exposedCore"
+              :cxt="widgetContext"
+              :props="props"
+              @mouseenter="isHovering= true"
+              @mouseleave="isHovering= false"
+          />
+
+          <component
+              v-for="widget in innerWidgets"
+              :is="widget"
+              :core="exposedCore"
+              :cxt="widgetContext"
+              :props="props"
+          />
+        </template>
+      </div>
+
+      <template v-if="exposedCore">
         <component
-            v-if="controlBarWidget && exposedCore"
-            :is="controlBarWidget"
+            v-for="widget in outerWidgets"
+            :is="widget"
             :core="exposedCore"
             :cxt="widgetContext"
             :props="props"
-            @mouseenter="isHovering= true"
-            @mouseleave="isHovering= false"
         />
-
-        <template v-for="widget in innerWidgets" :key="widget.key">
-          <component
-              v-if="exposedCore"
-              :is="widget.component"
-              :core="exposedCore"
-              :cxt="widgetContext"
-              :props="props"
-          />
-        </template>
-      </div>
-
-      <div class="gs-player-panels">
-        <template v-for="widget in outerWidgets" :key="widget.key">
-          <component
-              v-if="exposedCore"
-              :is="widget.component"
-              :core="exposedCore"
-              :cxt="widgetContext"
-              :props="props"
-          />
-        </template>
-      </div>
-
-      <component
-          v-if="listContainerWidget && exposedCore"
-          :is="listContainerWidget"
-          :core="exposedCore"
-          :cxt="widgetContext"
-          :props="props"
-      />
+      </template>
     </div>
   </teleport>
 </template>
@@ -139,7 +129,7 @@ const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
 const currentLayout = ref<LayoutMode>(props.layout);
 const originalLayout = ref<LayoutMode>(props.layout);
-const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio||DefaultAspectRatio);
+const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio || DefaultAspectRatio);
 const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
@@ -160,12 +150,12 @@ const DEFAULT_TRANSFORM_STATE: Readonly<ITransformState> = Object.freeze({
   translateY: 0
 });
 
-const transformState = ref<ITransformState>({ ...DEFAULT_TRANSFORM_STATE });
+const transformState = ref<ITransformState>({...DEFAULT_TRANSFORM_STATE});
 
 const hasTransformChanged = computed(() => {
   const state = transformState.value;
   return state.flipHorizontal || state.flipVertical || state.rotation !== 0 ||
-         state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
+      state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
 });
 
 const exposedCore = computed(() => coreRef.value);
@@ -277,7 +267,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return hasTransformChanged.value;
   },
   resetTransform: () => {
-    transformState.value = { ...DEFAULT_TRANSFORM_STATE };
+    transformState.value = {...DEFAULT_TRANSFORM_STATE};
   },
 });
 
@@ -289,11 +279,6 @@ watch(isFullscreen, (newVal, oldVal) => {
   }
 });
 
-interface ResolvedWidget {
-  key: string;
-  component: IGsWidget;
-}
-
 const controlBarWidget = computed<IGsWidget | null>(() => {
   if (props.controlBar === null) return null;
   if (isVueComponent(props.controlBar)) {
@@ -302,38 +287,25 @@ const controlBarWidget = computed<IGsWidget | null>(() => {
   return GsControlBar;
 });
 
-const innerWidgets = computed<ResolvedWidget[]>(() => {
-  const widgets: ResolvedWidget[] = [];
+const overlayWidget = computed<IGsWidget>(() => props.playOverlay !== null ? isVueComponent(props.playOverlay) ? props.playOverlay : GsPlayOverlay : null);
 
-  if (props.playOverlay !== null) {
-    const component = props.playOverlay !== undefined && isVueComponent(props.playOverlay)
-        ? props.playOverlay
-        : GsPlayOverlay;
-    widgets.push({key: 'playOverlay', component});
-  }
+const infoPanelWidget = computed<IGsWidget>(() => props.infoPanel !== null ? isVueComponent(props.infoPanel) ? props.infoPanel : GsInfoPanel : null);
 
+const listContainerWidget = computed<IGsWidget>(() => props.listContainer !== null ? isVueComponent(props.listContainer) ? props.listContainer : GsListContainer : null);
+
+const innerWidgets = computed<IGsWidget[]>(() => {
+  const iws = props.appendInnerWidgets;
+  const widgets = iws ? Array.isArray(iws) ? iws : [iws] : [];
+  if (overlayWidget.value) widgets.push(overlayWidget.value);
   return widgets;
 });
 
-const outerWidgets = computed<ResolvedWidget[]>(() => {
-  const widgets: ResolvedWidget[] = [];
-
-  if (props.infoPanel !== null) {
-    const component = props.infoPanel !== undefined && isVueComponent(props.infoPanel)
-        ? props.infoPanel
-        : GsInfoPanel;
-    widgets.push({key: 'infoPanel', component});
-  }
-
+const outerWidgets = computed<IGsWidget[]>(() => {
+  const ows = props.appendOuterWidgets;
+  const widgets = ows ? Array.isArray(ows) ? ows : [ows] : [];
+  if (infoPanelWidget.value) widgets.push(infoPanelWidget.value);
+  if (listContainerWidget.value) widgets.push(listContainerWidget.value);
   return widgets;
-});
-
-const listContainerWidget = computed<IGsWidget | null>(() => {
-  if (props.listContainer === null) return null;
-  if (isVueComponent(props.listContainer)) {
-    return props.listContainer;
-  }
-  return GsListContainer;
 });
 
 const mergedLogics = computed(() => {
@@ -440,7 +412,7 @@ defineExpose<IGsPlayerExpose>({
     return hasTransformChanged.value;
   },
   resetTransform: () => {
-    transformState.value = { ...DEFAULT_TRANSFORM_STATE };
+    transformState.value = {...DEFAULT_TRANSFORM_STATE};
   },
 });
 </script>
