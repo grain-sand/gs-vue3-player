@@ -35,6 +35,9 @@ export interface IGsWidgetContext {
 	/** 是否显示信息面板 */
 	infoPanelVisible: boolean;
 
+	/** 是否显示帮助面板 */
+	helpPanelVisible: boolean;
+
 	/** 是否处理播放器单击，默认为true，为静音时，为取消静音，否则为切换播放 */
 
 	handleClick: boolean;

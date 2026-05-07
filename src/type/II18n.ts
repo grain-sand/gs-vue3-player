@@ -39,15 +39,15 @@ export interface II18n {
     exitFullscreen: string;
     /** 网页全屏 */
     webFullscreen: string;
-    /** 弹出小窗 */
+    /** 画中画 */
     pip: string;
-    /** 退出弹出小窗 */
+    /** 退出画中画 */
     exitPip: string;
     /** 显示列表 */
     showList: string;
     /** 隐藏列表 */
     hideList: string;
-    /** 跟随视频比例 */
+    /** 随视频比例 */
     aspectRatioAuto: string;
     /** 变换控制 */
     transform: string;
@@ -73,6 +73,26 @@ export interface II18n {
     download: string;
     /** 信息面板 */
     info: string;
+    /** 帮助 */
+    help: string;
+    /** 快进快退 */
+    seek: string;
+    /** 快退10秒 */
+    seekBackward: string;
+    /** 快进10秒 */
+    seekForward: string;
+    /** 鼠标操作 */
+    mouse: string;
+    /** 单击 */
+    click: string;
+    /** 双击 */
+    doubleClick: string;
+    /** 滚轮 */
+    wheel: string;
+    /** 滚轮切换 */
+    wheelSwitch: string;
+    /** 滚轮缩放 */
+    wheelScale: string;
   };
   /** 播放列表标题 */
   playlist: string;

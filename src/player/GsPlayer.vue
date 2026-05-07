@@ -110,7 +110,7 @@ import {
 } from '../type';
 import {getI18nConfig} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsContextMenu, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
+import {GsControlBar, GsContextMenu, GsHelpPanel, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
 import {isVueComponent} from '../util';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -150,6 +150,7 @@ const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
 const infoPanelVisible = ref(true);
+const helpPanelVisible = ref(false);
 
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
@@ -259,6 +260,12 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   set infoPanelVisible(value: boolean) {
     infoPanelVisible.value = value;
   },
+  get helpPanelVisible() {
+    return helpPanelVisible.value;
+  },
+  set helpPanelVisible(value: boolean) {
+    helpPanelVisible.value = value;
+  },
   fullscreen,
   webFullscreen,
   exitFullscreen,
@@ -285,6 +292,8 @@ const overlayWidget = computed<IGsWidget>(() => props.playOverlay !== null ? isV
 
 const infoPanelWidget = computed<IGsWidget>(() => props.infoPanel !== null ? isVueComponent(props.infoPanel) ? props.infoPanel : GsInfoPanel : null);
 
+const helpPanelWidget = computed<IGsWidget>(() => GsHelpPanel);
+
 const listContainerWidget = computed<IGsWidget>(() => props.listContainer !== null ? isVueComponent(props.listContainer) ? props.listContainer : GsListContainer : null);
 
 const contextMenuWidget = computed<IGsWidget | null>(() => {
@@ -306,6 +315,7 @@ const outerWidgets = computed<IGsWidget[]>(() => {
   const ows = props.appendOuterWidgets;
   const widgets = ows ? Array.isArray(ows) ? ows : [ows] : [];
   if (infoPanelWidget.value) widgets.push(infoPanelWidget.value);
+  if (helpPanelWidget.value) widgets.push(helpPanelWidget.value);
   if (listContainerWidget.value) widgets.push(listContainerWidget.value);
   return widgets;
 });
@@ -402,6 +412,12 @@ defineExpose<IGsPlayerExpose>({
   },
   set infoPanelVisible(value: boolean) {
     infoPanelVisible.value = value;
+  },
+  get helpPanelVisible() {
+    return helpPanelVisible.value;
+  },
+  set helpPanelVisible(value: boolean) {
+    helpPanelVisible.value = value;
   },
   get i18n() {
     return i18nConfig.value;

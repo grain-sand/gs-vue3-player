@@ -167,7 +167,7 @@ export const ContextMenuItemDefaultNames = [
 	 * 帮助
 	 * - 弹出帮助面板
 	 * - 帮助面板中主要包含快捷键说明
-	 * - 帮助面板显示于 `<teleport :to="cxt.pageRoot">` 内
+	 * - 帮助面板显示于 `<teleport :to="pageRoot">` 内
 	 */
 	'help'
 ] as const;

@@ -36,7 +36,17 @@ export const enUS: II18n = {
     scaleAuto: 'Original Size',
     openLink: 'Open Link',
     download: 'Download',
-    info: 'Info Panel'
+    info: 'Info Panel',
+    help: 'Help',
+    seek: 'Seek',
+    seekBackward: '-10s',
+    seekForward: '+10s',
+    mouse: 'Mouse',
+    click: 'Click',
+    doubleClick: 'Double Click',
+    wheel: 'Wheel',
+    wheelSwitch: 'Switch',
+    wheelScale: 'Scale (Ctrl)'
   },
   playlist: 'Playlist',
   remove: 'Remove'

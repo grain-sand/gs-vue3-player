@@ -4,7 +4,6 @@
         v-if="isVisible"
         class="gs-context-menu"
         :style="menuStyle"
-        @click.stop
         @contextmenu.prevent
     >
       <template v-for="(item, index) in resolvedItems" :key="index">
@@ -65,10 +64,7 @@ const handleContextMenu = (e: MouseEvent) => {
   isVisible.value = true;
 };
 
-const handleClickOutside = (e: MouseEvent) => {
-  if ((e.target as HTMLElement).closest('.gs-context-menu')) return;
-  isVisible.value = false;
-};
+const handleClickOutside = () => isVisible.value = false
 
 onMounted(() => {
   const videoWrapper = cxt.value.videoWrapper;

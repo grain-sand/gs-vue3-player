@@ -1,10 +1,12 @@
 import {ContextMenuItem, ContextMenuItemDefaultNames, IGsWidget} from '../../../type';
 import GsInfoMenuItem from './GsInfoMenuItem.vue';
 import GsListMenuItem from './GsListMenuItem.vue';
+import GsHelpMenuItem from './GsHelpMenuItem.vue';
 
 export const defaultMenuComponents: Record<string, IGsWidget> = {
   'info': GsInfoMenuItem,
-  'list': GsListMenuItem
+  'list': GsListMenuItem,
+  'help': GsHelpMenuItem
 };
 
 export function resolveContextMenuComponent(item: ContextMenuItem): IGsWidget | null {
