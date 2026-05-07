@@ -9,9 +9,10 @@
             'gs-controls-visible': isControlsVisible
           }
         ]"
-        ref="containerRef"
+        ref="rootRef"
     >
       <div class="gs-video-wrapper"
+           ref="wrapperRef"
            @mouseenter="!isFullscreen && (isHovering= true)"
            @mouseleave="isHovering= false"
       >
@@ -128,7 +129,8 @@ function handleSrcChange(src: any) {
   trigger('srcChange', src);
 }
 
-const containerRef = ref<HTMLDivElement>();
+const rootRef = ref<HTMLDivElement>();
+const wrapperRef = ref<HTMLDivElement>();
 const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
 const currentLayout = ref<LayoutMode>(props.layout);
@@ -142,6 +144,7 @@ const infoPanelVisible = ref(true);
 
 const rootWidth = ref(0);
 const rootHeight = ref(0);
+const wrapperSize = ref<[number, number]>([0, 0]);
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
@@ -194,8 +197,12 @@ const updateRootSize = (width: number, height: number) => {
   rootHeight.value = height;
 };
 
+const updateWrapperSize = (size: [number, number]) => {
+  wrapperSize.value = size;
+};
+
 const fullscreen = () => {
-  containerRef.value?.requestFullscreen?.();
+  rootRef.value?.requestFullscreen?.();
 };
 
 const webFullscreen = () => {
@@ -230,7 +237,13 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return isFullscreen.value;
   },
   get playerRoot() {
-    return containerRef.value as HTMLElement;
+    return rootRef.value as HTMLElement;
+  },
+  get videoWrapper() {
+    return wrapperRef.value as HTMLElement;
+  },
+  get wrapperSize() {
+    return wrapperSize.value;
   },
   get rootWidth() {
     return rootWidth.value;
@@ -239,6 +252,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return rootHeight.value;
   },
   updateRootSize,
+  updateWrapperSize,
   get layout() {
     return layout.value;
   },
@@ -379,8 +393,15 @@ defineExpose<IGsPlayerExpose>({
     return isFullscreen.value;
   },
   get playerRoot() {
-    return containerRef.value!;
+    return rootRef.value!;
   },
+  get videoWrapper() {
+    return wrapperRef.value!;
+  },
+  get wrapperSize() {
+    return wrapperSize.value;
+  },
+  updateWrapperSize,
   get rootWidth() {
     return rootWidth.value;
   },
