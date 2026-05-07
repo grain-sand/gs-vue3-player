@@ -74,7 +74,7 @@ export function keyboardLogic() {
   return {
     mount({props, cxt, core}: IGsWidgetProps): void {
       const {keyboardTarget} = props;
-      
+
       if (keyboardTarget === false) {
         return;
       } else if (keyboardTarget === document || (keyboardTarget as any) === window) {
@@ -82,9 +82,9 @@ export function keyboardLogic() {
       } else if (keyboardTarget instanceof HTMLElement) {
         target = keyboardTarget;
       } else if (typeof keyboardTarget === 'string') {
-        target = document.querySelector(keyboardTarget) || cxt.container;
+        target = document.querySelector(keyboardTarget) || cxt.playerRoot;
       } else {
-        target = cxt.container;
+        target = cxt.playerRoot;
       }
 
       if (target) {

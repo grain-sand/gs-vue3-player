@@ -66,16 +66,16 @@ export function mouseEventLogic() {
 	return {
 		mount(p: IGsWidgetProps): void {
 			({props, core, cxt} = p);
-			const {container} = cxt;
+			const {playerRoot} = cxt;
 
-			container.addEventListener('click', handleClick);
-			container.addEventListener('dblclick', handleDblClick);
-			container.addEventListener('wheel', handleWheel, {passive: false});
+			playerRoot.addEventListener('click', handleClick);
+			playerRoot.addEventListener('dblclick', handleDblClick);
+			playerRoot.addEventListener('wheel', handleWheel, {passive: false});
 		},
-		unmount({cxt: {container}}): void {
-			container.removeEventListener('click', handleClick);
-			container.removeEventListener('dblclick', handleDblClick);
-			container.removeEventListener('wheel', handleWheel, {passive: false});
+		unmount({cxt: {playerRoot}}): void {
+			playerRoot.removeEventListener('click', handleClick);
+			playerRoot.removeEventListener('dblclick', handleDblClick);
+			playerRoot.removeEventListener('wheel', handleWheel, {passive: false});
 			props = core = cxt = null;
 		}
 	};

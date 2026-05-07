@@ -71,16 +71,16 @@ export function styleVariableLogic() {
 			if (variableWriteTarget instanceof HTMLElement) {
 				target = variableWriteTarget;
 			} else {
-				target = cxt.container;
+				target = cxt.playerRoot;
 			}
 			if (target) {
 				resizeObserver = new ResizeObserver(async ([entry]: ResizeObserverEntry[]) => {
 					const {width, height} = entry.contentRect;
 					containerSize = [width, height];
-					cxt.updateContainerSize(width, height);
+					cxt.updateRootSize(width, height);
 					await handleResize();
 				});
-				resizeObserver.observe(cxt.container);
+				resizeObserver.observe(cxt.playerRoot);
 			}
 
 			stopAspectRatioWatch = watch(() => cxt.aspectRatio, handleResize);

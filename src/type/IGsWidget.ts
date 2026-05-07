@@ -1,4 +1,4 @@
-import {AspectRatioMode, LayoutMode, VisibilityMode} from "./UnionTypes";
+import {AspectRatio, AspectRatioMode, LayoutMode, VisibilityMode} from "./UnionTypes";
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
 import {IGsPlayerProps} from "./IGsPlayerProps";
@@ -25,11 +25,6 @@ export interface IGsWidgetContext {
 	/** 是否显示信息面板 */
 	infoPanelVisible: boolean;
 
-	/**
-	 * 是否显示上下文菜单
-	 */
-	contextMenuVisible: boolean;
-
 	/** 是否处理播放器单击，默认为true，为静音时，为取消静音，否则为切换播放 */
 
 	handleClick: boolean;
@@ -48,25 +43,49 @@ export interface IGsWidgetContext {
 	readonly isFullscreen: boolean;
 
 	/**
-	 * 容器元素
+	 * `GsPlayer.vue` 根元素
 	 * - 是 GsPlayer.vue <teleport> 内的根元素
 	 */
-	readonly container: HTMLElement;
+	readonly playerRoot: HTMLElement;
 
 	/**
-	 * 容器宽度（实时）
+	 * 包裹`<video />` 的元素
 	 */
-	readonly containerWidth: number;
+	readonly videoWrapper: HTMLElement;
 
 	/**
-	 * 容器高度（实时）
+	 * 视频容器元素实时尺寸（实时）
+	 * - 格式：[width, height]
 	 */
-	readonly containerHeight: number;
+	readonly wrapperSize: AspectRatio
 
 	/**
-	 * 更新容器实时尺寸（内部使用）
+	 * 根元素宽度（实时）
 	 */
-	updateContainerSize(width: number, height: number): void;
+	readonly rootWidth: number;
+
+	/**
+	 * 根元素高度（实时）
+	 */
+	readonly rootHeight: number;
+	/**
+	 * 变换状态
+	 */
+	readonly transformState: ITransformState;
+	/**
+	 * 变换状态是否被改变
+	 */
+	readonly hasTransformChanged: boolean;
+
+	/**
+	 * 更新根元素实时尺寸（内部使用）
+	 */
+	updateRootSize(width: number, height: number): void;
+
+	/**
+	 * 更新视频容器元素实时尺寸（内部使用）
+	 */
+	updateWrapperSize(size: AspectRatio): void;
 
 	/** 桌面全屏 */
 	fullscreen(): void;
@@ -82,16 +101,6 @@ export interface IGsWidgetContext {
 	setLayout(layout: LayoutMode): void;
 
 	toggleListVisibility(): void;
-
-	/**
-	 * 变换状态
-	 */
-	readonly transformState: ITransformState;
-
-	/**
-	 * 变换状态是否被改变
-	 */
-	readonly hasTransformChanged: boolean;
 
 	/**
 	 * 重置所有变换

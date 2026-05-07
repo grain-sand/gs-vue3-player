@@ -42,8 +42,12 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	/** 可改变速度的数字数组，默认为 [0.8, 1, 1.2, 1.5, 2.0, 3.0] */
 	rates?: number[];
 
-	/** 网页全屏挂载目标，默认为body */
-	webFullscreenTarget?: string | HTMLElement;
+	/**
+	 * 页面根元素
+	 * - `body` 默认值
+	 * - 网页全屏、右键菜单……等的挂载目标
+	 */
+	pageRoot?: string | HTMLElement;
 
 	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
 	keyboardTarget?: HTMLElement | Document | null | string | false;

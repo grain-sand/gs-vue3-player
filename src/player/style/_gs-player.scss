@@ -33,7 +33,7 @@
 	  display: flex;
 	}
 
-	.gs-player-main {
+	.gs-video-wrapper {
 	  order: 1;
 	}
   }
@@ -41,7 +41,7 @@
   &.layout-horizontal {
 	flex-direction: row;
 
-	.gs-player-main {
+	.gs-video-wrapper {
 	  flex: 60% 3 1;
 	  position: relative;
 	  width: auto;
@@ -64,7 +64,7 @@
 	padding: 0;
 	overflow: hidden;
 
-	.gs-player-main {
+	.gs-video-wrapper {
 	  padding-bottom: 0;
 	}
   }

@@ -3,7 +3,7 @@ import {IGsWidgetContext} from "./IGsWidget";
 import {IPlayerCoreMediaEmits} from "./IPlayerCoreEmits";
 
 
-export interface IGsPlayerExpose extends Omit<IGsWidgetContext, 'updateContainerSize'> {
+export interface IGsPlayerExpose extends Omit<IGsWidgetContext, 'updateRootSize'> {
 
 	readonly core: IPlayerCoreExpose;
 

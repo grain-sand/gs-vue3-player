@@ -1,5 +1,5 @@
 <template>
-  <teleport :to="webFullscreenTarget" :disabled="!isWebFullscreen">
+  <teleport :to="pageRoot" :disabled="!isWebFullscreen">
     <div
         class="gs-player"
         :class="[
@@ -11,7 +11,7 @@
         ]"
         ref="containerRef"
     >
-      <div class="gs-player-main"
+      <div class="gs-video-wrapper"
            @mouseenter="!isFullscreen && (isHovering= true)"
            @mouseleave="isHovering= false"
       >
@@ -110,7 +110,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   handleDblClick: true,
   rates: () => [...DefaultRates],
   controlVisibility: DefaultControlVisibility,
-  webFullscreenTarget: () => document.body,
+  pageRoot: () => document.body,
   keyboardTarget: '.gs-player',
   disableWheelNavigation: false,
   listVisibility: DefaultListContainerVisibility,
@@ -140,8 +140,8 @@ const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
 const infoPanelVisible = ref(true);
 
-const containerWidth = ref(0);
-const containerHeight = ref(0);
+const rootWidth = ref(0);
+const rootHeight = ref(0);
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
@@ -166,14 +166,14 @@ const hasTransformChanged = computed(() => {
 const exposedCore = computed(() => coreRef.value);
 
 const isFullscreen = computed(() => {
-  containerWidth.value
-  containerHeight.value
+  rootWidth.value
+  rootHeight.value
   return isWebFullscreen.value || !!document.fullscreenElement;
 });
 
 const layout = computed(() => {
   if (isFullscreen.value) {
-    const containerAspectRatio = containerWidth.value / containerHeight.value;
+    const containerAspectRatio = rootWidth.value / rootHeight.value;
     return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
   }
   return currentLayout.value;
@@ -189,9 +189,9 @@ const isControlsVisible = computed(() => {
   return isHovering.value;
 });
 
-const updateContainerSize = (width: number, height: number) => {
-  containerWidth.value = width;
-  containerHeight.value = height;
+const updateRootSize = (width: number, height: number) => {
+  rootWidth.value = width;
+  rootHeight.value = height;
 };
 
 const fullscreen = () => {
@@ -229,16 +229,16 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get isFullscreen() {
     return isFullscreen.value;
   },
-  get container() {
+  get playerRoot() {
     return containerRef.value as HTMLElement;
   },
-  get containerWidth() {
-    return containerWidth.value;
+  get rootWidth() {
+    return rootWidth.value;
   },
-  get containerHeight() {
-    return containerHeight.value;
+  get rootHeight() {
+    return rootHeight.value;
   },
-  updateContainerSize,
+  updateRootSize,
   get layout() {
     return layout.value;
   },
@@ -357,8 +357,8 @@ watch(() => isFullscreen, async (v) => {
   if (!core)
     if (v) {
       core.toBestQuality({
-        width: containerWidth.value,
-        height: containerHeight.value,
+        width: rootWidth.value,
+        height: rootHeight.value,
       })
     } else {
       core.autoQualityHls();
@@ -378,14 +378,14 @@ defineExpose<IGsPlayerExpose>({
   get isFullscreen() {
     return isFullscreen.value;
   },
-  get container() {
+  get playerRoot() {
     return containerRef.value!;
   },
-  get containerWidth() {
-    return containerWidth.value;
+  get rootWidth() {
+    return rootWidth.value;
   },
-  get containerHeight() {
-    return containerHeight.value;
+  get rootHeight() {
+    return rootHeight.value;
   },
   get layout() {
     return layout.value;
