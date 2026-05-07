@@ -16,11 +16,11 @@ export function keyboardLogic() {
 				break;
 			case 'ArrowLeft':
 				e.preventDefault();
-				core.time -= 5
+				core.time -= e.ctrlKey ? 15 : 5
 				break;
 			case 'ArrowRight':
 				e.preventDefault();
-				core.time += 5
+				core.time += e.ctrlKey ? 15 : 5
 				break;
 			case 'ArrowUp':
 				e.preventDefault();
@@ -32,11 +32,7 @@ export function keyboardLogic() {
 				break;
 			case 'KeyM':
 				e.preventDefault();
-				if ((core as any).toggleMute) {
-					(core as any).toggleMute();
-				} else {
-					core.muted = !core.muted;
-				}
+				core.muted = !core.muted;
 				break;
 			case 'KeyF':
 				e.preventDefault();
@@ -68,8 +64,8 @@ export function keyboardLogic() {
 				break;
 			case 'F1':
 				e.preventDefault();
-				if ((cxt as any).helpPanelVisible !== undefined) {
-					(cxt as any).helpPanelVisible = !(cxt as any).helpPanelVisible;
+				if (cxt.helpVisible !== undefined) {
+					cxt.helpVisible = !cxt.helpVisible;
 				}
 				break;
 		}

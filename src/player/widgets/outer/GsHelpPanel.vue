@@ -1,7 +1,7 @@
 <template>
   <teleport :to="pageRoot" :disabled="cxt.isFullscreen">
     <div
-        v-if="cxt.helpPanelVisible"
+        v-if="cxt.helpVisible"
         class="gs-help-panel"
         @click.stop.prevent=""
         @wheel.stop=""
@@ -11,7 +11,7 @@
         <span>{{ cxt.i18n.titles.help }}</span>
         <GsButton
             :icon="CloseSvg"
-            @click="cxt.helpPanelVisible = false"
+            @click="cxt.helpVisible = false"
         />
       </div>
       <div class="gs-help-content">

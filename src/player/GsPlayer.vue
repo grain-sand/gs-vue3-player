@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
 import {PlayerCore} from '../core';
 import {
   AspectRatio,
@@ -94,7 +94,7 @@ import {
 } from '../type';
 import {getI18nConfig} from './i18n';
 import {resolveWidgets} from './widgets';
-import {LogicManager} from "./logics/LogicManager";
+import {LogicManager} from "./logics";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => DefaultI18nName,
@@ -133,7 +133,7 @@ const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
 const infoPanelVisible = ref(true);
-const helpPanelVisible = ref(false);
+const helpVisible = ref(false);
 
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
@@ -155,17 +155,14 @@ const isFullscreen = computed(() => {
 
 const rtLayout = computed(() => {
   if (isFullscreen.value) {
-    const containerAspectRatio = rootSize.value[0] / rootSize.value[1];
-    return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
+    return rootSize.value[0] / rootSize.value[1] > 1 ? 'horizontal' : 'vertical';
   }
   return currLayout.value;
 });
 
 const isControlsVisible = computed(() => {
-  if (
-      controlVisibility.value === 'always'
-      || listVisibility.value === 'always' && rtLayout.value === 'horizontal'
-  ) {
+  const {controlVisibility: cv, listVisibility: lv, rtLayout: rl} = widgetContext.value;
+  if (cv === 'always' || lv === 'always' && rl === 'horizontal') {
     return true;
   }
   return isHovering.value;
@@ -239,11 +236,11 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   set infoPanelVisible(value: boolean) {
     infoPanelVisible.value = value;
   },
-  get helpPanelVisible() {
-    return helpPanelVisible.value;
+  get helpVisible() {
+    return helpVisible.value;
   },
-  set helpPanelVisible(value: boolean) {
-    helpPanelVisible.value = value;
+  set helpVisible(value: boolean) {
+    helpVisible.value = value;
   },
   get transformState() {
     return transformState.value;
@@ -263,7 +260,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
 
 const widgets = computed(() => resolveWidgets(props));
 const widgetProps = computed(() => ({
-  core: coreRef.value!,
+  core: coreRef.value,
   cxt: widgetContext.value,
   props: props
 }))
@@ -272,22 +269,9 @@ onMounted(() => LogicManager.mount(widgetProps.value));
 
 onBeforeUnmount(() => LogicManager.unmount(widgetProps.value));
 
-watch(() => isFullscreen, async (v) => {
-  const core = coreRef.value;
-  if (!core)
-    if (v) {
-      core.toBestQuality({
-        width: rootSize.value[0],
-        height: rootSize.value[1],
-      })
-    } else {
-      core.autoQualityHls();
-    }
-})
-
 defineExpose<IGsPlayerExpose>({
   get core() {
-    return coreRef.value!;
+    return coreRef.value;
   },
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -299,10 +283,10 @@ defineExpose<IGsPlayerExpose>({
     return isFullscreen.value;
   },
   get playerRoot() {
-    return rootRef.value!;
+    return rootRef.value;
   },
   get videoWrapper() {
-    return wrapperRef.value!;
+    return wrapperRef.value;
   },
   get wrapperSize() {
     return wrapperSize.value;
@@ -337,11 +321,11 @@ defineExpose<IGsPlayerExpose>({
   set infoPanelVisible(value: boolean) {
     infoPanelVisible.value = value;
   },
-  get helpPanelVisible() {
-    return helpPanelVisible.value;
+  get helpVisible() {
+    return helpVisible.value;
   },
-  set helpPanelVisible(value: boolean) {
-    helpPanelVisible.value = value;
+  set helpVisible(value: boolean) {
+    helpVisible.value = value;
   },
   get i18n() {
     return i18nConfig.value;
