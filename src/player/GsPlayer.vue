@@ -41,44 +41,30 @@
             @mode-change="trigger('modeChange', $event)"
         />
 
-        <template v-if="exposedCore">
+        <template v-if="coreRef">
           <component
-              v-if="controlBarWidget"
-              :is="controlBarWidget"
-              :core="exposedCore"
-              :cxt="widgetContext"
-              :props="props"
+              v-if="widgets.controlBar"
+              :is="widgets.controlBar"
+              v-bind="widgetProps"
               @mouseenter="isHovering= true"
               @mouseleave="isHovering= false"
           />
 
           <component
-              v-for="widget in innerWidgets"
+              v-for="widget in widgets.innerWidgets"
               :is="widget"
-              :core="exposedCore"
-              :cxt="widgetContext"
-              :props="props"
+              v-bind="widgetProps"
           />
         </template>
       </div>
 
-      <template v-if="exposedCore">
+      <template v-if="coreRef">
         <component
-            v-for="widget in outerWidgets"
+            v-for="widget in widgets.outerWidgets"
             :is="widget"
-            :core="exposedCore"
-            :cxt="widgetContext"
-            :props="props"
+            v-bind="widgetProps"
         />
       </template>
-
-      <component
-          v-if="contextMenuWidget && exposedCore"
-          :is="contextMenuWidget"
-          :core="exposedCore"
-          :cxt="widgetContext"
-          :props="props"
-      />
     </div>
   </teleport>
 </template>
@@ -99,9 +85,7 @@ import {
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
-  IGsWidget,
   IGsWidgetContext,
-  IGsWidgetProps,
   II18n,
   IPlayerCoreExpose,
   ITransformState,
@@ -110,8 +94,7 @@ import {
 } from '../type';
 import {getI18nConfig} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsContextMenu, GsHelpPanel, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
-import {isVueComponent} from '../util';
+import {resolveWidgets} from './widgets';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => DefaultI18nName,
@@ -155,17 +138,15 @@ const helpPanelVisible = ref(false);
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
 
-const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
-
 const transformState = ref<ITransformState>({...DefaultTransformState});
+
+const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
 const hasTransformChanged = computed(() => {
   const state = transformState.value;
   return state.flipHorizontal || state.flipVertical || state.rotation !== 0 ||
       state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
 });
-
-const exposedCore = computed(() => coreRef.value);
 
 const isFullscreen = computed(() => {
   rootSize.value
@@ -231,8 +212,6 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get rootSize() {
     return rootSize.value;
   },
-  updateRootSize: (size) => rootSize.value = size,
-  updateWrapperSize: (size) => wrapperSize.value = size,
   get layout() {
     return rtLayout.value;
   },
@@ -266,84 +245,45 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   set helpPanelVisible(value: boolean) {
     helpPanelVisible.value = value;
   },
-  fullscreen,
-  webFullscreen,
-  exitFullscreen,
-  setLayout,
-  toggleListVisibility,
   get transformState() {
     return transformState.value;
   },
   get hasTransformChanged() {
     return hasTransformChanged.value;
   },
+  fullscreen,
+  webFullscreen,
+  exitFullscreen,
+  setLayout,
+  toggleListVisibility,
   resetTransform,
+  updateRootSize: (size) => rootSize.value = size,
+  updateWrapperSize: (size) => wrapperSize.value = size,
 });
 
-const controlBarWidget = computed<IGsWidget | null>(() => {
-  if (props.controlBar === null) return null;
-  if (isVueComponent(props.controlBar)) {
-    return props.controlBar;
-  }
-  return GsControlBar;
-});
-
-const overlayWidget = computed<IGsWidget>(() => props.playOverlay !== null ? isVueComponent(props.playOverlay) ? props.playOverlay : GsPlayOverlay : null);
-
-const infoPanelWidget = computed<IGsWidget>(() => props.infoPanel !== null ? isVueComponent(props.infoPanel) ? props.infoPanel : GsInfoPanel : null);
-
-const helpPanelWidget = computed<IGsWidget>(() => GsHelpPanel);
-
-const listContainerWidget = computed<IGsWidget>(() => props.listContainer !== null ? isVueComponent(props.listContainer) ? props.listContainer : GsListContainer : null);
-
-const contextMenuWidget = computed<IGsWidget | null>(() => {
-  if (props.contextMenu === null) return null;
-  if (isVueComponent(props.contextMenu)) {
-    return props.contextMenu;
-  }
-  return GsContextMenu;
-});
-
-const innerWidgets = computed<IGsWidget[]>(() => {
-  const iws = props.appendInnerWidgets;
-  const widgets = iws ? Array.isArray(iws) ? iws : [iws] : [];
-  if (overlayWidget.value) widgets.push(overlayWidget.value);
-  return widgets;
-});
-
-const outerWidgets = computed<IGsWidget[]>(() => {
-  const ows = props.appendOuterWidgets;
-  const widgets = ows ? Array.isArray(ows) ? ows : [ows] : [];
-  if (infoPanelWidget.value) widgets.push(infoPanelWidget.value);
-  if (helpPanelWidget.value) widgets.push(helpPanelWidget.value);
-  if (listContainerWidget.value) widgets.push(listContainerWidget.value);
-  return widgets;
-});
+const widgets = computed(() => resolveWidgets(props));
+const widgetProps = computed(() => ({
+  core: coreRef.value!,
+  cxt: widgetContext.value,
+  props: props
+}))
 
 const mergedLogics = computed(() => {
   const baseLogics = props.logics ?? defaultLogics;
   return [...baseLogics, ...(props.appendLogics || [])];
 });
+
+
 onMounted(async () => {
-  const widgetProps: IGsWidgetProps = {
-    core: coreRef.value!,
-    cxt: widgetContext.value,
-    props: props
-  };
   for (const logic of mergedLogics.value) {
-    await logic.mount(widgetProps);
+    await logic.mount(widgetProps.value);
   }
 });
 
 onBeforeUnmount(() => {
-  const widgetProps: IGsWidgetProps = {
-    core: coreRef.value!,
-    cxt: widgetContext.value,
-    props: props
-  };
   for (const logic of mergedLogics.value) {
     if (logic.unmount) {
-      logic.unmount(widgetProps);
+      logic.unmount(widgetProps.value);
     }
   }
 });

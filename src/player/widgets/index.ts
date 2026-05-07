@@ -4,3 +4,4 @@ export {default as GsInfoPanel} from './outer/GsInfoPanel.vue';
 export {default as GsHelpPanel} from './outer/GsHelpPanel.vue';
 export {default as GsListContainer} from './playlist/GsListContainer.vue';
 export {default as GsContextMenu} from './context-menu/GsContextMenu.vue';
+export {resolveWidgets} from './widgetResolver';
