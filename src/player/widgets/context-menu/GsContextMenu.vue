@@ -13,8 +13,8 @@
             class="gs-context-menu-divider"
         />
         <component
-            v-else
-            :is="resolveComponent(item)"
+            v-else-if="resolveContextMenuComponent(item)"
+            :is="resolveContextMenuComponent(item)"
             :core="props.core"
             :cxt="props.cxt"
             :props="props.props"
@@ -26,16 +26,17 @@
 
 <script setup lang="ts">
 import {computed, onMounted, onUnmounted, ref, watch} from 'vue';
-import {ContextMenuItem, ContextMenuItemDefaultNames, IGsWidget, IGsWidgetProps} from '../../../type';
-import GsInfoMenuItem from './GsInfoMenuItem.vue';
-import GsListMenuItem from './GsListMenuItem.vue';
+import {IGsWidgetProps} from '../../../type';
+import {
+  resolveContextMenuComponent,
+  resolveContextMenuItems
+} from './contextMenuComponents';
 
 const props = defineProps<IGsWidgetProps>();
 
 const isVisible = ref(false);
 const menuPosition = ref({x: 0, y: 0});
 const pageRoot = computed(() => props.props.pageRoot ?? document.body);
-
 const cxt = computed(() => props.cxt);
 
 const menuStyle = computed(() => ({
@@ -43,34 +44,14 @@ const menuStyle = computed(() => ({
   top: `${menuPosition.value.y}px`
 }));
 
-const defaultComponents: Record<string, IGsWidget> = {
-  'info': GsInfoMenuItem,
-  'list': GsListMenuItem
-};
-
 const resolvedItems = computed(() => {
-  const items = [...ContextMenuItemDefaultNames];
-
-  if (props.props.contextMenu?.items) {
-    return props.props.contextMenu.items;
-  }
-
-  if (props.props.contextMenu?.insertItems) {
-    for (const insert of props.props.contextMenu.insertItems) {
-      const pos = insert.position ?? items.length;
-      items.splice(pos, 0, insert.item);
-    }
-  }
-
-  return items;
+  const {contextMenu} = props.props;
+  return resolveContextMenuItems(
+    undefined,
+    contextMenu?.items,
+    contextMenu?.insertItems
+  );
 });
-
-const resolveComponent = (item: ContextMenuItem): IGsWidget => {
-  if (typeof item === 'string') {
-    return defaultComponents[item] || GsInfoMenuItem;
-  }
-  return item;
-};
 
 const handleContextMenu = (e: MouseEvent) => {
   e.preventDefault();

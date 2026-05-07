@@ -2,7 +2,7 @@
   <button
       class="gs-context-menu-item"
       :class="{ 'is-active': cxt.listVisibility === 'always' }"
-      @click="handleClick"
+      @click="cxt.toggleListVisibility()"
   >
     <component :is="ListSvg"/>
     <span>{{ cxt.i18n.titles.showList }}</span>
@@ -13,11 +13,5 @@
 import {IGsWidgetProps} from '../../../type';
 import {ListSvg} from '../../../svgs';
 
-const props = defineProps<IGsWidgetProps>();
-
-const cxt = props.cxt;
-
-const handleClick = () => {
-  cxt.toggleListVisibility();
-};
+defineProps<IGsWidgetProps>();
 </script>

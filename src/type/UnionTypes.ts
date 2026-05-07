@@ -55,11 +55,6 @@ export const ControlDefaultItems = [
 	 */
 	'-',
 	/**
-	 * 切换列表显示模式
-	 * - `layout=horizontal` 时，自动隐藏此按钮
-	 */
-	'list',
-	/**
 	 * 播放速度菜单切换按钮
 	 * - 悬停时出现切换菜单
 	 * - 悬停时响应鼠标中键滚动调整播放速度
@@ -96,6 +91,11 @@ export const ControlItemNames = [...ControlDefaultItems,
 	 * 切换上一个输入源按钮
 	 */
 	'pre',
+	/**
+	 * 切换列表显示模式
+	 * - `layout=horizontal` 时，自动隐藏此按钮
+	 */
+	'list',
 	/**
 	 * 浏览器原生弹出视频小窗模式
 	 */
@@ -156,20 +156,20 @@ export const ContextMenuItemDefaultNames = [
 	 */
 	'|',
 	/** 切换 列表 的 显示/隐藏 */
-	ControlDefaultItems[4],
+	'list',
 	// /** 模式切换->二级菜单 */
 	// ControlDefaultItems[7],
 	// /** 变换->二级菜单 */
 	// ControlDefaultItems[8],
 	// /** 切换显示比例->二级菜单 */
 	// ControlDefaultItems[9],
-	// /**
-	//  * 帮助
-	//  * - 弹出帮助面板
-	//  * - 帮助面板中主要包含快捷键说明
-	//  * - 帮助面板显示于 `<teleport :to="webFullscreenTarget">` 内
-	//  */
-	// 'help'
+	/**
+	 * 帮助
+	 * - 弹出帮助面板
+	 * - 帮助面板中主要包含快捷键说明
+	 * - 帮助面板显示于 `<teleport :to="cxt.pageRoot">` 内
+	 */
+	'help'
 ] as const;
 
 export const ContextMenuItemNames = [

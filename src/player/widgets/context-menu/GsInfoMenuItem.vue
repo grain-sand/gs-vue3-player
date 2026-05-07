@@ -2,7 +2,7 @@
   <button
       class="gs-context-menu-item"
       :class="{ 'is-active': cxt.infoPanelVisible }"
-      @click="handleClick"
+      @click="cxt.infoPanelVisible = !cxt.infoPanelVisible"
   >
     <component :is="InfoSvg"/>
     <span>{{ cxt.i18n.titles.info }}</span>
@@ -13,11 +13,5 @@
 import {IGsWidgetProps} from '../../../type';
 import {InfoSvg} from '../../../svgs';
 
-const props = defineProps<IGsWidgetProps>();
-
-const cxt = props.cxt;
-
-const handleClick = () => {
-  cxt.infoPanelVisible = !cxt.infoPanelVisible;
-};
+defineProps<IGsWidgetProps>();
 </script>
