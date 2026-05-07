@@ -151,12 +151,12 @@ export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];
 export const ContextMenuItemDefaultNames = [
 	/** 切换 信息面板 的 显示/隐藏 */
 	'info',
+	/** 切换 列表 的 显示/隐藏 */
+	'list',
 	/**
 	 * 分隔线
 	 */
 	'|',
-	/** 切换 列表 的 显示/隐藏 */
-	'list',
 	// /** 模式切换->二级菜单 */
 	// ControlDefaultItems[7],
 	// /** 变换->二级菜单 */

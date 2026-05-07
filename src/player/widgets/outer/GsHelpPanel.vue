@@ -11,7 +11,6 @@
         <span>{{ cxt.i18n.titles.help }}</span>
         <GsButton
             :icon="CloseSvg"
-            :title="cxt.i18n.titles.exitFullscreen"
             @click="cxt.helpPanelVisible = false"
         />
       </div>
@@ -48,10 +47,10 @@
           <h3>{{ cxt.i18n.titles.fullscreen }}</h3>
           <kbd>F</kbd>
           <span>{{ cxt.i18n.titles.fullscreen }}</span>
-          <kbd>W</kbd>
+          <kbd>Enter</kbd>
           <span>{{ cxt.i18n.titles.webFullscreen }}</span>
-          <kbd>Esc</kbd>
-          <span>{{ cxt.i18n.titles.exitFullscreen }}</span>
+          <kbd>V</kbd>
+          <span>{{ cxt.i18n.titles.pip }}</span>
         </div>
         <div class="gs-help-section">
           <h3>{{ cxt.i18n.titles.mouse }}</h3>

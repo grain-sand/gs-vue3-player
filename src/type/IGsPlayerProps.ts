@@ -93,7 +93,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 是否显示信息面板
 	 * - 默认值为 `true`
 	 */
-	infoPanelVisible: boolean;
+	infoPanelVisible?: boolean;
 
 	/**
 	 * 列表容器

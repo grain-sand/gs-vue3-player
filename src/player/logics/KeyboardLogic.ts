@@ -1,106 +1,110 @@
 import {IGsWidgetProps} from "../../type";
 
 export function keyboardLogic() {
-  let target: HTMLElement | Document | null = null;
-  let boundHandler: ((e: KeyboardEvent) => void) | null = null;
+	let target: HTMLElement | Document | null = null;
+	let boundHandler: ((e: KeyboardEvent) => void) | null = null;
 
-  const handleKeydown = (core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: KeyboardEvent) => {
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-      return;
-    }
+	const handleKeydown = (core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: KeyboardEvent) => {
+		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+			return;
+		}
 
-    switch (e.code) {
-      case 'Space':
-        e.preventDefault();
-        core.togglePlay();
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        (core as any).seek?.(core.time - 10);
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        (core as any).seek?.(core.time + 10);
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        core.volume = Math.min(1, core.volume + 0.1);
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        core.volume = Math.max(0, core.volume - 0.1);
-        break;
-      case 'KeyM':
-        e.preventDefault();
-        if ((core as any).toggleMute) {
-          (core as any).toggleMute();
-        } else {
-          core.muted = !core.muted;
-        }
-        break;
-      case 'KeyF':
-        e.preventDefault();
-        if (cxt.isFullscreen) {
-          cxt.exitFullscreen();
-        } else {
-          cxt.fullscreen();
-        }
-        break;
-      case 'KeyW':
-        e.preventDefault();
-        if (cxt.isFullscreen) {
-          cxt.exitFullscreen();
-        } else {
-          cxt.webFullscreen();
-        }
-        break;
-      case 'Escape':
-        e.preventDefault();
-        if (cxt.isFullscreen) {
-          cxt.exitFullscreen();
-        }
-        break;
-      case 'KeyN':
-        e.preventDefault();
-        core.playNext();
-        break;
-      case 'KeyP':
-        e.preventDefault();
-        core.playPre();
-        break;
-    }
-  };
+		switch (e.code) {
+			case 'Space':
+				e.preventDefault();
+				core.togglePlay();
+				break;
+			case 'ArrowLeft':
+				e.preventDefault();
+				core.time -= 5
+				break;
+			case 'ArrowRight':
+				e.preventDefault();
+				core.time += 5
+				break;
+			case 'ArrowUp':
+				e.preventDefault();
+				core.volume = Math.min(1, core.volume + 0.1);
+				break;
+			case 'ArrowDown':
+				e.preventDefault();
+				core.volume = Math.max(0, core.volume - 0.1);
+				break;
+			case 'KeyM':
+				e.preventDefault();
+				if ((core as any).toggleMute) {
+					(core as any).toggleMute();
+				} else {
+					core.muted = !core.muted;
+				}
+				break;
+			case 'KeyF':
+				e.preventDefault();
+				if (cxt.isFullscreen) {
+					cxt.exitFullscreen();
+				} else {
+					cxt.fullscreen();
+				}
+				break;
+			case 'Enter':
+				e.preventDefault();
+				if (cxt.isFullscreen) {
+					cxt.exitFullscreen();
+				} else {
+					cxt.webFullscreen();
+				}
+				break;
+			case 'KeyV':
+				e.preventDefault();
+				core.togglePip();
+				break;
+			case 'KeyN':
+				e.preventDefault();
+				core.playNext();
+				break;
+			case 'KeyP':
+				e.preventDefault();
+				core.playPre();
+				break;
+			case 'F1':
+				e.preventDefault();
+				if ((cxt as any).helpPanelVisible !== undefined) {
+					(cxt as any).helpPanelVisible = !(cxt as any).helpPanelVisible;
+				}
+				break;
+		}
+	};
 
-  return {
-    mount({props, cxt, core}: IGsWidgetProps): void {
-      const {keyboardTarget} = props;
+	return {
+		mount({props, cxt, core}: IGsWidgetProps): void {
+			const {keyboardTarget} = props;
 
-      if (keyboardTarget === false) {
-        return;
-      } else if (keyboardTarget === document || (keyboardTarget as any) === window) {
-        target = document;
-      } else if (keyboardTarget instanceof HTMLElement) {
-        target = keyboardTarget;
-      } else if (typeof keyboardTarget === 'string') {
-        target = document.querySelector(keyboardTarget) || cxt.playerRoot;
-      } else {
-        target = cxt.playerRoot;
-      }
+			if (keyboardTarget === false) {
+				return;
+			} else if (keyboardTarget === document || (keyboardTarget as any) === window) {
+				target = document;
+			} else if (keyboardTarget instanceof HTMLElement) {
+				target = keyboardTarget;
+			} else if (typeof keyboardTarget === 'string') {
+				target = document.querySelector(keyboardTarget) || cxt.playerRoot;
+			} else {
+				target = cxt.playerRoot;
+			}
 
-      if (target) {
-        boundHandler = handleKeydown.bind(null, core, cxt);
-        target.addEventListener('keydown', boundHandler);
-        if ('setAttribute' in target) {
-          target.setAttribute('tabindex', '0');
-        }
-      }
-    },
-    unmount(): void {
-      if (target && boundHandler) {
-        target.removeEventListener('keydown', boundHandler);
-      }
-      target = null;
-      boundHandler = null;
-    }
-  };
+			if (target) {
+				boundHandler = handleKeydown.bind(null, core, cxt);
+				target.addEventListener('keydown', boundHandler);
+				if ('setAttribute' in target) {
+					target.setAttribute('tabindex', '0');
+				}
+			}
+		},
+		unmount(): void {
+			if (target && boundHandler) {
+				target.removeEventListener('keydown', boundHandler);
+			}
+			target = null;
+			boundHandler = null;
+		}
+	};
 }
