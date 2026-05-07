@@ -1,5 +1,6 @@
 <template>
   <div class="gs-info-panel"
+       v-if="cxt.infoPanelVisible"
        @click.stop.prevent=""
        @wheel.stop=''
        @dblclick.stop.prevent=""

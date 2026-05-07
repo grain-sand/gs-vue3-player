@@ -151,29 +151,29 @@ export type PlaylistItemPartName = (typeof PlaylistItemPartNames)[number];
 export const ContextMenuItemDefaultNames = [
 	/** 切换 信息面板 的 显示/隐藏 */
 	'info',
+	/**
+	 * 分隔线
+	 */
+	'|',
 	/** 切换 列表 的 显示/隐藏 */
 	ControlDefaultItems[4],
-	/** 模式切换->二级菜单 */
-	ControlDefaultItems[7],
-	/** 变换->二级菜单 */
-	ControlDefaultItems[8],
-	/** 切换显示比例->二级菜单 */
-	ControlDefaultItems[9],
-	/**
-	 * 帮助
-	 * - 弹出帮助面板
-	 * - 帮助面板中主要包含快捷键说明
-	 * - 帮助面板显示于 `<teleport :to="webFullscreenTarget">` 内
-	 */
-	'help'
+	// /** 模式切换->二级菜单 */
+	// ControlDefaultItems[7],
+	// /** 变换->二级菜单 */
+	// ControlDefaultItems[8],
+	// /** 切换显示比例->二级菜单 */
+	// ControlDefaultItems[9],
+	// /**
+	//  * 帮助
+	//  * - 弹出帮助面板
+	//  * - 帮助面板中主要包含快捷键说明
+	//  * - 帮助面板显示于 `<teleport :to="webFullscreenTarget">` 内
+	//  */
+	// 'help'
 ] as const;
 
 export const ContextMenuItemNames = [
 	...ContextMenuItemDefaultNames,
-	/**
-	 * 分隔线
-	 */
-	'|'
 ] as const;
 
 export type ContextMenuItemName = (typeof ContextMenuItemNames)[number];

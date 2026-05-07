@@ -114,6 +114,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   keyboardTarget: '.gs-player',
   disableWheelNavigation: false,
   listVisibility: DefaultListContainerVisibility,
+  infoPanelVisible: true,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -137,6 +138,7 @@ const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
+const infoPanelVisible = ref(true);
 
 const containerWidth = ref(0);
 const containerHeight = ref(0);
@@ -257,6 +259,12 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   },
   set handleClick(value: boolean) {
     handleClick.value = value;
+  },
+  get infoPanelVisible() {
+    return infoPanelVisible.value;
+  },
+  set infoPanelVisible(value: boolean) {
+    infoPanelVisible.value = value;
   },
   fullscreen,
   webFullscreen,
@@ -399,6 +407,12 @@ defineExpose<IGsPlayerExpose>({
   },
   set handleClick(value: boolean) {
     handleClick.value = value;
+  },
+  get infoPanelVisible() {
+    return infoPanelVisible.value;
+  },
+  set infoPanelVisible(value: boolean) {
+    infoPanelVisible.value = value;
   },
   get i18n() {
     return i18nConfig.value;

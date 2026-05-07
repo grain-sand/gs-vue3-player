@@ -1,10 +1,11 @@
 import {IPlayerCoreProps} from "./IPlayerCoreProps";
 import {II18n} from "./II18n";
-import {AspectRatioMode, VisibilityMode, I18nName, LayoutMode} from "./UnionTypes";
+import {AspectRatioMode, I18nName, LayoutMode, VisibilityMode} from "./UnionTypes";
 import {IGsLogic, IGsWidget} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
+import {IContextMenuOption} from "./IContextMenuOption";
 
 export interface IGsPlayerProps extends IPlayerCoreProps {
 
@@ -85,6 +86,12 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	infoPanel?: null | IGsWidget;
 
 	/**
+	 * 是否显示信息面板
+	 * - 默认值为 `true`
+	 */
+	infoPanelVisible: boolean;
+
+	/**
 	 * 列表容器
 	 * - 未定义时，包含默认列表容器
 	 * - `null` 整体不包含列表容器组件
@@ -162,5 +169,14 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - 默认值为 `undefined`，即不处理下载
 	 */
 	downloadHandler?: (url: string, src: PlaySource) => void;
+
+	/**
+	 * 上下文菜单
+	 * - 未定义时，显示默认上下文菜单
+	 * - `null` 不显示上下文菜单
+	 * - `IGsWidget`自定义上下文菜单组件
+	 * - `IContextMenuOption` 包含默认上下文菜单，并对默认上下文菜单选项进行配置
+	 */
+	contextMenu?: null | IGsWidget | IContextMenuOption;
 
 }
