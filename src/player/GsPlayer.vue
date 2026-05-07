@@ -71,6 +71,14 @@
             :props="props"
         />
       </template>
+
+      <component
+          v-if="contextMenuWidget && exposedCore"
+          :is="contextMenuWidget"
+          :core="exposedCore"
+          :cxt="widgetContext"
+          :props="props"
+      />
     </div>
   </teleport>
 </template>
@@ -102,7 +110,7 @@ import {
 } from '../type';
 import {getI18nConfig} from './i18n';
 import {defaultLogics} from './logics';
-import {GsControlBar, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
+import {GsControlBar, GsContextMenu, GsInfoPanel, GsListContainer, GsPlayOverlay} from './widgets';
 import {isVueComponent} from '../util';
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
@@ -278,6 +286,14 @@ const overlayWidget = computed<IGsWidget>(() => props.playOverlay !== null ? isV
 const infoPanelWidget = computed<IGsWidget>(() => props.infoPanel !== null ? isVueComponent(props.infoPanel) ? props.infoPanel : GsInfoPanel : null);
 
 const listContainerWidget = computed<IGsWidget>(() => props.listContainer !== null ? isVueComponent(props.listContainer) ? props.listContainer : GsListContainer : null);
+
+const contextMenuWidget = computed<IGsWidget | null>(() => {
+  if (props.contextMenu === null) return null;
+  if (isVueComponent(props.contextMenu)) {
+    return props.contextMenu;
+  }
+  return GsContextMenu;
+});
 
 const innerWidgets = computed<IGsWidget[]>(() => {
   const iws = props.appendInnerWidgets;

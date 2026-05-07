@@ -35,7 +35,8 @@ export const zhTW: II18n = {
     scale15x: '1.5倍縮放',
     scaleAuto: '原始尺寸',
     openLink: '開啟連結',
-    download: '下載'
+    download: '下載',
+    info: '資訊面板'
   },
   playlist: '播放列表',
   remove: '移除'

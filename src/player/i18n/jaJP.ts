@@ -35,7 +35,8 @@ export const jaJP: II18n = {
     scale15x: '1.5倍拡大',
     scaleAuto: '元のサイズ',
     openLink: 'リンクを開く',
-    download: 'ダウンロード'
+    download: 'ダウンロード',
+    info: '情報パネル'
   },
   playlist: 'プレイリスト',
   remove: '削除'

@@ -35,7 +35,8 @@ export const enUS: II18n = {
     scale15x: '1.5x Scale',
     scaleAuto: 'Original Size',
     openLink: 'Open Link',
-    download: 'Download'
+    download: 'Download',
+    info: 'Info Panel'
   },
   playlist: 'Playlist',
   remove: 'Remove'

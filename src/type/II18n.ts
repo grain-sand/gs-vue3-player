@@ -71,6 +71,8 @@ export interface II18n {
     openLink: string;
     /** 下载 */
     download: string;
+    /** 信息面板 */
+    info: string;
   };
   /** 播放列表标题 */
   playlist: string;

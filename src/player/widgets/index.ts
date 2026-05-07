@@ -17,3 +17,5 @@ export {default as GsFullscreenControl} from './GsFullscreenControl.vue';
 export {default as GsWebFullscreenControl} from './GsWebFullscreenControl.vue';
 export {default as GsAspectRatioControl} from './GsAspectRatioControl.vue';
 export {default as GsTransformControl} from './GsTransformControl.vue';
+export {default as GsContextMenu} from './context-menu/GsContextMenu.vue';
+export {default as GsContextMenuItem} from './context-menu/GsContextMenuItem.vue';
