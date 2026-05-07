@@ -12,15 +12,9 @@
             v-if="item === '|'"
             class="gs-context-menu-divider"
         />
-        <GsContextMenuItem
-            v-else-if="item === 'info' || item === 'list'"
-            :item="item"
-            :i18n="cxt.i18n"
-            @action="handleMenuItemAction"
-        />
         <component
-            v-else-if="typeof item !== 'string'"
-            :is="item"
+            v-else
+            :is="resolveComponent(item)"
             :core="props.core"
             :cxt="props.cxt"
             :props="props.props"
@@ -32,8 +26,9 @@
 
 <script setup lang="ts">
 import {computed, onMounted, onUnmounted, ref, watch} from 'vue';
-import {ContextMenuItemDefaultNames, IGsWidgetProps} from '../../../type';
-import GsContextMenuItem from './GsContextMenuItem.vue';
+import {ContextMenuItem, ContextMenuItemDefaultNames, IGsWidget, IGsWidgetProps} from '../../../type';
+import GsInfoMenuItem from './GsInfoMenuItem.vue';
+import GsListMenuItem from './GsListMenuItem.vue';
 
 const props = defineProps<IGsWidgetProps>();
 
@@ -47,6 +42,11 @@ const menuStyle = computed(() => ({
   left: `${menuPosition.value.x}px`,
   top: `${menuPosition.value.y}px`
 }));
+
+const defaultComponents: Record<string, IGsWidget> = {
+  'info': GsInfoMenuItem,
+  'list': GsListMenuItem
+};
 
 const resolvedItems = computed(() => {
   const items = [...ContextMenuItemDefaultNames];
@@ -65,6 +65,13 @@ const resolvedItems = computed(() => {
   return items;
 });
 
+const resolveComponent = (item: ContextMenuItem): IGsWidget => {
+  if (typeof item === 'string') {
+    return defaultComponents[item] || GsInfoMenuItem;
+  }
+  return item;
+};
+
 const handleContextMenu = (e: MouseEvent) => {
   e.preventDefault();
 
@@ -79,18 +86,6 @@ const handleContextMenu = (e: MouseEvent) => {
 
 const handleClickOutside = (e: MouseEvent) => {
   if ((e.target as HTMLElement).closest('.gs-context-menu')) return;
-  isVisible.value = false;
-};
-
-const handleMenuItemAction = (item: string) => {
-  switch (item) {
-    case 'info':
-      cxt.value.infoPanelVisible = !cxt.value.infoPanelVisible;
-      break;
-    case 'list':
-      cxt.value.toggleListVisibility();
-      break;
-  }
   isVisible.value = false;
 };
 
