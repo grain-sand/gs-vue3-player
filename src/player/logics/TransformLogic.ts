@@ -64,8 +64,7 @@ export class TransformLogic implements IGsLogic {
 
 		const state = cxt.transformState;
 		const transforms: string[] = [];
-		const containerW = cxt.rootWidth;
-		const containerH = cxt.rootHeight;
+		const [containerW, containerH] = cxt.rootSize;
 
 		transforms.push('scale(1)');
 		if (state.scaleMode === 'fit') {

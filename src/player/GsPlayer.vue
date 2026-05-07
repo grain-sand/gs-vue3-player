@@ -3,7 +3,7 @@
     <div
         class="gs-player"
         :class="[
-          `layout-${layout}`,
+          `layout-${rtLayout}`,
           {
             'is-web-fullscreen': isWebFullscreen,
             'gs-controls-visible': isControlsVisible
@@ -79,6 +79,7 @@
 import {computed, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import {PlayerCore} from '../core';
 import {
+  AspectRatio,
   AspectRatioMode,
   DefaultAspectRatio,
   DefaultControlVisibility,
@@ -86,6 +87,7 @@ import {
   DefaultLayoutMode,
   DefaultListContainerVisibility,
   DefaultRates,
+  DefaultTransformState,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
@@ -133,8 +135,7 @@ const rootRef = ref<HTMLDivElement>();
 const wrapperRef = ref<HTMLDivElement>();
 const coreRef = ref<IPlayerCoreExpose>();
 const isWebFullscreen = ref(false);
-const currentLayout = ref<LayoutMode>(props.layout);
-const originalLayout = ref<LayoutMode>(props.layout);
+const currLayout = ref<LayoutMode>(props.layout);
 const currentAspectRatio = ref<AspectRatioMode>(props.aspectRatio || DefaultAspectRatio);
 const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
@@ -142,23 +143,12 @@ const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
 const infoPanelVisible = ref(true);
 
-const rootWidth = ref(0);
-const rootHeight = ref(0);
-const wrapperSize = ref<[number, number]>([0, 0]);
+const rootSize = ref<AspectRatio>([0, 0]);
+const wrapperSize = ref<AspectRatio>([0, 0]);
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
-const DEFAULT_TRANSFORM_STATE: Readonly<ITransformState> = Object.freeze({
-  draggable: false,
-  flipHorizontal: false,
-  flipVertical: false,
-  rotation: 0,
-  scaleMode: 'auto',
-  translateX: 0,
-  translateY: 0
-});
-
-const transformState = ref<ITransformState>({...DEFAULT_TRANSFORM_STATE});
+const transformState = ref<ITransformState>({...DefaultTransformState});
 
 const hasTransformChanged = computed(() => {
   const state = transformState.value;
@@ -169,59 +159,43 @@ const hasTransformChanged = computed(() => {
 const exposedCore = computed(() => coreRef.value);
 
 const isFullscreen = computed(() => {
-  rootWidth.value
-  rootHeight.value
+  rootSize.value
   return isWebFullscreen.value || !!document.fullscreenElement;
 });
 
-const layout = computed(() => {
+const rtLayout = computed(() => {
   if (isFullscreen.value) {
-    const containerAspectRatio = rootWidth.value / rootHeight.value;
+    const containerAspectRatio = rootSize.value[0] / rootSize.value[1];
     return containerAspectRatio > 1 ? 'horizontal' : 'vertical';
   }
-  return currentLayout.value;
+  return currLayout.value;
 });
 
 const isControlsVisible = computed(() => {
   if (
       controlVisibility.value === 'always'
-      || listVisibility.value === 'always' && layout.value === 'horizontal'
+      || listVisibility.value === 'always' && rtLayout.value === 'horizontal'
   ) {
     return true;
   }
   return isHovering.value;
 });
 
-const updateRootSize = (width: number, height: number) => {
-  rootWidth.value = width;
-  rootHeight.value = height;
-};
 
-const updateWrapperSize = (size: [number, number]) => {
-  wrapperSize.value = size;
-};
+const fullscreen = () => rootRef.value?.requestFullscreen?.()
 
-const fullscreen = () => {
-  rootRef.value?.requestFullscreen?.();
-};
-
-const webFullscreen = () => {
-  isWebFullscreen.value = true;
-};
+const webFullscreen = () => isWebFullscreen.value = true
 
 const exitFullscreen = () => {
-  if (document.fullscreenElement) {
-    document.exitFullscreen?.();
-  }
   isWebFullscreen.value = false;
+  if (document.fullscreenElement) document.exitFullscreen?.();
 };
 
-const setLayout = (layout: LayoutMode) => {
-  if (!isFullscreen.value) {
-    currentLayout.value = layout;
-    originalLayout.value = layout;
-  }
-};
+const toggleListVisibility = () => listVisibility.value = listVisibility.value === 'hover' ? 'always' : 'hover';
+
+const setLayout = (layout: LayoutMode) => currLayout.value = layout
+
+const resetTransform = () => transformState.value = {...DefaultTransformState}
 
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
@@ -245,16 +219,13 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get wrapperSize() {
     return wrapperSize.value;
   },
-  get rootWidth() {
-    return rootWidth.value;
+  get rootSize() {
+    return rootSize.value;
   },
-  get rootHeight() {
-    return rootHeight.value;
-  },
-  updateRootSize,
-  updateWrapperSize,
+  updateRootSize: (size) => rootSize.value = size,
+  updateWrapperSize: (size) => wrapperSize.value = size,
   get layout() {
-    return layout.value;
+    return rtLayout.value;
   },
   get controlVisibility() {
     return controlVisibility.value;
@@ -291,17 +262,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   get hasTransformChanged() {
     return hasTransformChanged.value;
   },
-  resetTransform: () => {
-    transformState.value = {...DEFAULT_TRANSFORM_STATE};
-  },
-});
-
-watch(isFullscreen, (newVal, oldVal) => {
-  if (newVal && !oldVal) {
-    originalLayout.value = currentLayout.value;
-  } else if (!newVal && oldVal) {
-    currentLayout.value = originalLayout.value;
-  }
+  resetTransform,
 });
 
 const controlBarWidget = computed<IGsWidget | null>(() => {
@@ -337,11 +298,6 @@ const mergedLogics = computed(() => {
   const baseLogics = props.logics ?? defaultLogics;
   return [...baseLogics, ...(props.appendLogics || [])];
 });
-
-function toggleListVisibility() {
-  listVisibility.value = listVisibility.value === 'hover' ? 'always' : 'hover';
-}
-
 onMounted(async () => {
   const widgetProps: IGsWidgetProps = {
     core: coreRef.value!,
@@ -371,8 +327,8 @@ watch(() => isFullscreen, async (v) => {
   if (!core)
     if (v) {
       core.toBestQuality({
-        width: rootWidth.value,
-        height: rootHeight.value,
+        width: rootSize.value[0],
+        height: rootSize.value[1],
       })
     } else {
       core.autoQualityHls();
@@ -401,15 +357,11 @@ defineExpose<IGsPlayerExpose>({
   get wrapperSize() {
     return wrapperSize.value;
   },
-  updateWrapperSize,
-  get rootWidth() {
-    return rootWidth.value;
-  },
-  get rootHeight() {
-    return rootHeight.value;
+  get rootSize() {
+    return rootSize.value;
   },
   get layout() {
-    return layout.value;
+    return rtLayout.value;
   },
   get controlVisibility() {
     return controlVisibility.value;
@@ -449,8 +401,6 @@ defineExpose<IGsPlayerExpose>({
   get hasTransformChanged() {
     return hasTransformChanged.value;
   },
-  resetTransform: () => {
-    transformState.value = {...DEFAULT_TRANSFORM_STATE};
-  },
+  resetTransform,
 });
 </script>

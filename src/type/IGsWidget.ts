@@ -14,6 +14,16 @@ export interface ITransformState {
 	translateY: number;
 }
 
+export const DefaultTransformState: Readonly<ITransformState> = Object.freeze({
+	draggable: false,
+	flipHorizontal: false,
+	flipVertical: false,
+	rotation: 0,
+	scaleMode: 'auto',
+	translateX: 0,
+	translateY: 0
+});
+
 export interface IGsWidgetContext {
 
 	controlVisibility: VisibilityMode;
@@ -60,14 +70,10 @@ export interface IGsWidgetContext {
 	readonly wrapperSize: AspectRatio
 
 	/**
-	 * 根元素宽度（实时）
+	 * 根元素尺寸（实时）
+	 * - 格式：[width, height]
 	 */
-	readonly rootWidth: number;
-
-	/**
-	 * 根元素高度（实时）
-	 */
-	readonly rootHeight: number;
+	readonly rootSize: AspectRatio;
 	/**
 	 * 变换状态
 	 */
@@ -80,7 +86,7 @@ export interface IGsWidgetContext {
 	/**
 	 * 更新根元素实时尺寸（内部使用）
 	 */
-	updateRootSize(width: number, height: number): void;
+	updateRootSize(size: AspectRatio): void;
 
 	/**
 	 * 更新视频容器元素实时尺寸（内部使用）

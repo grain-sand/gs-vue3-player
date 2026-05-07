@@ -4,18 +4,18 @@ import {Timer} from "gs-base/timer";
 import {watch} from "vue";
 
 export function styleVariableLogic() {
+	const timer = new Timer(300);
 	let stopAspectRatioWatch: Function;
 	let stopVideoSizeWatch: Function;
-	let target: HTMLElement | null = null;
-	let resizeObserver: ResizeObserver | null = null;
-	const timer = new Timer(300);
+	let target: HTMLElement;
+	let resizeObserver: ResizeObserver;
 	let core: IPlayerCoreExpose;
 	let cxt: IGsWidgetContext;
-	let containerSize: AspectRatio;
+	let rootSize: AspectRatio;
 
 
 	const calculateHeight = (): number => {
-		const [width] = containerSize;
+		const [width] = rootSize;
 		if (!width) return 240;
 
 		if (cxt.aspectRatio === 'auto') {
@@ -32,11 +32,11 @@ export function styleVariableLogic() {
 	};
 
 	const handleResize = async () => {
-		if (!containerSize) {
+		if (!rootSize) {
 			return;
 		}
 		await timer.reWait();
-		const [width, height] = containerSize;
+		const [width, height] = rootSize;
 
 		const isHorizontal = cxt.layout === 'horizontal';
 		const isFullscreen = cxt.isFullscreen;
@@ -60,13 +60,13 @@ export function styleVariableLogic() {
 		if (target) {
 			setStyleVars(target, {playerCoreHeight, playerCoreWidth});
 		}
+		cxt.updateWrapperSize([Number(playerCoreWidth), Number(playerCoreHeight)]);
 	};
 
 	return {
-		mount({props, cxt: cxtProp, core: coreProp}: IGsWidgetProps): void {
-			cxt = cxtProp;
-			core = coreProp;
-			const {variableWriteTarget} = props;
+		mount(p: IGsWidgetProps): void {
+			({cxt, core} = p);
+			const {variableWriteTarget} = p.props;
 
 			if (variableWriteTarget instanceof HTMLElement) {
 				target = variableWriteTarget;
@@ -76,8 +76,7 @@ export function styleVariableLogic() {
 			if (target) {
 				resizeObserver = new ResizeObserver(async ([entry]: ResizeObserverEntry[]) => {
 					const {width, height} = entry.contentRect;
-					containerSize = [width, height];
-					cxt.updateRootSize(width, height);
+					cxt.updateRootSize(rootSize = [width, height]);
 					await handleResize();
 				});
 				resizeObserver.observe(cxt.playerRoot);
