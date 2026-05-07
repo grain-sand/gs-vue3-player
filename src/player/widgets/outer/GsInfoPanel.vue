@@ -36,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import {IGsWidgetProps} from '../../type';
-import {GsAuthor, GsButton} from "../../component";
-import {LinkSvg, DownloadSvg} from "../../svgs";
+import {IGsWidgetProps} from '../../../type';
+import {GsAuthor, GsButton} from "../../../component";
+import {LinkSvg, DownloadSvg} from "../../../svgs";
 import {computed, ref} from "vue";
 
 const contentRef = ref<HTMLDivElement>();

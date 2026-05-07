@@ -42,11 +42,11 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {ControlDefaultItems, ControlItemName, IGsWidget, IGsWidgetProps} from '../../type';
+import {ControlDefaultItems, ControlItemName, IGsWidget, IGsWidgetProps} from '../../../type';
 import GsPlayButton from './GsPlayButton.vue';
 import GsPreButton from './GsPreButton.vue';
 import GsNextButton from './GsNextButton.vue';
-import {GsProgressBar, GsTimeDisplay, GsSpacer} from '../../component';
+import {GsProgressBar, GsTimeDisplay, GsSpacer} from '../../../component';
 import GsSpeedControl from './GsSpeedControl.vue';
 import GsVolumeControl from './GsVolumeControl.vue';
 import GsModeControl from './GsModeControl.vue';

@@ -23,9 +23,9 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {IGsWidgetProps} from '../../type';
-import {GsButton} from '../../component';
-import {VolumeStateIcons} from '../../svgs';
+import {IGsWidgetProps} from '../../../type';
+import {GsButton} from '../../../component';
+import {VolumeStateIcons} from '../../../svgs';
 
 const props = defineProps<IGsWidgetProps>();
 

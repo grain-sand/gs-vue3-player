@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import {IGsWidgetProps} from '../../type';
+import {IGsWidgetProps} from '../../../type';
 import GsPlaylistItem from './GsPlaylistItem.vue';
 import {ref, watch} from "vue";
 import {wait} from "gs-base/timer";

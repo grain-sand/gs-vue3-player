@@ -41,9 +41,9 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {DefaultListHeaderVisible, IGsWidget, IGsWidgetProps, IListContainerTab, PlaylistItemPart} from '../../type';
+import {DefaultListHeaderVisible, IGsWidget, IGsWidgetProps, IListContainerTab, PlaylistItemPart} from '../../../type';
 import GsPlaylist from './GsPlaylist.vue';
-import {PinSvg} from '../../svgs';
+import {PinSvg} from '../../../svgs';
 
 const {props, core, cxt} = defineProps<IGsWidgetProps>();
 

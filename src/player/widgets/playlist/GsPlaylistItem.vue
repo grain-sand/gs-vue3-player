@@ -28,10 +28,10 @@
 
 <script setup lang="ts">
 import {computed, defineComponent, h, ref} from 'vue';
-import {IPlaylistItemProps, PlaylistItemPart, PlaylistItemPartNames} from '../../type';
-import {GsAuthor, GsSpacer} from '../../component';
-import {PlayStateIcons} from '../../svgs';
-import {wrapComponent} from '../../util';
+import {IPlaylistItemProps, PlaylistItemPart, PlaylistItemPartNames} from '../../../type';
+import {GsAuthor, GsSpacer} from '../../../component';
+import {PlayStateIcons} from '../../../svgs';
+import {wrapComponent} from '../../../util';
 
 
 const itemRef = ref<HTMLLIElement>();

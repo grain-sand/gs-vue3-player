@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import {PlayStateIcons} from '../../svgs';
-import {GsButton} from '../../component';
-import {IGsWidgetProps} from '../../type';
+import {PlayStateIcons} from '../../../svgs';
+import {GsButton} from '../../../component';
+import {IGsWidgetProps} from '../../../type';
 
 defineProps<IGsWidgetProps>();
 </script>

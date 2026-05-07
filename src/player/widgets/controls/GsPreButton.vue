@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import {PreSvg} from '../../svgs';
-import {GsButton} from '../../component';
-import {IGsWidgetProps} from '../../type';
+import {PreSvg} from '../../../svgs';
+import {GsButton} from '../../../component';
+import {IGsWidgetProps} from '../../../type';
 
 defineProps<IGsWidgetProps>();
 </script>

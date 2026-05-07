@@ -75,9 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import {IGsWidgetProps} from '../../type';
-import {GsButton} from '../../component';
-import {AutoSvg, FitSvg, FlipSvg, RotateSvg, TransformSvg} from '../../svgs';
+import {IGsWidgetProps} from '../../../type';
+import {GsButton} from '../../../component';
+import {AutoSvg, FitSvg, FlipSvg, RotateSvg, TransformSvg} from '../../../svgs';
 
 defineProps<IGsWidgetProps>();
 </script>

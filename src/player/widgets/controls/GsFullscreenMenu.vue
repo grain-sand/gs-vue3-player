@@ -29,9 +29,9 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {IGsWidgetProps} from '../../type';
-import {GsButton} from '../../component';
-import {FullscreenSvg, ExitFullscreenSvg, PipSvg, ExitPipSvg, WebFullscreenSvg} from '../../svgs';
+import {IGsWidgetProps} from '../../../type';
+import {GsButton} from '../../../component';
+import {FullscreenSvg, ExitFullscreenSvg, PipSvg, ExitPipSvg, WebFullscreenSvg} from '../../../svgs';
 
 const props = defineProps<IGsWidgetProps>();
 

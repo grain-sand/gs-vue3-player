@@ -23,10 +23,10 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {IGsWidgetProps} from '../../type';
-import {GsButton} from '../../component';
-import {PlaybackModeIcons} from '../../svgs';
-import type {PlaybackMode} from '../../type';
+import {IGsWidgetProps} from '../../../type';
+import {GsButton} from '../../../component';
+import {PlaybackModeIcons} from '../../../svgs';
+import type {PlaybackMode} from '../../../type';
 
 const props = defineProps<IGsWidgetProps>();
 

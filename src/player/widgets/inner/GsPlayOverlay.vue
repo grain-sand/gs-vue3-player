@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import {PauseSvg, MuteSvg} from '../../svgs';
-import {IGsWidgetProps} from '../../type';
+import {PauseSvg, MuteSvg} from '../../../svgs';
+import {IGsWidgetProps} from '../../../type';
 
 defineProps<IGsWidgetProps>();
 </script>

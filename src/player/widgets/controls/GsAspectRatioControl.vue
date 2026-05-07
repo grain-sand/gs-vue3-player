@@ -25,9 +25,9 @@
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {IGsWidgetProps, AspectRatioMode, DefaultAspectRatios} from '../../type';
-import {GsButton} from '../../component';
-import {AutoSvg} from '../../svgs';
+import {IGsWidgetProps, AspectRatioMode, DefaultAspectRatios} from '../../../type';
+import {GsButton} from '../../../component';
+import {AutoSvg} from '../../../svgs';
 
 const props = defineProps<IGsWidgetProps>();
 
