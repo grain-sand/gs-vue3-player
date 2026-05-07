@@ -93,8 +93,8 @@ import {
   VisibilityMode
 } from '../type';
 import {getI18nConfig} from './i18n';
-import {defaultLogics} from './logics';
 import {resolveWidgets} from './widgets';
+import {LogicManager} from "./logics/LogicManager";
 
 const props = withDefaults(defineProps<IGsPlayerProps>(), {
   i18n: () => DefaultI18nName,
@@ -268,25 +268,9 @@ const widgetProps = computed(() => ({
   props: props
 }))
 
-const mergedLogics = computed(() => {
-  const baseLogics = props.logics ?? defaultLogics;
-  return [...baseLogics, ...(props.appendLogics || [])];
-});
+onMounted(() => LogicManager.mount(widgetProps.value));
 
-
-onMounted(async () => {
-  for (const logic of mergedLogics.value) {
-    await logic.mount(widgetProps.value);
-  }
-});
-
-onBeforeUnmount(() => {
-  for (const logic of mergedLogics.value) {
-    if (logic.unmount) {
-      logic.unmount(widgetProps.value);
-    }
-  }
-});
+onBeforeUnmount(() => LogicManager.unmount(widgetProps.value));
 
 watch(() => isFullscreen, async (v) => {
   const core = coreRef.value;
