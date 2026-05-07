@@ -6,7 +6,7 @@
           `layout-${rtLayout}`,
           {
             'is-web-fullscreen': isWebFullscreen,
-            'gs-controls-visible': isControlsVisible
+            'gs-controls-visible': controlsVisible
           }
         ]"
         ref="rootRef"
@@ -153,21 +153,9 @@ const isFullscreen = computed(() => {
   return isWebFullscreen.value || !!document.fullscreenElement;
 });
 
-const rtLayout = computed(() => {
-  if (isFullscreen.value) {
-    return rootSize.value[0] / rootSize.value[1] > 1 ? 'horizontal' : 'vertical';
-  }
-  return currLayout.value;
-});
+const rtLayout = computed(() => isFullscreen.value ? rootSize.value[0] / rootSize.value[1] > 1 ? 'horizontal' : 'vertical' : currLayout.value);
 
-const isControlsVisible = computed(() => {
-  const {controlVisibility: cv, listVisibility: lv, rtLayout: rl} = widgetContext.value;
-  if (cv === 'always' || lv === 'always' && rl === 'horizontal') {
-    return true;
-  }
-  return isHovering.value;
-});
-
+const controlsVisible = computed(() => isHovering.value || controlVisibility.value === 'always' || listVisibility.value === 'always' && rtLayout.value === 'horizontal');
 
 const fullscreen = () => rootRef.value?.requestFullscreen?.()
 
