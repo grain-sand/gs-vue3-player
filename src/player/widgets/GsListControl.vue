@@ -12,7 +12,7 @@
 import {computed} from 'vue';
 import {IGsWidgetProps} from '../../type';
 import {GsButton} from '../../component';
-import ListSvg from '../../svgs/list.svg';
+import {ListSvg} from '../../svgs';
 
 const props = defineProps<IGsWidgetProps>();
 

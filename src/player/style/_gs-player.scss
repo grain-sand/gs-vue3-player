@@ -13,11 +13,8 @@
 	right: 0;
 	z-index: 2;
 
-	.gs-controls, .gs-progress-container {
-	  transition-delay: var(--gs-progress-out-delay);
-	}
-
 	.gs-progress-container {
+	  transform: translateY(3px);
 	  z-index: 1;
 	}
   }
@@ -87,8 +84,8 @@
 	  transition-delay: 0s !important;
 	}
 
-	&.layout-horizontal .gs-progress-container {
-	  transform: translateY(3px);
+	.gs-progress-container, &.layout-horizontal .gs-info-panel {
+	  transform: translateY(3px) !important;
 	  transition-delay: 0s !important;
 	}
   }

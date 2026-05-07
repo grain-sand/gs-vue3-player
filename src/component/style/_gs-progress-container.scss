@@ -7,91 +7,89 @@
 	transition: var(--gs-transition);
   }
 
-  .gs-progress-bar {
-	position: relative;
-	height: 6px;
+  > .gs-progress-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	bottom: 0;
+	height: 4px;
 	cursor: pointer;
-	transition: opacity 0.2s;
 
-	&:hover {
-	  .gs-progress-track {
-		height: 8px;
+	.gs-progress-track {
+	  width: 100%;
+	  height: 100%;
+	  background: var(--gs-track-bg);
+	  border-radius: 2px;
+	  position: relative;
+	  transition: height 0.2s;
+
+	  > .gs-progress-fill, > .gs-progress-buffered {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		border-radius: 2px;
+		pointer-events: none;
+	  }
+
+	  > .gs-progress-fill {
+		background: var(--gs-primary);
+	  }
+
+	  > .gs-progress-buffered {
+		background: rgba(255, 255, 255, 0.4);
+	  }
+
+	  > .gs-progress-handle {
+		position: absolute;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 12px;
+		height: 12px;
+		background: #fff;
+		border-radius: 50%;
+		box-shadow: 0 0 0 2px var(--gs-primary);
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.2s;
+		z-index: 2;
+	  }
+
+	  > .gs-progress-tooltip,
+	  > .gs-progress-tooltip-handle,
+	  > .gs-progress-tooltip-duration {
+		position: absolute;
+		bottom: 100%;
+		padding: 4px 8px;
+		background: #000;
+		color: #fff;
+		font-size: 12px;
+		border-radius: 4px;
+		pointer-events: none;
+		margin-bottom: 8px;
+		white-space: nowrap;
+		max-width: 100%;
+		box-sizing: border-box;
+	  }
+
+	  > .gs-progress-tooltip,
+	  > .gs-progress-tooltip-handle {
+		left: 0;
+		transform: translateX(-50%);
+	  }
+
+	  > .gs-progress-tooltip-duration {
+		right: 0;
 	  }
 	}
-  }
 
-  .gs-progress-track {
-	width: 100%;
-	height: 4px;
-	background: var(--gs-track-bg);
-	border-radius: 2px;
-	position: relative;
-	transition: height 0.2s;
-  }
+	&:hover {
+	  height: 8px;
 
-  .gs-progress-fill {
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
-	background: var(--gs-primary);
-	border-radius: 2px;
-	pointer-events: none;
-  }
-
-  .gs-progress-handle {
-	position: absolute;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 12px;
-	height: 12px;
-	background: #fff;
-	border-radius: 50%;
-	box-shadow: 0 0 0 2px var(--gs-primary);
-	pointer-events: none;
-	opacity: 0;
-	transition: opacity 0.2s;
-	z-index: 2;
-  }
-
-  .gs-progress-bar:hover .gs-progress-handle {
-	opacity: 1;
-  }
-
-  .gs-progress-buffered {
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
-	background: rgba(255, 255, 255, 0.4);
-	border-radius: 2px;
-	pointer-events: none;
-  }
-
-  .gs-progress-tooltip,
-  .gs-progress-tooltip-handle,
-  .gs-progress-tooltip-duration {
-	position: absolute;
-	bottom: 100%;
-	padding: 4px 8px;
-	background: #000;
-	color: #fff;
-	font-size: 12px;
-	border-radius: 4px;
-	pointer-events: none;
-	margin-bottom: 8px;
-	white-space: nowrap;
-	max-width: 100%;
-	box-sizing: border-box;
-  }
-
-  .gs-progress-tooltip,
-  .gs-progress-tooltip-handle {
-	left: 0;
-	transform: translateX(-50%);
-  }
-
-  .gs-progress-tooltip-duration {
-	right: 0;
+	  .gs-progress-handle {
+		opacity: 1;
+	  }
+	}
   }
 }
