@@ -65,6 +65,7 @@ function getPartComponent(part: PlaylistItemPart) {
           handleClick: false
         });
       case 'date':
+        if (!current.createdAt) return null;
         return wrapComponent(GsDate, {
           date: current.createdAt,
           i18n: cxt.i18n.date,

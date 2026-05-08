@@ -9,7 +9,7 @@ export function formatDate(dateInput: Date | number | string, option: IFormatDat
   const date = new Date(dateInput);
 
   if (isNaN(date.getTime())) {
-    throw new Error('Invalid date input');
+    return ''
   }
 
   const now = new Date();
