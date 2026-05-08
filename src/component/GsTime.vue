@@ -1,5 +1,5 @@
 <template>
-  <div class="gs-time-display">
+  <div class="gs-time">
     <span>{{ formatTime(time) }}</span>
     <span v-if="duration"> / {{ formatTime(duration) }}</span>
   </div>

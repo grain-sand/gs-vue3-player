@@ -23,7 +23,7 @@
     />
     <div class="gs-controls" @click.stop.prevent>
       <template v-for="(item, index) in resolvedItems" :key="index">
-        <GsTimeDisplay
+        <GsTime
             v-if="item === 'time'"
             :time="props.core?.time ?? 0"
             :duration="props.core?.duration ?? 0"
@@ -46,7 +46,7 @@ import {ControlDefaultItems, ControlItemName, IGsWidget, IGsWidgetProps} from '.
 import GsPlayButton from './GsPlayButton.vue';
 import GsPreButton from './GsPreButton.vue';
 import GsNextButton from './GsNextButton.vue';
-import {GsProgressBar, GsTimeDisplay, GsSpacer} from '../../../component';
+import {GsProgressBar, GsTime, GsSpacer} from '../../../component';
 import GsSpeedControl from './GsSpeedControl.vue';
 import GsVolumeControl from './GsVolumeControl.vue';
 import GsModeControl from './GsModeControl.vue';

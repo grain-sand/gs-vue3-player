@@ -29,9 +29,9 @@
 <script setup lang="ts">
 import {computed, defineComponent, h, ref} from 'vue';
 import {IPlaylistItemProps, PlaylistItemPart, PlaylistItemPartNames} from '../../../type';
-import {GsAuthor, GsSpacer} from '../../../component';
-import {DateSvg, PlayStateIcons} from '../../../svgs';
-import {formatDate, wrapComponent} from '../../../util';
+import {GsAuthor, GsDate, GsSpacer} from '../../../component';
+import {PlayStateIcons} from '../../../svgs';
+import {wrapComponent} from '../../../util';
 
 
 const itemRef = ref<HTMLLIElement>();
@@ -65,18 +65,11 @@ function getPartComponent(part: PlaylistItemPart) {
           handleClick: false
         });
       case 'date':
-        return defineComponent({
-          inheritAttrs: false,
-          render: () => {
-            const createdAt = current.createdAt;
-            if (!createdAt) return null;
-            const formattedDate = formatDate(createdAt, {i18n: cxt.i18n.date});
-            return h('span', {class: 'gs-playlist-item-date'}, [
-              h(DateSvg),
-              h('span', formattedDate)
-            ]);
-          }
-        } as any);
+        return wrapComponent(GsDate, {
+          date: current.createdAt,
+          i18n: cxt.i18n.date,
+          showFullOnHover: false
+        });
       case 'time':
         return defineComponent({
           inheritAttrs: false,

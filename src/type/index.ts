@@ -7,6 +7,7 @@ export * from './IGsButton';
 export * from './IGsDropdownItem';
 export * from './IGsTimeDisplay';
 export * from './IGsProgressBar';
+export * from './IGsDateDisplay';
 
 export * from './IPlayerCoreProps';
 export * from './IPlayerCoreEmits';
