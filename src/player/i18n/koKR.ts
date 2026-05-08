@@ -49,5 +49,11 @@ export const koKR: II18n = {
     wheelScale: '확대 (Ctrl)'
   },
   playlist: '재생 목록',
-  remove: '제거'
+  remove: '제거',
+  relativeTime: {
+    day: '일',
+    hour: '시간',
+    minute: '분',
+    ago: '전'
+  }
 };

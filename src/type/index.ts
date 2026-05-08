@@ -14,6 +14,9 @@ export * from './IPlayerCoreExpose';
 export * from './IPlayerSource';
 
 export * from './II18n';
+export * from './TimeZone';
+export * from './IFormatDateOption';
+
 export * from './IGsPlayerProps';
 export * from './IGsPlayerExpose';
 

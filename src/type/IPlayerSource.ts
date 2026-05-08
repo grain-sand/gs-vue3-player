@@ -68,6 +68,13 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 	 * 视频下载链接
 	 */
 	downloadUrl?: string;
+
+	/**
+	 * 视频创建时间
+	 * - `number`时，为Unix时间戳，毫秒
+	 * -  `string`时，为兼容`new Date()`参数的字符串，如：ISO时间字符串
+	 */
+	createAt?: number | string;
 }
 
 // 指定类型与URL

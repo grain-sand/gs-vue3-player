@@ -49,5 +49,11 @@ export const enUS: II18n = {
     wheelScale: 'Scale (Ctrl)'
   },
   playlist: 'Playlist',
-  remove: 'Remove'
+  remove: 'Remove',
+  relativeTime: {
+    day: 'd',
+    hour: 'h',
+    minute: 'm',
+    ago: ' ago'
+  }
 };

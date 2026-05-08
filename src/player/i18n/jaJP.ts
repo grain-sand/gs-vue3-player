@@ -49,5 +49,11 @@ export const jaJP: II18n = {
     wheelScale: 'スケール (Ctrl)'
   },
   playlist: '再生リスト',
-  remove: '削除'
+  remove: '削除',
+  relativeTime: {
+    day: '日',
+    hour: '時間',
+    minute: '分',
+    ago: '前'
+  }
 };

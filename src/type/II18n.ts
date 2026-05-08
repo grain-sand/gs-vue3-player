@@ -98,4 +98,15 @@ export interface II18n {
   playlist: string;
   /** 移除按钮标题 */
   remove: string;
+  /** 相对时间格式化 */
+  relativeTime: {
+    /** 天 */
+    day: string;
+    /** 小时 */
+    hour: string;
+    /** 分钟 */
+    minute: string;
+    /** 前 */
+    ago: string;
+  };
 }

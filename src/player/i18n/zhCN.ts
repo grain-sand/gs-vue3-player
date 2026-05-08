@@ -49,5 +49,11 @@ export const zhCN: II18n = {
     wheelScale: '缩放 (Ctrl)'
   },
   playlist: '播放列表',
-  remove: '移除'
+  remove: '移除',
+  relativeTime: {
+    day: '天',
+    hour: '时',
+    minute: '分',
+    ago: '前'
+  }
 };
