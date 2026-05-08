@@ -34,6 +34,7 @@ import InfoSvg from './info.svg';
 import ListSvg from './list.svg';
 import HelpSvg from './help.svg';
 import CloseSvg from './close.svg';
+import DateSvg from './date.svg';
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {
@@ -82,5 +83,6 @@ export {
 	InfoSvg,
 	ListSvg,
 	HelpSvg,
-	CloseSvg
+	CloseSvg,
+	DateSvg
 };

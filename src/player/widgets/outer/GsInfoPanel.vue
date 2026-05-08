@@ -12,7 +12,16 @@
           :link-handler="(url)=>p.props.linkHandler?.(url, core.src)"
           class="gs-info-author"
       />
-      <time v-if="createdAt">{{createdAt}}</time>
+      <time
+          v-if="shortDate"
+          :datetime="fullDate"
+          :class="{'gs-info-time-hover':timeHover}"
+          @mouseenter="timeHover = true"
+          @mouseleave="timeHover = false"
+      >
+        <DateSvg/>
+        <span v-text="timeHover ? fullDate : shortDate"></span>
+      </time>
       <GsButton
           v-if="core.src?.link"
           :icon="LinkSvg"
@@ -39,17 +48,26 @@
 <script setup lang="ts">
 import {IGsWidgetProps} from '../../../type';
 import {GsAuthor, GsButton} from "../../../component";
-import {LinkSvg, DownloadSvg} from "../../../svgs";
+import {LinkSvg, DownloadSvg, DateSvg} from "../../../svgs";
 import {computed, ref} from "vue";
 import {formatDate} from "../../../util";
 
 const contentRef = ref<HTMLDivElement>();
 
+const timeHover = ref(false);
+
 const p = defineProps<IGsWidgetProps>();
 
 const src = computed(() => p.core?.src);
 
-const createdAt = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {i18n: p.cxt.i18n}) : '');
+const shortDate = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {i18n: p.cxt.i18n}) : '');
+const fullDate = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {
+  i18n: p.cxt.i18n,
+  omitYearThisYear: false,
+  relativeTimeThreshold: null,
+  shortYear: false,
+  showTime: true
+}) : '');
 
 const html = computed(() => {
   const text = p.core?.src?.description || p.core?.src?.title?.replace(/\n/g, '<br/>');

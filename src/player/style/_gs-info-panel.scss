@@ -24,6 +24,27 @@
 		margin-right: 8px;
 	  }
 
+	  > time {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-size: 12px;
+		color: var(--text-tertiary);
+		flex-shrink: 0;
+		margin-right: 8px;
+		cursor: default;
+		transition: color var(--gs-transition);
+
+		> svg {
+		  width: 12px;
+		  height: 12px;
+		}
+
+		&:hover, &.gs-info-time-hover {
+		  color: var(--text-secondary);
+		}
+	  }
+
 	  > .gs-btn-wrapper > .gs-btn {
 		width: 28px;
 		height: 28px;
