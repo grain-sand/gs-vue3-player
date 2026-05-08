@@ -50,7 +50,7 @@ export const zhTW: II18n = {
   },
   playlist: '播放列表',
   remove: '移除',
-  relativeTime: {
+  date: {
     day: '天',
     hour: '時',
     minute: '分',

@@ -7,7 +7,7 @@ describe('formatDate', () => {
   it('should format date with Date object input', () => {
     const date = new Date('2026-01-15T10:30:00');
     const result = formatDate(date, {
-      i18n: zhCN,
+      i18n: zhCN.date,
       relativeTimeThreshold: null,
       showTime: true
     });
@@ -17,7 +17,7 @@ describe('formatDate', () => {
   it('should format date with timestamp number input', () => {
     const timestamp = new Date('2026-01-15T10:30:00').getTime();
     const result = formatDate(timestamp, {
-      i18n: zhCN,
+      i18n: zhCN.date,
       relativeTimeThreshold: null,
       showTime: true
     });
@@ -26,7 +26,7 @@ describe('formatDate', () => {
 
   it('should format date with string input', () => {
     const result = formatDate('2026-01-15T10:30:00', {
-      i18n: zhCN,
+      i18n: zhCN.date,
       relativeTimeThreshold: null,
       showTime: true
     });
@@ -34,7 +34,7 @@ describe('formatDate', () => {
   });
 
   it('should throw error for invalid date input', () => {
-    expect(() => formatDate('invalid-date', { i18n: zhCN })).toThrow('Invalid date input');
+    expect(() => formatDate('invalid-date', { i18n: zhCN.date })).toThrow('Invalid date input');
   });
 
   describe('relative time formatting', () => {
@@ -43,7 +43,7 @@ describe('formatDate', () => {
       const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(tenMinutesAgo, { i18n: zhCN, relativeTimeThreshold: threshold });
+      const result = formatDate(tenMinutesAgo, { i18n: zhCN.date, relativeTimeThreshold: threshold });
       expect(result).toBe('10分前');
     });
 
@@ -52,7 +52,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000 - 30 * 60 * 1000);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: zhCN, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: zhCN.date, relativeTimeThreshold: threshold });
       expect(result).toBe('2时30分前');
     });
 
@@ -61,7 +61,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000 - 5 * 60 * 60 * 1000);
       const threshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: zhCN, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: zhCN.date, relativeTimeThreshold: threshold });
       expect(result).toBe('3天5时前');
     });
 
@@ -70,7 +70,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
       const threshold = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: zhCN, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: zhCN.date, relativeTimeThreshold: threshold });
       expect(result).toBe('5天前');
     });
 
@@ -79,7 +79,7 @@ describe('formatDate', () => {
       const justNow = new Date(now.getTime() - 500);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(justNow, { i18n: zhCN, relativeTimeThreshold: threshold });
+      const result = formatDate(justNow, { i18n: zhCN.date, relativeTimeThreshold: threshold });
       expect(result).toBe('0分前');
     });
   });
@@ -91,7 +91,7 @@ describe('formatDate', () => {
       const customThreshold = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
       const result = formatDate(timeAgo, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: customThreshold
       });
       expect(result).toBe('1天1时前');
@@ -102,7 +102,7 @@ describe('formatDate', () => {
       const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
 
       const result = formatDate(tenMinutesAgo, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null
       });
       expect(result).not.toContain('分前');
@@ -114,7 +114,7 @@ describe('formatDate', () => {
       const threshold = new Date(now.getTime() - 20 * 60 * 60 * 1000);
 
       const result = formatDate(yesterday, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: threshold
       });
       expect(result).not.toContain('时前');
@@ -127,7 +127,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: enUS, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: enUS.date, relativeTimeThreshold: threshold });
       expect(result).toBe('2h ago');
     });
 
@@ -136,7 +136,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000 - 2 * 60 * 60 * 1000);
       const threshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: jaJP, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: jaJP.date, relativeTimeThreshold: threshold });
       expect(result).toBe('3日2時間前');
     });
 
@@ -145,7 +145,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 30 * 60 * 1000);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: koKR, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: koKR.date, relativeTimeThreshold: threshold });
       expect(result).toBe('30분전');
     });
 
@@ -154,7 +154,7 @@ describe('formatDate', () => {
       const timeAgo = new Date(now.getTime() - 5 * 60 * 60 * 1000);
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-      const result = formatDate(timeAgo, { i18n: zhTW, relativeTimeThreshold: threshold });
+      const result = formatDate(timeAgo, { i18n: zhTW.date, relativeTimeThreshold: threshold });
       expect(result).toBe('5時前');
     });
   });
@@ -163,7 +163,7 @@ describe('formatDate', () => {
     it('should format date with timezone', () => {
       const date = new Date('2026-01-15T10:30:00Z');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         timeZone: 'America/New_York',
         relativeTimeThreshold: null,
         showTime: true
@@ -177,7 +177,7 @@ describe('formatDate', () => {
       const threshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
       const result = formatDate(timeAgo, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         timeZone: 'America/New_York',
         relativeTimeThreshold: threshold
       });
@@ -187,7 +187,7 @@ describe('formatDate', () => {
     it('should use default timezone when not specified', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: true
       });
@@ -200,7 +200,7 @@ describe('formatDate', () => {
       const now = new Date();
       const todayMorning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
-      const result = formatDate(todayMorning, { i18n: zhCN });
+      const result = formatDate(todayMorning, { i18n: zhCN.date });
       expect(result).toContain('时');
     });
 
@@ -208,7 +208,7 @@ describe('formatDate', () => {
       const now = new Date();
       const yesterday = new Date(now.getTime() - 25 * 60 * 60 * 1000);
 
-      const result = formatDate(yesterday, { i18n: zhCN });
+      const result = formatDate(yesterday, { i18n: zhCN.date });
       expect(result).not.toContain('前');
     });
   });
@@ -217,7 +217,7 @@ describe('formatDate', () => {
     it('should hide time by default', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null
       });
       expect(result).toBe('01-15');
@@ -226,7 +226,7 @@ describe('formatDate', () => {
     it('should hide time when showTime is false', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: false
       });
@@ -236,7 +236,7 @@ describe('formatDate', () => {
     it('should show time when showTime is true', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: true
       });
@@ -249,7 +249,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateThisYear = new Date(now.getFullYear(), 5, 15, 10, 30);
       const result = formatDate(dateThisYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null
       });
       expect(result).toBe('06-15');
@@ -259,7 +259,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateThisYear = new Date(now.getFullYear(), 5, 15, 10, 30);
       const result = formatDate(dateThisYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         omitYearThisYear: false
       });
@@ -270,7 +270,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateLastYear = new Date(now.getFullYear() - 1, 5, 15, 10, 30);
       const result = formatDate(dateLastYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null
       });
       expect(result).toMatch(/^\d{2}-/);
@@ -281,7 +281,7 @@ describe('formatDate', () => {
     it('should use short year by default', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         omitYearThisYear: false,
         showTime: true
@@ -292,7 +292,7 @@ describe('formatDate', () => {
     it('should use full year when shortYear is false', () => {
       const date = new Date('2026-01-15T10:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         omitYearThisYear: false,
         shortYear: false,
@@ -305,7 +305,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateLastYear = new Date(now.getFullYear() - 1, 5, 15, 10, 30);
       const result = formatDate(dateLastYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null
       });
       expect(result).toMatch(/^\d{2}-/);
@@ -316,7 +316,7 @@ describe('formatDate', () => {
     it('should handle all options together for previous year', () => {
       const date = new Date('2025-06-15T14:30:00');
       const result = formatDate(date, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: false,
         omitYearThisYear: true,
@@ -329,7 +329,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateLastYear = new Date(now.getFullYear() - 1, 11, 25, 20, 0);
       const result = formatDate(dateLastYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: true,
         omitYearThisYear: true,
@@ -342,7 +342,7 @@ describe('formatDate', () => {
       const now = new Date();
       const dateThisYear = new Date(now.getFullYear(), 6, 15, 14, 30);
       const result = formatDate(dateThisYear, {
-        i18n: zhCN,
+        i18n: zhCN.date,
         relativeTimeThreshold: null,
         showTime: false,
         omitYearThisYear: true

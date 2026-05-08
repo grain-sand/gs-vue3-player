@@ -13,6 +13,7 @@
 		"build": "gs-rollup -c",
 		"dev": "vite",
 		"test": "vitest run",
+		"test:format-date": "vitest run formatDate",
 		"test:core": "vitest core",
 		"test:player": "vitest player"
 	},

@@ -60,9 +60,9 @@ const p = defineProps<IGsWidgetProps>();
 
 const src = computed(() => p.core?.src);
 
-const shortDate = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {i18n: p.cxt.i18n}) : '');
+const shortDate = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {i18n: p.cxt.i18n.date}) : '');
 const fullDate = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {
-  i18n: p.cxt.i18n,
+  i18n: p.cxt.i18n.date,
   omitYearThisYear: false,
   relativeTimeThreshold: null,
   shortYear: false,

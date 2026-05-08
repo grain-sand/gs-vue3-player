@@ -50,7 +50,7 @@ export const enUS: II18n = {
   },
   playlist: 'Playlist',
   remove: 'Remove',
-  relativeTime: {
+  date: {
     day: 'd',
     hour: 'h',
     minute: 'm',

@@ -50,7 +50,7 @@ export const jaJP: II18n = {
   },
   playlist: '再生リスト',
   remove: '削除',
-  relativeTime: {
+  date: {
     day: '日',
     hour: '時間',
     minute: '分',

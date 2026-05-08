@@ -50,7 +50,7 @@ export const koKR: II18n = {
   },
   playlist: '재생 목록',
   remove: '제거',
-  relativeTime: {
+  date: {
     day: '일',
     hour: '시간',
     minute: '분',

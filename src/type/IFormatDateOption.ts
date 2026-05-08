@@ -1,9 +1,9 @@
-import {II18n} from "./II18n";
+import {IDateI18n} from "./II18n";
 import {TimeZone} from "./TimeZone";
 
 export interface IFormatDateOption {
-	/** 国际化对象，包含相对时间格式化所需的多语言配置 */
-	i18n: II18n;
+	/** 相对时间格式化所需的多语言配置 */
+	i18n: IDateI18n;
 	/**
 	 * 时区
 	 * - 默认值为当前系统（浏览器）时区

@@ -70,7 +70,7 @@ function getPartComponent(part: PlaylistItemPart) {
           render: () => {
             const createdAt = current.createdAt;
             if (!createdAt) return null;
-            const formattedDate = formatDate(createdAt, {i18n: cxt.i18n});
+            const formattedDate = formatDate(createdAt, {i18n: cxt.i18n.date});
             return h('span', {class: 'gs-playlist-item-date'}, [
               h(DateSvg),
               h('span', formattedDate)

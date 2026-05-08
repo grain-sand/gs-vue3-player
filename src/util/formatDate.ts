@@ -1,4 +1,4 @@
-import {IFormatDateOption, II18n} from "../type";
+import {IFormatDateOption, IDateI18n} from "../type";
 
 
 const MINUTE = 60 * 1000;
@@ -51,7 +51,7 @@ function getTodayStart(date: Date, timeZone?: string): Date {
   return new Date(year, month, day);
 }
 
-function formatRelativeTime(diff: number, i18n: II18n): string {
+function formatRelativeTime(diff: number, i18n: IDateI18n): string {
   const days = Math.floor(diff / DAY);
   const hours = Math.floor((diff % DAY) / HOUR);
   const minutes = Math.floor((diff % HOUR) / MINUTE);
@@ -59,22 +59,22 @@ function formatRelativeTime(diff: number, i18n: II18n): string {
   const parts: string[] = [];
 
   if (days > 0) {
-    parts.push(`${days}${i18n.relativeTime.day}`);
+    parts.push(`${days}${i18n.day}`);
   }
 
   if (hours > 0 && parts.length < 2) {
-    parts.push(`${hours}${i18n.relativeTime.hour}`);
+    parts.push(`${hours}${i18n.hour}`);
   }
 
   if (minutes > 0 && parts.length < 2) {
-    parts.push(`${minutes}${i18n.relativeTime.minute}`);
+    parts.push(`${minutes}${i18n.minute}`);
   }
 
   if (parts.length === 0) {
-    return `${0}${i18n.relativeTime.minute}${i18n.relativeTime.ago}`;
+    return `${0}${i18n.minute}${i18n.ago}`;
   }
 
-  return `${parts.join('')}${i18n.relativeTime.ago}`;
+  return `${parts.join('')}${i18n.ago}`;
 }
 
 function formatStandardDate(date: Date, now: Date, options: IFormatDateOption): string {
