@@ -10,11 +10,11 @@ export interface IMeasureRenderedTextArg {
 	text: string,
 	className?: string,
 	style?: Partial<CSSStyleDeclaration>
+	parent?: HTMLElement
 }
 
 const hiddenMeasureEl = (() => {
 	const el = document.createElement('div')
-
 	Object.assign(el.style, {
 		position: 'absolute',
 		pointerEvents: 'none',
@@ -24,15 +24,13 @@ const hiddenMeasureEl = (() => {
 		top: '-9999px',
 		zIndex: '-999999',
 	})
-
-	document.body.appendChild(el)
-
 	return el
 })()
 
 export function measureRenderedText(arg: IMeasureRenderedTextArg): IMeasureResult {
-	const {text, className = '', style = {}} = arg;
+	const {text, className = '', style = {}, parent = document.body || document.documentElement} = arg;
 	const el = hiddenMeasureEl
+	parent.appendChild(el)
 	el.className = className;
 	style && Object.assign(el.style, style)
 
