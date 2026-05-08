@@ -82,4 +82,13 @@ export class SourceWrapper implements ISourceWrapper {
 	get downloadUrl(): string | undefined {
 		return this._raw.downloadUrl;
 	}
+
+	private _createdAt?: Date
+
+	get createdAt(): Date | undefined {
+		if (!this._raw.createdAt) {
+			return undefined;
+		}
+		return this._createdAt || (this._createdAt = new Date(this._raw.createdAt));
+	}
 }

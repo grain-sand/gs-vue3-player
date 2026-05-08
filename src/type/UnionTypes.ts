@@ -132,6 +132,10 @@ export const PlaylistItemPartNames = [
 	 */
 	'author',
 	/**
+	 * 创建时间组件
+	 */
+	'date',
+	/**
 	 * 空白填充组件
 	 * - 会自动伸展占用所有剩余空间，没有padding与margin
 	 */

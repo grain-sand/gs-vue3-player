@@ -12,6 +12,7 @@
           :link-handler="(url)=>p.props.linkHandler?.(url, core.src)"
           class="gs-info-author"
       />
+      <time v-if="createdAt">{{createdAt}}</time>
       <GsButton
           v-if="core.src?.link"
           :icon="LinkSvg"
@@ -40,10 +41,15 @@ import {IGsWidgetProps} from '../../../type';
 import {GsAuthor, GsButton} from "../../../component";
 import {LinkSvg, DownloadSvg} from "../../../svgs";
 import {computed, ref} from "vue";
+import {formatDate} from "../../../util";
 
 const contentRef = ref<HTMLDivElement>();
 
 const p = defineProps<IGsWidgetProps>();
+
+const src = computed(() => p.core?.src);
+
+const createdAt = computed(() => src.value?.createdAt ? formatDate(src.value.createdAt, {i18n: p.cxt.i18n}) : '');
 
 const html = computed(() => {
   const text = p.core?.src?.description || p.core?.src?.title?.replace(/\n/g, '<br/>');
