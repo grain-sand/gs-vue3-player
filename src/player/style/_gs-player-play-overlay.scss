@@ -4,20 +4,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: transparent;
   transition: background 0.3s;
   cursor: pointer;
   z-index: 1;
 
-  &.muted {
-	background: transparent;
-  }
+  //&.muted {
+	//background: transparent;
+  //}
+  //
+  //&.paused {
+	//background: rgba(0, 0, 0, 0.5);
+  //}
 
-  &.paused {
-	background: rgba(0, 0, 0, 0.5);
-  }
-
-  .gs-play-overlay-button {
+  >.gs-play-overlay-button {
 	--btn-size: min(max(40px, calc(var(--player-core-width) * 0.15)), 80px);
 	width: var(--btn-size);
 	height: var(--btn-size);
@@ -41,3 +41,10 @@
 	background: rgba(0, 0, 0, 0.8);
   }
 }
+
+//.gs-player.layout-horizontal .gs-player-play-overlay {
+//  max-height: calc(100% - 140px);
+//  >.gs-play-overlay-button {
+//	transform: translateY(70px);
+//  }
+//}

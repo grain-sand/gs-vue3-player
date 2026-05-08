@@ -4,6 +4,9 @@
        @click.stop.prevent=""
        @wheel.stop=''
        @dblclick.stop.prevent=""
+       @mouseleave="onMouseleave"
+       :class="{hovered}"
+       ref="panelRef"
   >
     <div class="gs-info-header">
       <GsAuthor
@@ -35,7 +38,8 @@
         v-html="html"
         ref="contentRef"
         @click.stop.prevent="handleContentClick"
-        @mouseleave="onMouseleave"
+        @mouseenter="hovered = true"
+        :style="{height}"
     ></div>
   </div>
 </template>
@@ -44,9 +48,15 @@
 import {IGsWidgetProps} from '../../../type';
 import {GsAuthor, GsButton, GsDate} from "../../../component";
 import {LinkSvg, DownloadSvg} from "../../../svgs";
-import {computed, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
+import {measureRenderedText} from "../../../util";
 
+let resizeObserver: ResizeObserver;
+
+const panelRef = ref<HTMLDivElement>();
 const contentRef = ref<HTMLDivElement>();
+const panelWidth = ref(0);
+const hovered = ref(false);
 
 const p = defineProps<IGsWidgetProps>();
 
@@ -57,6 +67,35 @@ const html = computed(() => {
   }
   return parseSocioWords(text);
 });
+
+
+const height = computed(() => {
+  if (p.cxt.layout === 'vertical') {
+    return '4.5em';
+  }
+  if (!hovered.value) {
+    return '1.8em';
+  }
+  const maxWidth = `${panelWidth.value}px`
+  const {lines} = measureRenderedText({
+    text: html.value,
+    className: 'gs-info-content',
+    style: {maxWidth, lineHeight: '1.8em'}
+  });
+  return `${lines * 1.8}em`
+});
+
+
+onMounted(() => {
+  resizeObserver = new ResizeObserver(([entry]) => panelWidth.value = entry.contentRect.width);
+  resizeObserver.observe(panelRef.value);
+})
+
+onUnmounted(() => {
+  resizeObserver?.disconnect?.();
+  resizeObserver = null;
+})
+
 
 function parseSocioWords(text: string): string {
   let result = text;
@@ -89,6 +128,7 @@ function handleLinkClick() {
 
 
 function onMouseleave() {
+  hovered.value = false;
   const {value: el} = contentRef;
   if (!el) return;
   el.scroll({

@@ -4,23 +4,29 @@
       class="gs-date"
       :datetime="fullDate"
       :class="{'gs-info-time-hover': timeHover && showFullOnHover}"
-      @mouseenter="timeHover = true"
+      @mouseenter="timeHover = true;showFullOnHover&&(display = fullDate)"
       @mouseleave="timeHover = false"
+      :style="{width: `${showFullOnHover && timeHover ? fullWidth : shotWidth}px`}"
+      @transitionend="!timeHover && (display = shortDate)"
   >
     <DateSvg/>
-    <span v-text="showFullOnHover && timeHover ? fullDate : shortDate"></span>
+    <span v-text="display"></span>
   </time>
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {IGsDateDisplayProps} from "../type";
 import {DateSvg} from "../svgs";
-import {formatDate} from "../util";
+import {formatDate, measureRenderedText} from "../util";
+
+defineOptions({inheritAttrs: false});
 
 const props = withDefaults(defineProps<IGsDateDisplayProps>(), {
   showFullOnHover: true
 });
+
+const display = ref('');
 
 const showFullOnHover = computed(() => props.showFullOnHover);
 
@@ -35,4 +41,14 @@ const fullDate = computed(() => formatDate(props.date, {
   shortYear: false,
   showTime: true
 }));
+
+onMounted(() => display.value = shortDate.value)
+
+const shotWidth = computed(() => measureRenderedText({text: shortDate.value, className: 'gs-date'}).width + 17);
+const fullWidth = computed(() => measureRenderedText({text: fullDate.value, className: 'gs-date'}).width + 17);
+
+const style = computed(() => (props.showFullOnHover ? {
+  width: `${showFullOnHover.value && timeHover.value ? fullWidth.value : shotWidth.value}px`
+} : {}));
+
 </script>
