@@ -4,8 +4,9 @@
         class="gs-player"
         :class="[
           `layout-${rtLayout}`,
+          `list-visibility-${listVisibility}`,
           {
-            'is-web-fullscreen': isWebFullscreen,
+            'fullscreen': isFullscreen,
             'gs-controls-visible': controlsVisible
           }
         ]"

@@ -11,10 +11,10 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
-	z-index: 2;
+	z-index: 12;
 
 	.gs-progress-container {
-	  transform: translateY(3px);
+	  transform: translateY(-3px);
 	  z-index: 1;
 	}
   }
@@ -52,24 +52,28 @@
 	}
   }
 
-  &.is-web-fullscreen, :fullscreen {
+  &.fullscreen {
 	position: fixed;
 	inset: 0;
 	z-index: 9999;
-	background: #000;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-
-	.gs-video-wrapper {
-	  padding-bottom: 0;
-	}
   }
 
   &:not(.gs-controls-visible) {
-	.gs-progress-container, &.layout-horizontal .gs-info-panel {
-	  transform: translateY(calc(var(--gs-ctrl-h) + 2px));
+	&.layout-horizontal .gs-info-panel {
+	  transform: translateY(calc(var(--gs-ctrl-h) + 6px));
 	  transition-delay: var(--gs-progress-out-delay);
+	}
+
+	.gs-progress-container {
+	  transform: translateY(calc(var(--gs-ctrl-h) - 4px));
+	  transition-delay: var(--gs-progress-out-delay);
+
+	  .gs-progress-track {
+		background: transparent;
+	  }
 	}
 
 	.gs-controls {
@@ -84,8 +88,17 @@
 	  transition-delay: 0s !important;
 	}
 
-	.gs-progress-container, &.layout-horizontal .gs-info-panel {
-	  transform: translateY(3px) !important;
+	&.layout-horizontal.list-visibility-always .gs-video-wrapper {
+	  padding-bottom: 44px;
+	}
+
+	&.layout-horizontal .gs-info-panel {
+	  transform: translateY(12px) !important;
+	  transition-delay: 0s !important;
+	}
+
+	.gs-progress-container {
+	  transform: translateY(-3) !important;
 	  transition-delay: 0s !important;
 	}
   }

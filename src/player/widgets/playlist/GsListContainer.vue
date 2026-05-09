@@ -1,10 +1,6 @@
 <template>
   <div
       class="gs-list-container"
-      :class="[
-        `visibility-${cxt.listVisibility}`,
-        `layout-${cxt.layout}`
-      ]"
       @click.stop.prevent=""
       @wheel.stop=''
       @dblclick.stop.prevent=""

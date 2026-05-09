@@ -7,6 +7,7 @@
        @mouseleave="onMouseleave"
        :class="{hovered}"
        ref="panelRef"
+       :style="{pointerEvents: hovered ? 'auto' : 'none'}"
   >
     <div class="gs-info-header">
       <GsAuthor
