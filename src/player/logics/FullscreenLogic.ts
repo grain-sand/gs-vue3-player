@@ -1,11 +1,12 @@
 import {IGsWidgetContext, IGsWidgetProps, IPlayerCoreExpose} from "../../type";
 import {watch} from "vue";
+import {wait} from "gs-base/timer";
 
 export function fullscreenLogic() {
 
-	let core: IPlayerCoreExpose, cxt: IGsWidgetContext, stopWatch: Function;
+	let core: IPlayerCoreExpose, cxt: IGsWidgetContext, stopScreenWatch: Function, stopSizeWatch: Function;
 
-	const onFullscreenChange = (isFullscreen: boolean) => {
+	const onFullscreenChange = async (isFullscreen: boolean) => {
 		const {playerRoot: root} = cxt;
 
 		if (isFullscreen && root) {
@@ -15,23 +16,28 @@ export function fullscreenLogic() {
 
 		// 处理质量调整
 		if (isFullscreen) {
-			core.toBestQuality({
-				width: cxt?.rootSize[0] ?? 0,
-				height: cxt?.rootSize[1] ?? 0,
-			});
+			await wait(10)
+			const [width, height] = cxt.rootSize;
+			core.toBestQuality({width, height});
 		} else {
 			core.autoQualityHls?.();
 		}
 	};
 
+	const onSizeChange = ([width, height]) => {
+		if (cxt.isFullscreen) core.toBestQuality({width, height})
+	}
+	
 	return {
 		mount(p: IGsWidgetProps): void {
 			({core, cxt} = p);
-			stopWatch = watch(() => cxt.isFullscreen, onFullscreenChange);
+			stopScreenWatch = watch(() => cxt.isFullscreen, onFullscreenChange);
+			stopSizeWatch = watch(() => cxt.rootSize, onSizeChange);
 		},
 		unmount(): void {
-			stopWatch?.();
-			core = cxt = stopWatch = null;
+			stopScreenWatch?.();
+			stopSizeWatch?.();
+			core = cxt = stopScreenWatch = stopSizeWatch = null;
 		}
 	};
 }
