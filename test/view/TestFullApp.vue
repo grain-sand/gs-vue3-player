@@ -15,6 +15,7 @@
           ]
         }"
         :download-handler="download"
+        :default-transform="{scaleMode:'fit'}"
     />
     <hr/>
     handleClick: {{ playerRef?.handleClick }}<br/>

@@ -1,13 +1,16 @@
 import type {IGsLogic, IGsWidgetProps} from '../../type';
 import {watch} from 'vue';
+import {Timer} from "gs-base/timer";
 
 export class TransformLogic implements IGsLogic {
 	private props: IGsWidgetProps | null = null;
 	private isDragging = false;
 	private startPos = {x: 0, y: 0};
 	private startTranslate = {x: 0, y: 0};
-	private cleanup: (() => void) | null = null;
+	private stopWatchTrans: Function;
+	private stopWatchOther: Function;
 	private handleClick = false;
+	private timer = new Timer(100)
 
 	mount(props: IGsWidgetProps): void {
 		this.props = props;
@@ -18,11 +21,10 @@ export class TransformLogic implements IGsLogic {
 
 	unmount(): void {
 		this.unregisterEvents();
-		if (this.cleanup) {
-			this.cleanup();
-			this.cleanup = null;
-		}
-		this.props = null;
+		this.stopWatchTrans?.();
+		this.stopWatchOther?.();
+		this.timer.cancel()
+		this.timer = this.stopWatchTrans = this.stopWatchOther = this.props = null;
 	}
 
 	private registerEvents(): void {
@@ -49,12 +51,20 @@ export class TransformLogic implements IGsLogic {
 	}
 
 	private setupWatcher(): void {
-		const {cxt} = this.props!;
+		const {cxt, core} = this.props!;
 
-		this.cleanup = watch(
-			() => cxt.transformState,
+		this.stopWatchTrans = watch(
+			() => cxt.transform,
 			() => this.updateTransformStyle(),
 			{deep: true}
+		);
+		this.stopWatchOther = watch(
+			() => [cxt.rootSize, core.src],
+			async () => {
+				await this.timer.reWait();
+				this.updateTransformStyle()
+			},
+			{deep: true, immediate: true}
 		);
 	}
 
@@ -62,7 +72,7 @@ export class TransformLogic implements IGsLogic {
 		if (!this.props) return;
 		const {core, cxt} = this.props;
 
-		const state = cxt.transformState;
+		const state = cxt.transform;
 		const transforms: string[] = [];
 		const [containerW, containerH] = cxt.rootSize;
 
@@ -85,14 +95,14 @@ export class TransformLogic implements IGsLogic {
 				core.style.width = 'auto';
 				core.style.height = 'auto';
 			}
-		} else if (typeof state.scaleMode === 'number') {
-			core.style.width = 'auto';
-			core.style.height = 'auto';
-			transforms.push(`scale(${state.scaleMode})`);
 		} else {
 			core.style.width = 'auto';
 			core.style.height = 'auto';
-			transforms.push('scale(1)');
+			if (typeof state.scaleMode === 'number') {
+				transforms.push(`scale(${state.scaleMode})`);
+			} else {
+				transforms.push('scale(1)');
+			}
 		}
 
 		if (state.flipHorizontal) {
@@ -117,7 +127,7 @@ export class TransformLogic implements IGsLogic {
 	private onMouseDown = (e: MouseEvent) => {
 		this.isDragging = true;
 		this.startPos = {x: e.clientX, y: e.clientY};
-		const state = this.props!.cxt.transformState;
+		const state = this.props!.cxt.transform;
 		this.startTranslate = {x: state.translateX, y: state.translateY};
 
 		document.addEventListener('mousemove', this.onMouseMove);
@@ -132,7 +142,7 @@ export class TransformLogic implements IGsLogic {
 		const dx = e.clientX - this.startPos.x;
 		const dy = e.clientY - this.startPos.y;
 
-		const state = this.props.cxt.transformState;
+		const state = this.props.cxt.transform;
 		state.translateX = this.startTranslate.x + dx;
 		state.translateY = this.startTranslate.y + dy;
 	};
@@ -150,7 +160,7 @@ export class TransformLogic implements IGsLogic {
 		this.isDragging = true;
 		const touch = e.touches[0];
 		this.startPos = {x: touch.clientX, y: touch.clientY};
-		const state = this.props!.cxt.transformState;
+		const state = this.props!.cxt.transform;
 		this.startTranslate = {x: state.translateX, y: state.translateY};
 		e.preventDefault();
 	};
@@ -163,7 +173,7 @@ export class TransformLogic implements IGsLogic {
 		const dx = touch.clientX - this.startPos.x;
 		const dy = touch.clientY - this.startPos.y;
 
-		const state = this.props.cxt.transformState;
+		const state = this.props.cxt.transform;
 		state.translateX = this.startTranslate.x + dx;
 		state.translateY = this.startTranslate.y + dy;
 		e.preventDefault();

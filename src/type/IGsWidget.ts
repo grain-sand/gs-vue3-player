@@ -3,26 +3,7 @@ import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
 import {IGsPlayerProps} from "./IGsPlayerProps";
 import {II18n} from "./II18n";
-
-export interface ITransformState {
-	draggable: boolean;
-	flipHorizontal: boolean;
-	flipVertical: boolean;
-	rotation: number;
-	scaleMode: 'fit' | 'auto' | number;
-	translateX: number;
-	translateY: number;
-}
-
-export const DefaultTransformState: Readonly<ITransformState> = Object.freeze({
-	draggable: false,
-	flipHorizontal: false,
-	flipVertical: false,
-	rotation: 0,
-	scaleMode: 'auto',
-	translateX: 0,
-	translateY: 0
-});
+import {IGsTransform} from "./IGsTransform";
 
 export interface IGsWidgetContext {
 
@@ -80,11 +61,11 @@ export interface IGsWidgetContext {
 	/**
 	 * 变换状态
 	 */
-	readonly transformState: ITransformState;
+	readonly transform: IGsTransform;
 	/**
 	 * 变换状态是否被改变
 	 */
-	readonly hasTransformChanged: boolean;
+	readonly transformChanged: boolean;
 
 	/**
 	 * 更新根元素实时尺寸（内部使用）

@@ -61,7 +61,7 @@
 	overflow: hidden;
   }
 
-  &:not(.gs-controls-visible) {
+  &:not(.controls-visible) {
 	&.layout-horizontal .gs-info-panel {
 	  transform: translateY(calc(var(--gs-ctrl-h) + 6px));
 	  transition-delay: var(--gs-progress-out-delay);
@@ -82,7 +82,7 @@
 	}
   }
 
-  &.gs-controls-visible {
+  &.controls-visible {
 	.gs-controls {
 	  transform: translateY(0%);
 	  transition-delay: 0s !important;

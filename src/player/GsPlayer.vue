@@ -1,13 +1,13 @@
 <template>
   <teleport :to="pageRoot" :disabled="!isWebFullscreen">
     <div
-        class="gs-player"
         :class="[
+          'gs-player',
           `layout-${rtLayout}`,
           `list-visibility-${listVisibility}`,
           {
             'fullscreen': isFullscreen,
-            'gs-controls-visible': controlsVisible
+            'controls-visible': controlsVisible
           }
         ]"
         ref="rootRef"
@@ -83,14 +83,14 @@ import {
   DefaultLinkHandler,
   DefaultListContainerVisibility,
   DefaultRates,
-  DefaultTransformState,
+  DefaultTransform,
   IGsPlayerEmits,
   IGsPlayerExpose,
   IGsPlayerProps,
   IGsWidgetContext,
   II18n,
   IPlayerCoreExpose,
-  ITransformState,
+  IGsTransform,
   LayoutMode,
   VisibilityMode
 } from '../type';
@@ -104,7 +104,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   layout: DefaultLayoutMode,
   handleClick: true,
   handleDblClick: true,
-  rates: () => [...DefaultRates],
+  rates: () => DefaultRates,
   controlVisibility: DefaultControlVisibility,
   pageRoot: () => document.body,
   keyboardTarget: '.gs-player',
@@ -112,9 +112,12 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   listVisibility: DefaultListContainerVisibility,
   infoPanelVisible: true,
   linkHandler: DefaultLinkHandler,
+  defaultTransform: <any>DefaultTransform,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
+
+const defaultTransform = Object.freeze({...DefaultTransform, ...props.defaultTransform});
 
 function trigger<T extends keyof IGsPlayerEmits>(e: T, arg: Parameters<IGsPlayerEmits[T]>[0]) {
   // @ts-ignore
@@ -141,14 +144,18 @@ const helpVisible = ref(false);
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
 
-const transformState = ref<ITransformState>({...DefaultTransformState});
+const transform = ref<IGsTransform>({...defaultTransform});
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
-const hasTransformChanged = computed(() => {
-  const state = transformState.value;
-  return state.flipHorizontal || state.flipVertical || state.rotation !== 0 ||
-      state.scaleMode !== 'auto' || state.translateX !== 0 || state.translateY !== 0;
+const transformChanged = computed(() => {
+  const state = transform.value;
+  return state.flipHorizontal !== defaultTransform.flipHorizontal ||
+      state.flipVertical !== defaultTransform.flipVertical ||
+      state.rotation !== defaultTransform.rotation ||
+      state.scaleMode !== defaultTransform.scaleMode ||
+      state.translateX !== defaultTransform.translateX ||
+      state.translateY !== defaultTransform.translateY;
 });
 
 const isFullscreen = computed(() => {
@@ -173,7 +180,7 @@ const toggleListVisibility = () => listVisibility.value = listVisibility.value =
 
 const setLayout = (layout: LayoutMode) => currLayout.value = layout
 
-const resetTransform = () => transformState.value = {...DefaultTransformState}
+const resetTransform = () => transform.value = {...defaultTransform}
 
 const widgetContext = shallowRef<IGsWidgetContext>({
   get aspectRatio() {
@@ -233,11 +240,11 @@ const widgetContext = shallowRef<IGsWidgetContext>({
   set helpVisible(value: boolean) {
     helpVisible.value = value;
   },
-  get transformState() {
-    return transformState.value;
+  get transform() {
+    return transform.value;
   },
-  get hasTransformChanged() {
-    return hasTransformChanged.value;
+  get transformChanged() {
+    return transformChanged.value;
   },
   fullscreen,
   webFullscreen,
@@ -326,11 +333,11 @@ defineExpose<IGsPlayerExpose>({
   exitFullscreen,
   setLayout,
   toggleListVisibility,
-  get transformState() {
-    return transformState.value;
+  get transform() {
+    return transform.value;
   },
-  get hasTransformChanged() {
-    return hasTransformChanged.value;
+  get transformChanged() {
+    return transformChanged.value;
   },
   resetTransform,
 });

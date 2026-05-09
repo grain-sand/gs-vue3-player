@@ -6,8 +6,11 @@ import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
 import {IContextMenuOption} from "./IContextMenuOption";
+import {IGsTransform} from "./IGsTransform";
 
-export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) => window.open(url));
+export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) => {
+	window.open(url)
+});
 
 export interface IGsPlayerProps extends IPlayerCoreProps {
 
@@ -184,5 +187,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - `IContextMenuOption` 包含默认上下文菜单，并对默认上下文菜单选项进行配置
 	 */
 	contextMenu?: null | IGsWidget | IContextMenuOption;
+
+	defaultTransform?: Partial<IGsTransform>;
 
 }

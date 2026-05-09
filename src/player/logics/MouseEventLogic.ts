@@ -40,7 +40,7 @@ export function mouseEventLogic() {
 		e.preventDefault();
 
 		if (e.ctrlKey || e.metaKey) {
-			const currentScale = cxt.transformState.scaleMode;
+			const currentScale = cxt.transform.scaleMode;
 			let newScale: number | 'fit' | 'auto' = currentScale === 'fit' || currentScale === 'auto' ? 1 : currentScale;
 
 			if (e.deltaY < 0) {
@@ -49,7 +49,7 @@ export function mouseEventLogic() {
 				newScale = Math.max(newScale / 1.2, 0.2);
 			}
 
-			cxt.transformState.scaleMode = newScale;
+			cxt.transform.scaleMode = newScale;
 		} else {
 			if (e.deltaY < 0) {
 				if (core.hasPre) {

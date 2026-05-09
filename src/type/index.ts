@@ -1,5 +1,6 @@
 export * from './UnionTypes';
 export * from './DefaultHlsConfig';
+export * from './IGsTransform';
 
 export * from './IAuthorProps';
 export * from './IGsSpacerProps';
