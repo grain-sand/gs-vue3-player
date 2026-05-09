@@ -34,7 +34,6 @@ export const koKR: II18n = {
     scale2x: '2배 확대',
     scale15x: '1.5배 확대',
     scaleAuto: '원래 크기',
-    openLink: '링크 열기',
     download: '다운로드',
     info: '정보 패널',
     help: '도움말',

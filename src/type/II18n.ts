@@ -67,8 +67,6 @@ export interface II18n {
 		scale15x: string;
 		/** 原始尺寸 */
 		scaleAuto: string;
-		/** 打开链接 */
-		openLink: string;
 		/** 下载 */
 		download: string;
 		/** 信息面板 */

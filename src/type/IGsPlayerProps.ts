@@ -7,6 +7,8 @@ import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
 import {IContextMenuOption} from "./IContextMenuOption";
 
+export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) => window.open(url));
+
 export interface IGsPlayerProps extends IPlayerCoreProps {
 
 	/**

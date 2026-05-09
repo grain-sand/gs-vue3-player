@@ -34,7 +34,6 @@ export const zhTW: II18n = {
     scale2x: '2倍縮放',
     scale15x: '1.5倍縮放',
     scaleAuto: '原始尺寸',
-    openLink: '開啟連結',
     download: '下載',
     info: '資訊面板',
     help: '說明',

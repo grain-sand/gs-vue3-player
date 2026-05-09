@@ -34,7 +34,6 @@ export const jaJP: II18n = {
     scale2x: '2倍拡大',
     scale15x: '1.5倍拡大',
     scaleAuto: '元のサイズ',
-    openLink: 'リンクを開く',
     download: 'ダウンロード',
     info: '情報パネル',
     help: 'ヘルプ',

@@ -10,27 +10,27 @@
   >
     <div class="gs-info-header">
       <GsAuthor
-          v-if="core.src?.author"
-          :author="core.src.author"
-          :link-handler="(url)=>p.props.linkHandler?.(url, core.src)"
+          v-if="src?.author"
+          :author="src.author"
+          :link-handler="authorLink"
           class="gs-info-author"
       />
       <GsDate
-          v-if="core.src?.createdAt"
-          :date="core.src.createdAt"
-          :i18n="p.cxt.i18n.date"
+          v-if="src?.createdAt"
+          :date="src.createdAt"
+          :i18n="cxt.i18n.date"
       />
       <GsButton
-          v-if="core.src?.link"
+          v-if="src?.link&&props.linkHandler"
           :icon="LinkSvg"
-          :title="cxt.i18n.titles.openLink"
-          @click="handleLinkClick"
+          :title="src.link"
+          @click="props.linkHandler(src.link, src)"
       />
       <GsButton
-          v-if="core.src?.downloadUrl&&p.props.downloadHandler"
+          v-if="src?.downloadUrl && props.downloadHandler"
           :icon="DownloadSvg"
           :title="cxt.i18n.titles.download"
-          @click="p.props.downloadHandler(core?.src?.downloadUrl, core?.src)"
+          @click="props.downloadHandler?.(src.downloadUrl, src)"
       />
     </div>
     <div
@@ -60,15 +60,17 @@ const hovered = ref(false);
 
 const p = defineProps<IGsWidgetProps>();
 
+const src = computed(() => p.core?.src);
+
 const html = computed(() => {
-  const text = p.core?.src?.description || p.core?.src?.title?.replace(/\n/g, '<br/>');
+  const text = src.value?.description || src.value?.title?.replace(/\n/g, '<br/>');
   if (!text || !p.props.socioWordHandler) {
     return text;
   }
   return parseSocioWords(text);
 });
 
-
+// todo 隐藏后显示，会计算错误
 const height = computed(() => {
   if (p.cxt.layout === 'vertical') {
     return '4.5em';
@@ -96,6 +98,7 @@ onUnmounted(() => {
   resizeObserver = null;
 })
 
+const authorLink = (url: string) => p.props.linkHandler?.(url, src.value);
 
 function parseSocioWords(text: string): string {
   let result = text;
@@ -113,19 +116,6 @@ function handleContentClick(event: MouseEvent) {
     }
   }
 }
-
-function handleLinkClick() {
-  const url = p.core?.src?.link;
-  if (url) {
-    const handler = p.props.linkHandler;
-    if (handler) {
-      handler(url, p.core?.src);
-    } else {
-      window.open(url);
-    }
-  }
-}
-
 
 function onMouseleave() {
   hovered.value = false;

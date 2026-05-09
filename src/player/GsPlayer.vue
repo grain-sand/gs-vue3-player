@@ -79,6 +79,7 @@ import {
   DefaultControlVisibility,
   DefaultI18nName,
   DefaultLayoutMode,
+  DefaultLinkHandler,
   DefaultListContainerVisibility,
   DefaultRates,
   DefaultTransformState,
@@ -109,6 +110,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   disableWheelNavigation: false,
   listVisibility: DefaultListContainerVisibility,
   infoPanelVisible: true,
+  linkHandler: DefaultLinkHandler,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
