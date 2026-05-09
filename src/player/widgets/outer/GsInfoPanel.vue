@@ -1,6 +1,6 @@
 <template>
   <div class="gs-info-panel"
-       v-if="cxt.infoPanelVisible"
+       v-show="cxt.infoPanelVisible"
        @click.stop.prevent=""
        @wheel.stop=''
        @dblclick.stop.prevent=""
@@ -70,7 +70,6 @@ const html = computed(() => {
   return parseSocioWords(text);
 });
 
-// todo 隐藏后显示，会计算错误
 const height = computed(() => {
   if (p.cxt.layout === 'vertical') {
     return '4.5em';

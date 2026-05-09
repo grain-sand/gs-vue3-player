@@ -16,39 +16,37 @@ const input = [
 
 const addExternal = ['hls.js'];
 
-// logJson(dts)
-
 export default [
-	// ...defineDts({
-	// 	input,
-	// 	buildPackageJson: {
-	// 		deleteProps: /^(devDependencies|scripts)$/,
-	// 		overwriteProps: {
-	// 			sideEffects: ["*.css"],
-	// 			style: "./lib/style.css"
-	// 		},
-	// 		after(pkg) {
-	// 			delete pkg.main;
-	// 			['variables.scss', 'component.scss', 'player.scss','reset.scss','pre.scss', 'main.css']
-	// 				.forEach(e => pkg.exports[`./lib/${e}`] = `./lib/${e}`);
-	// 		}
-	// 	},
-	// 	addPlugins: [
-	// 		scssMerge([
-	// 			'src/player/style/player.scss',
-	// 			'src/component/style/variables.scss',
-	// 			'src/component/style/reset.scss',
-	// 			'src/component/style/component.scss',
-	// 			'src/component/style/pre.scss',
-	// 		])
-	// 	],
-	// 	vueDts: {
-	// 		importPattern: /\.svg$/,
-	// 	},
-	// 	addExternal
-	// 	// vueDts: false,
-	// 	// addExternal: /\.(vue|svg)$/
-	// }),
+	...defineDts({
+		input,
+		buildPackageJson: {
+			deleteProps: /^(devDependencies|scripts)$/,
+			overwriteProps: {
+				sideEffects: ["*.css"],
+				style: "./lib/style.css"
+			},
+			after(pkg) {
+				delete pkg.main;
+				['variables.scss', 'component.scss', 'player.scss','reset.scss','pre.scss', 'main.css']
+					.forEach(e => pkg.exports[`./lib/${e}`] = `./lib/${e}`);
+			}
+		},
+		addPlugins: [
+			scssMerge([
+				'src/player/style/player.scss',
+				'src/component/style/variables.scss',
+				'src/component/style/reset.scss',
+				'src/component/style/component.scss',
+				'src/component/style/pre.scss',
+			])
+		],
+		vueDts: {
+			importPattern: /\.svg$/,
+		},
+		addExternal
+		// vueDts: false,
+		// addExternal: /\.(vue|svg)$/
+	}),
 	...defineJs({
 		input,
 		addPlugins: [
