@@ -256,7 +256,7 @@ function removePlaylistItem(src: number | ISourceWrapper): void {
   trigger('srcRemove', delSrc);
 }
 
-function removeSrcFromPlaylist(src: PlaySource | ISourceWrapper): void {
+function removeSrc(src: PlaySource | ISourceWrapper): void {
   let wrapper: ISourceWrapper | undefined;
   if (typeof src === 'object' && src !== null && '_id' in src) {
     wrapper = src;
@@ -264,6 +264,13 @@ function removeSrcFromPlaylist(src: PlaySource | ISourceWrapper): void {
     wrapper = wrapperMap.get(src as PlaySource);
   }
   if (wrapper) {
+    if (hasNext()) {
+      playNext()
+    } else if (hasPre()) {
+      playPre()
+    } else {
+      setSrc(undefined)
+    }
     removePlaylistItem(wrapper);
   }
 }
@@ -679,8 +686,6 @@ const playNext = async () => {
   const source = navTo(1, props.nextSrc);
   await changeSourceAndPlay(source);
 }
-
-const removeSrc = removeSrcFromPlaylist;
 
 defineExpose<IPlayerCoreExpose>({
   get el() {

@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-	<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-	<path d="M12 6L7 9l1.5 2.5L12 8l3.5 3.5L17 9z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37.5 20" fill="currentColor">
+	<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="16px" font-weight="bold"
+	      font-family="Microsoft YaHei, SimHei, Heiti SC, PingFang SC, sans-serif"
+	      stroke-linecap="round" stroke-linejoin="round"
+	      fill="currentColor" stroke="none"
+	>SVIP
+	</text>
 </svg>

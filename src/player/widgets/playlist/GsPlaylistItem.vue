@@ -86,7 +86,6 @@ function getPartComponent(part: PlaylistItemPart) {
         return defineComponent({
           inheritAttrs: false,
           render: () => {
-            if (current._id === core.src._id) return null;
             return h('button', {
               class: 'gs-playlist-item-remove',
               onClick: (e: Event) => {

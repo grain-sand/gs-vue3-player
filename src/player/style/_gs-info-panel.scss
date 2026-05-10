@@ -52,7 +52,8 @@
 	  left: 2px;
 	  transition: var(--gs-transition);
 	  width: 40%;
-	  > .gs-info-header{
+
+	  > .gs-info-header {
 		text-shadow: .2em .2em 10px rgba(255, 255, 255, 0.5);
 	  }
 
@@ -67,6 +68,11 @@
 		max-width: 336px;
 		transition: all .1s;
 		text-shadow: .2em .2em 10px rgba(0, 0, 0, 0.5);
+	  }
+
+	  &:not(.hovered) > .gs-info-content > * {
+		content: " ";
+		display: inline !important;
 	  }
 
 	  &.hovered {
