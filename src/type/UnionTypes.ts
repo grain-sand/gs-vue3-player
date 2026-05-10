@@ -181,3 +181,7 @@ export const ContextMenuItemNames = [
 ] as const;
 
 export type ContextMenuItemName = (typeof ContextMenuItemNames)[number];
+
+export const AuthorTypes = ['none', 'blue', 'government','business','vip','svip','supper'] as const;
+
+export type AuthorType = (typeof AuthorTypes)[number];
