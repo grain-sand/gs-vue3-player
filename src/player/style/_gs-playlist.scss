@@ -83,6 +83,12 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+
+			.gs-author-icon {
+			  svg {
+				transform: translateY(.05em);
+			  }
+			}
 		  }
 
 		  > .gs-playlist-item-time {

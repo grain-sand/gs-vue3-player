@@ -31,6 +31,35 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+
+	.gs-author-icon {
+	  width: 1.2em;
+	  height: 1.2em;
+
+	  svg {
+		width: 100%;
+		height: 100%;
+		transform: translateY(.2em);
+	  }
+
+	  &.type-vip,
+	  &.type-blue {
+		color: var(--gs-color-blue);
+	  }
+
+	  &.type-business,
+	  &.type-supper {
+		color: var(--gs-color-purple);
+	  }
+
+	  &.type-svip,
+	  &.type-government {
+		color: var(--gs-color-gold);
+	  }
+	}
   }
 
   &.gs-author-clickable {

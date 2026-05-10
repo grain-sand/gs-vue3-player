@@ -35,6 +35,21 @@ import ListSvg from './list.svg';
 import HelpSvg from './help.svg';
 import CloseSvg from './close.svg';
 import DateSvg from './date.svg';
+import VerifiedSvg from './verified.svg';
+import VipSvg from './vip.svg';
+import SvipSvg from './svip.svg';
+import SupperSvg from './supper.svg';
+import {AuthorType} from "../type";
+
+export const AuthorTypeIcons: Record<AuthorType, DefineComponent | null> = {
+	none: null,
+	blue: VerifiedSvg,
+	government: VerifiedSvg,
+	business: VerifiedSvg,
+	vip: VipSvg,
+	svip: SvipSvg,
+	supper: SupperSvg
+} as any;
 
 // 类型断言，确保 svg 文件被正确识别为组件
 export const PlaybackModeIcons: Record<PlaybackMode, DefineComponent> = {

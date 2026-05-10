@@ -1,8 +1,7 @@
 <template>
   <figure
       v-if="author"
-      class="gs-author"
-      :class="{ 'gs-author-clickable': link }"
+      :class="['gs-author', { 'gs-author-clickable': link }]"
       @click="link && props.linkHandler?.(link)"
       :title="link"
   >
@@ -10,14 +9,20 @@
       <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">
       <UserSvg v-else/>
     </div>
-    <figcaption class="gs-author-name">{{ author.name }}</figcaption>
+    <figcaption class="gs-author-name">
+      {{ author.name }}
+      <span v-if="typeIcon.src||typeIcon.svg" :class="['gs-author-icon', authorTypeClass]">
+        <img v-if="typeIcon.src" :src="typeIcon.src" alt="verified">
+        <component v-else :is="typeIcon.svg"/>
+      </span>
+    </figcaption>
   </figure>
 </template>
 
 <script setup lang="ts">
 import {IAuthorProps} from '../type';
-import {UserSvg} from '../svgs';
-import {computed} from "vue";
+import {UserSvg, AuthorTypeIcons} from '../svgs';
+import {computed, DefineComponent} from "vue";
 
 defineOptions({inheritAttrs: false});
 
@@ -27,5 +32,19 @@ const props = withDefaults(defineProps<IAuthorProps>(), {
 
 const link = computed(() => props.handleClick && props.linkHandler && props.author?.link);
 
+const typeIcon = computed<{ svg?: DefineComponent | null, src?: string }>(() => {
+  const type = props.author?.type;
+  if (!type) return {};
+  if (type in AuthorTypeIcons) {
+    return {svg: AuthorTypeIcons[type as keyof typeof AuthorTypeIcons]};
+  }
+  return {src: type as string};
+});
 
+const authorTypeClass = computed(() => {
+  if (typeIcon.value.svg) {
+    return `type-${props.author?.type}`;
+  }
+  return `type-none`;
+});
 </script>
