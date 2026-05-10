@@ -6,7 +6,7 @@
 	color: var(--gs-text);
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 10px;
 	z-index: 2;
 
 	> .gs-info-header, > .gs-info-content {
@@ -26,17 +26,17 @@
 		margin-right: 8px;
 	  }
 
-	  > .gs-date {
-		transform: translateY(2px);
-	  }
+	  > .gs-btn-wrapper {
+		margin: -7.5px 0!important;
 
-	  > .gs-btn-wrapper > .gs-btn {
-		width: 28px;
-		height: 28px;
+		> .gs-btn {
+		  width: 28px;
+		  height: 28px;
 
-		svg {
-		  width: 18px;
-		  height: 18px;
+		  svg {
+			width: 18px;
+			height: 18px;
+		  }
 		}
 	  }
 	}
@@ -55,6 +55,12 @@
 
 	  > .gs-info-header {
 		text-shadow: .2em .2em 10px rgba(255, 255, 255, 0.5);
+		.gs-author-icon{
+		  transform: translateY(-.2em);
+		  &.type-svip, &.type-vip {
+			transform: translateY(.5px);
+		  }
+		}
 	  }
 
 	  > .gs-info-content {
@@ -96,12 +102,14 @@
 
   &.layout-vertical {
 	.gs-info-panel {
-	  >.gs-info-header .gs-author-icon{
+	  > .gs-info-header .gs-author-icon {
 		transform: translateY(-1px);
-		&.type-svip,&.type-vip{
+
+		&.type-svip, &.type-vip {
 		  transform: translateY(1px);
 		}
 	  }
+
 	  > .gs-info-content {
 		font-size: 13px;
 		line-height: 1.5em;

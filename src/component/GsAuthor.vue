@@ -10,7 +10,7 @@
       <UserSvg v-else/>
     </div>
     <figcaption class="gs-author-name">
-      {{ author.name }}
+      <span class="gs-author-text">{{ author.name }}</span>
       <span v-if="typeIcon.src||typeIcon.svg" :class="['gs-author-icon', authorTypeClass]">
         <img v-if="typeIcon.src" :src="typeIcon.src" alt="verified">
         <component v-else :is="typeIcon.svg"/>

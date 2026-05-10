@@ -47,7 +47,7 @@
 	}
 
 	.gs-info-panel {
-	  bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 8px);
+	  bottom: calc(var(--gs-ctrl-h) + var(--gs-progress-min-h) + 11px);
 	  max-height: calc(100% - var(--gs-ctrl-h) - var(--gs-progress-min-h) - 48px);
 	}
   }
@@ -63,7 +63,7 @@
 
   &:not(.controls-visible) {
 	&.layout-horizontal .gs-info-panel {
-	  transform: translateY(calc(var(--gs-ctrl-h) + 6px));
+	  transform: translateY(calc(var(--gs-ctrl-h) + 8px));
 	  transition-delay: var(--gs-progress-out-delay);
 	}
 
@@ -93,7 +93,7 @@
 	}
 
 	&.layout-horizontal .gs-info-panel {
-	  transform: translateY(12px) !important;
+	  transform: translateY(11px) !important;
 	  transition-delay: 0s !important;
 	}
 
