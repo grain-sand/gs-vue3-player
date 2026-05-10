@@ -9,8 +9,10 @@
           $props.class
         ]"
         :title="title"
-        @click="$emit('click', $event)"
         :disabled="disabled"
+        @click="$emit('click', $event)"
+        @mouseenter="$emit('mouseenter', $event)"
+        @mouseleave="$emit('mouseleave', $event)"
     >
       <component v-if="icon" :is="icon"/>
       <span v-else-if="text">{{ text }}</span>

@@ -12,4 +12,6 @@ export interface IGsButtonProps {
 
 export interface IGsButtonEmits {
   click(event: MouseEvent): void;
+  mouseenter(event: MouseEvent): void;
+  mouseleave(event: MouseEvent): void;
 }
