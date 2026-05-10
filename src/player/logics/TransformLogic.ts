@@ -71,57 +71,63 @@ export class TransformLogic implements IGsLogic {
 	private updateTransformStyle(): void {
 		if (!this.props) return;
 		const {core, cxt} = this.props;
-
-		const state = cxt.transform;
+		const {scaleMode, flipHorizontal, flipVertical, rotation, translateX, translateY} = cxt.transform;
+		const {style} = core;
 		const transforms: string[] = [];
-		const [containerW, containerH] = cxt.rootSize;
-
-		transforms.push('scale(1)');
-		if (state.scaleMode === 'fit') {
-			const [videoWidth, videoHeight] = core.size;
-
-			if (videoWidth > 0 && videoHeight > 0 && containerW > 0 && containerH > 0) {
-				const videoRatio = videoWidth / videoHeight;
-				const containerRatio = containerW / containerH;
+		if (scaleMode === 'fit') {
+			const [cw, ch] = cxt.rootSize;
+			const [vw, vh] = core.size;
+			transforms.push('scale(1)');
+			if (vw > 0 && vh > 0 && cw > 0 && ch > 0) {
+				const videoRatio = vw / vh;
+				const containerRatio = cw / ch;
 
 				if (videoRatio > containerRatio) {
-					core.style.width = '100%';
-					core.style.height = 'auto';
+					style.width = '100%';
+					style.height = 'auto';
 				} else {
-					core.style.width = 'auto';
-					core.style.height = '100%';
+					style.width = 'auto';
+					style.height = '100%';
 				}
 			} else {
-				core.style.width = 'auto';
-				core.style.height = 'auto';
+				style.width = 'auto';
+				style.height = 'auto';
 			}
 		} else {
-			core.style.width = 'auto';
-			core.style.height = 'auto';
-			if (typeof state.scaleMode === 'number') {
-				transforms.push(`scale(${state.scaleMode})`);
+			style.width = 'auto';
+			style.height = 'auto';
+			if (typeof scaleMode === 'number') {
+				transforms.push(`scale(${scaleMode})`);
 			} else {
 				transforms.push('scale(1)');
 			}
 		}
 
-		if (state.flipHorizontal) {
+		if (flipHorizontal) {
 			transforms.push('scaleX(-1)');
 		}
 
-		if (state.flipVertical) {
+		if (flipVertical) {
 			transforms.push('scaleY(-1)');
 		}
 
-		if (state.rotation !== 0) {
-			transforms.push(`rotate(${state.rotation}deg)`);
+		if (rotation !== 0) {
+			transforms.push(`rotate(${rotation}deg)`);
 		}
 
-		if (state.translateX !== 0 || state.translateY !== 0) {
-			transforms.push(`translate(${state.translateX}px, ${state.translateY}px)`);
+		if (translateX !== 0 || translateY !== 0) {
+			transforms.push(`translate(${translateX}px, ${translateY}px)`);
 		}
 
-		core.style.transform = transforms.join(' ');
+		style.transform = transforms.join(' ');
+		if(cxt.isFullscreen) {
+			const vs = core.el.getBoundingClientRect();
+			const [ww, wh] = cxt.wrapperSize;
+			core.toBestQuality({
+				width: Math.max(ww, vs.width),
+				height: Math.max(wh, vs.height),
+			})
+		}
 	}
 
 	private onMouseDown = (e: MouseEvent) => {
