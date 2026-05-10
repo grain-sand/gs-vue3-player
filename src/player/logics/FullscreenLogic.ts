@@ -4,7 +4,8 @@ import {wait} from "gs-base/timer";
 
 export function fullscreenLogic() {
 
-	let core: IPlayerCoreExpose, cxt: IGsWidgetContext, stopScreenWatch: Function, stopSizeWatch: Function;
+	let core: IPlayerCoreExpose, cxt: IGsWidgetContext, stopScreenWatch: Function,
+		stopSizeWatch: Function;
 
 	const onFullscreenChange = async (isFullscreen: boolean) => {
 		const {playerRoot: root} = cxt;
@@ -19,6 +20,7 @@ export function fullscreenLogic() {
 			await wait(10)
 			const [width, height] = cxt.rootSize;
 			core.toBestQuality({width, height});
+			(cxt.keyboardTarget as HTMLElement).focus?.();
 		} else {
 			core.autoQualityHls?.();
 		}
@@ -27,7 +29,7 @@ export function fullscreenLogic() {
 	const onSizeChange = ([width, height]) => {
 		if (cxt.isFullscreen) core.toBestQuality({width, height})
 	}
-	
+
 	return {
 		mount(p: IGsWidgetProps): void {
 			({core, cxt} = p);

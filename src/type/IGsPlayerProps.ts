@@ -54,8 +54,8 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 */
 	pageRoot?: string | HTMLElement;
 
-	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为false则键盘事件无效 */
-	keyboardTarget?: HTMLElement | Document | null | string | false;
+	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为`null`则键盘事件无效 */
+	keyboardTarget?: HTMLElement | Document | null | string;
 
 	/**
 	 * 是否禁用鼠标滚轮切换上一个下一个，默认为false（不禁用）

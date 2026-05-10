@@ -107,7 +107,6 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   rates: () => DefaultRates,
   controlVisibility: DefaultControlVisibility,
   pageRoot: () => document.body,
-  keyboardTarget: '.gs-player',
   disableWheelNavigation: false,
   listVisibility: DefaultListContainerVisibility,
   infoPanelVisible: true,
@@ -158,6 +157,21 @@ const transformChanged = computed(() => {
       state.translateY !== defaultTransform.translateY;
 });
 
+const keyboardTarget = computed(() => {
+  const {keyboardTarget: kt} = props
+  if (kt === null) {
+    return null;
+  } else if (kt === document || (kt as any) === window) {
+    return document;
+  } else if (kt instanceof HTMLElement) {
+    return kt;
+  } else if (typeof kt === 'string') {
+    return document.querySelector(kt) || rootRef.value;
+  } else {
+    return rootRef.value;
+  }
+});
+
 const isFullscreen = computed(() => {
   rootSize.value
   return isWebFullscreen.value || !!document.fullscreenElement;
@@ -183,6 +197,9 @@ const setLayout = (layout: LayoutMode) => currLayout.value = layout
 const resetTransform = () => transform.value = {...defaultTransform}
 
 const widgetContext = shallowRef<IGsWidgetContext>({
+  get keyboardTarget() {
+    return keyboardTarget.value
+  },
   get aspectRatio() {
     return currentAspectRatio.value;
   },
@@ -268,6 +285,9 @@ onMounted(() => LogicManager.mount(widgetProps.value));
 onBeforeUnmount(() => LogicManager.unmount(widgetProps.value));
 
 defineExpose<IGsPlayerExpose>({
+  get keyboardTarget() {
+    return keyboardTarget.value
+  },
   get core() {
     return coreRef.value;
   },

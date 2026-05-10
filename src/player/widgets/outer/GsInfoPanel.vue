@@ -35,7 +35,7 @@
       />
     </div>
     <div
-        class="gs-info-content"
+        :class="['gs-info-content', {'not-hovered': !hovered}]"
         v-html="html"
         ref="contentRef"
         @click.stop.prevent="handleContentClick"

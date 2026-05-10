@@ -48,6 +48,13 @@ export interface IGsWidgetContext {
 	readonly videoWrapper: HTMLElement;
 
 	/**
+	 * 键盘事件注册到的元素
+	 * - 默认 gs-player(需要设置可以获取焦点)
+	 * - 如果值为`null`则键盘事件无效
+	 */
+	readonly keyboardTarget: HTMLElement | Document
+
+	/**
 	 * 视频容器元素实时尺寸（实时）
 	 * - 格式：[width, height]
 	 */

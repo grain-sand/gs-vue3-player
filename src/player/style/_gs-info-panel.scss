@@ -70,9 +70,14 @@
 		text-shadow: .2em .2em 10px rgba(0, 0, 0, 0.5);
 	  }
 
-	  &:not(.hovered) > .gs-info-content > * {
-		content: " ";
-		display: inline !important;
+	  &:not(.hovered) > .gs-info-content.not-hovered {
+		> * {
+		  display: inline !important;
+		}
+
+		> br {
+		  display: none !important;
+		}
 	  }
 
 	  &.hovered {
@@ -91,6 +96,12 @@
 
   &.layout-vertical {
 	.gs-info-panel {
+	  >.gs-info-header .gs-author-icon{
+		transform: translateY(-1px);
+		&.type-svip,&.type-vip{
+		  transform: translateY(1px);
+		}
+	  }
 	  > .gs-info-content {
 		font-size: 13px;
 		line-height: 1.5em;

@@ -5,7 +5,7 @@ export function keyboardLogic() {
 	let boundHandler: ((e: KeyboardEvent) => void) | null = null;
 
 	const handleKeydown = (core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: KeyboardEvent) => {
-		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).getAttribute?.('contenteditable')) {
 			return;
 		}
 
@@ -72,22 +72,9 @@ export function keyboardLogic() {
 	};
 
 	return {
-		mount({props, cxt, core}: IGsWidgetProps): void {
-			const {keyboardTarget} = props;
-
-			if (keyboardTarget === false) {
-				return;
-			} else if (keyboardTarget === document || (keyboardTarget as any) === window) {
-				target = document;
-			} else if (keyboardTarget instanceof HTMLElement) {
-				target = keyboardTarget;
-			} else if (typeof keyboardTarget === 'string') {
-				target = document.querySelector(keyboardTarget) || cxt.playerRoot;
-			} else {
-				target = cxt.playerRoot;
-			}
-
-			if (target) {
+		mount({cxt, core}: IGsWidgetProps): void {
+			const {keyboardTarget} = cxt;
+			if ((target = keyboardTarget)) {
 				boundHandler = handleKeydown.bind(null, core, cxt);
 				target.addEventListener('keydown', boundHandler);
 				if ('setAttribute' in target) {
