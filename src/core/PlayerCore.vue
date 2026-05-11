@@ -6,8 +6,8 @@
       :controls="props.controls"
       :muted="props.muted"
       :volume="props.volume"
-      @volumechange="volumeChange"
-      @ratechange="rateChange"
+      @volumechange="volumeChanged"
+      @ratechange="rateChanged"
       @error="error = videoRef.error"
       @play="playing = true"
       @pause="playing = false"
@@ -253,7 +253,7 @@ function removePlaylistItem(src: number | ISourceWrapper): void {
   if (!delSrc) return;
   playlist.value.splice(i, 1);
   wrapperMap.delete(delSrc._raw);
-  trigger('srcRemove', delSrc);
+  trigger('srcRemoved', delSrc);
 }
 
 function removeSrc(src: PlaySource | ISourceWrapper): void {
@@ -273,6 +273,40 @@ function removeSrc(src: PlaySource | ISourceWrapper): void {
     }
     removePlaylistItem(wrapper);
   }
+}
+
+function insertSrc(src: PlaySource | PlaySource[], index: number = -1): void {
+  const sources = Array.isArray(src) ? src : [src];
+  const newWrappers: ISourceWrapper[] = [];
+
+  for (let i = 0; i < sources.length; i++) {
+    const s = sources[i];
+    let wrapper = wrapperMap.get(s);
+    if (!wrapper) {
+      wrapper = new SourceWrapper(s, idCounter++);
+      wrapperMap.set(s, wrapper);
+    } else {
+      let existsInPlaylist = false;
+      for (let j = 0; j < playlist.value.length; j++) {
+        if (playlist.value[j]._id === wrapper._id) {
+          existsInPlaylist = true;
+          break;
+        }
+      }
+      if (existsInPlaylist) {
+        continue;
+      }
+    }
+    newWrappers.push(wrapper);
+  }
+
+  if (!newWrappers.length) {
+    return;
+  }
+
+  const insertPos = index >= 0 && index <= playlist.value.length ? index : playlist.value.length;
+  playlist.value.splice(insertPos, 0, ...newWrappers);
+  trigger('srcInserted', newWrappers);
 }
 
 function getWrapper(src: PlaySource): ISourceWrapper | undefined {
@@ -354,22 +388,22 @@ function loadedmetadata() {
   }
 }
 
-function rateChange() {
+function rateChanged() {
   const old = rate.value;
   rate.value = videoRef.value?.playbackRate || 1
   if (rate.value !== old) {
-    trigger('rateChange', rate.value);
+    trigger('rateChanged', rate.value);
   }
 }
 
-function volumeChange() {
+function volumeChanged() {
   if (muted.value !== videoRef.value?.muted) {
     muted.value = videoRef.value?.muted || false
-    trigger('mutedChange', muted.value);
+    trigger('mutedChanged', muted.value);
   }
   if (volume.value !== videoRef.value?.volume) {
     volume.value = videoRef.value?.volume || 0
-    trigger('volumeChange', volume.value);
+    trigger('volumeChanged', volume.value);
   }
 }
 
@@ -408,7 +442,7 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
   innerSrc.value = wrapper;
 
   if (wrapper) {
-    setTimeout(() => trigger('srcChange', wrapper), 10);
+    setTimeout(() => trigger('srcChanged', wrapper), 10);
   }
   destroyHls();
   const video = videoRef.value;
@@ -456,7 +490,7 @@ watch(() => props.src, (newSrc) => {
 watch(() => props.mode, (newMode) => {
   if (newMode) {
     currentMode.value = newMode;
-    trigger('modeChange', newMode);
+    trigger('modeChanged', newMode);
   }
 });
 
@@ -731,7 +765,7 @@ defineExpose<IPlayerCoreExpose>({
   },
   set mode(v) {
     currentMode.value = v;
-    trigger('modeChange', v);
+    trigger('modeChanged', v);
   },
   get playlist() {
     return playlist.value
@@ -785,6 +819,7 @@ defineExpose<IPlayerCoreExpose>({
     return bestQuality.value;
   },
   removeSrc,
+  insertSrc,
   playPre,
   playNext,
   get pipState() {

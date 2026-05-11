@@ -3,7 +3,7 @@
     <gs-player
         ref="playerRef"
         :playlist="videoList"
-        @src-change="eventChange('src-change',$event)"
+        @src-changed="eventChange('src-changed',$event)"
         :keyboard-target="tar"
         :list-container="{
           appendTabs: playerRef?.layout === 'vertical' ?undefined: [

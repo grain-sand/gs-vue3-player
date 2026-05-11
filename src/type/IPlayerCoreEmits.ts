@@ -21,17 +21,47 @@ export interface IPlayerCoreMouseEmits {
 
 export interface IPlayerCoreMediaEmits {
 
-	srcChange: (src: ISourceWrapper) => void | Promise<void>
+	/**
+	 * 当前播放源改变后触发
+	 * @param src
+	 */
+	srcChanged: (src: ISourceWrapper) => void | Promise<void>
 
-	srcRemove: (src: ISourceWrapper) => void | Promise<void>
+	/**
+	 * 从播放列表移除后触发
+	 * @param src
+	 */
+	srcRemoved: (src: ISourceWrapper) => void | Promise<void>
 
-	volumeChange: (volume: number) => void | Promise<void>
+	/**
+	 * 插入播放列表后触发
+	 * @param src
+	 */
+	srcInserted: (src: ISourceWrapper[]) => void | Promise<void>
 
-	mutedChange: (muted: boolean) => void | Promise<void>
+	/**
+	 * 音量改变后触发
+	 * @param volume
+	 */
+	volumeChanged: (volume: number) => void | Promise<void>
 
-	rateChange: (rate: number) => void | Promise<void>
+	/**
+	 * 静音状态改变后触发
+	 * @param muted
+	 */
+	mutedChanged: (muted: boolean) => void | Promise<void>
 
-	modeChange: (mode: PlaybackMode) => void | Promise<void>
+	/**
+	 * 播放速率改变后触发
+	 * @param rate
+	 */
+	rateChanged: (rate: number) => void | Promise<void>
+
+	/**
+	 * 播放模式改变后触发
+	 * @param mode
+	 */
+	modeChanged: (mode: PlaybackMode) => void | Promise<void>
 
 }
 

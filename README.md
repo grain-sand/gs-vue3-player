@@ -38,9 +38,9 @@ yarn add gs-vue3-player
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'infoPanel', 'playlist']"
       :keyboardTarget=".gs-player"
-      @srcChange="handleSrcChange"
-      @volumeChange="handleVolumeChange"
-      @modeChange="handleModeChange"
+      @srcChanged="handleSrcChange"
+      @volumeChanged="handleVolumeChange"
+      @modeChanged="handleModeChange"
       @playbackRateChange="handlePlaybackRateChange"
   />
 </template>
@@ -221,12 +221,12 @@ You can use them directly:
 
 | Event              | Description                        | Parameters                     |
 |--------------------|------------------------------------|--------------------------------|
-| srcChange          | Emitted when source changes        | src: ISourceWrapper            |
-| srcRemove          | Emitted when source is removed     | src: ISourceWrapper            |
-| volumeChange       | Emitted when volume changes        | volume: number                 |
-| mutedChange        | Emitted when muted state changes   | muted: boolean                 |
-| rateChange         | Emitted when playback rate changes | rate: number                   |
-| modeChange         | Emitted when playback mode changes | mode: PlaybackMode             |
+| srcChanged          | Emitted when source changes        | src: ISourceWrapper            |
+| srcRemoved          | Emitted when source is removed     | src: ISourceWrapper            |
+| volumeChanged       | Emitted when volume changes        | volume: number                 |
+| mutedChanged        | Emitted when muted state changes   | muted: boolean                 |
+| rateChanged         | Emitted when playback rate changes | rate: number                   |
+| modeChanged         | Emitted when playback mode changes | mode: PlaybackMode             |
 
 ## Keyboard Shortcuts
 

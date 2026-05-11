@@ -8,9 +8,9 @@
         :controls="false"
         :autoplay="false"
         :volume="0.5"
-        @src-change="handleSrcChange"
-        @volume-change="handleVolumeChange"
-        @mode-change="handleModeChange"
+        @src-changed="handleSrcChange"
+        @volume-changed="handleVolumeChange"
+        @mode-changed="handleModeChange"
     />
 
     <div class="controls-panel">

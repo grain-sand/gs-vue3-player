@@ -38,10 +38,10 @@ yarn add gs-vue3-player
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'infoPanel', 'playlist']"
       :keyboardTarget=".gs-player"
-      @srcChange="handleSrcChange"
-      @volumeChange="handleVolumeChange"
-      @modeChange="handleModeChange"
-      @rateChange="handleRateChange"
+      @srcChanged="handleSrcChange"
+      @volumeChanged="handleVolumeChange"
+      @modeChanged="handleModeChange"
+      @rateChanged="handleRateChange"
   />
 </template>
 
@@ -221,12 +221,12 @@ yarn add gs-vue3-player
 
 | 事件                 | 描述         | 参数                     |
 |--------------------|------------|--------------------------|
-| srcChange          | 视频源更改时触发   | src: ISourceWrapper      |
-| srcRemove          | 视频源移除时触发   | src: ISourceWrapper      |
-| volumeChange       | 音量更改时触发    | volume: number           |
-| mutedChange        | 静音状态更改时触发  | muted: boolean           |
-| rateChange         | 播放速度更改时触发  | rate: number             |
-| modeChange         | 播放模式更改时触发  | mode: PlaybackMode       |
+| srcChanged          | 视频源更改时触发   | src: ISourceWrapper      |
+| srcRemoved          | 视频源移除时触发   | src: ISourceWrapper      |
+| volumeChanged       | 音量更改时触发    | volume: number           |
+| mutedChanged        | 静音状态更改时触发  | muted: boolean           |
+| rateChanged         | 播放速度更改时触发  | rate: number             |
+| modeChanged         | 播放模式更改时触发  | mode: PlaybackMode       |
 
 ## 键盘快捷键
 

@@ -34,12 +34,13 @@
             :pre-src="props.preSrc"
             :playlist="props.playlist"
             :mode="props.mode"
-            @src-change="handleSrcChange"
-            @src-remove="trigger('srcRemove', $event)"
-            @volume-change="trigger('volumeChange', $event)"
-            @muted-change="trigger('mutedChange', $event)"
-            @rate-change="trigger('rateChange', $event)"
-            @mode-change="trigger('modeChange', $event)"
+            @src-changed="handleSrcChange"
+            @src-removed="trigger('srcRemoved', $event)"
+            @src-inserted="trigger('srcInserted', $event)"
+            @volume-changed="trigger('volumeChanged', $event)"
+            @muted-changed="trigger('mutedChanged', $event)"
+            @rate-changed="trigger('rateChanged', $event)"
+            @mode-changed="trigger('modeChanged', $event)"
         />
 
         <template v-if="coreRef">
@@ -124,7 +125,7 @@ function trigger<T extends keyof IGsPlayerEmits>(e: T, arg: Parameters<IGsPlayer
 }
 
 function handleSrcChange(src: any) {
-  trigger('srcChange', src);
+  trigger('srcChanged', src);
 }
 
 const rootRef = ref<HTMLDivElement>();
