@@ -11,8 +11,6 @@ export interface IGsWidgetContext {
 
 	listVisibility: VisibilityMode;
 
-	readonly layout: LayoutMode;
-
 	/** 是否显示信息面板 */
 	infoPanelVisible: boolean;
 
@@ -29,6 +27,8 @@ export interface IGsWidgetContext {
 	aspectRatio: AspectRatioMode
 
 	readonly i18n: II18n;
+
+	readonly layout: LayoutMode;
 
 	/**
 	 * 是否全屏模式
@@ -65,6 +65,12 @@ export interface IGsWidgetContext {
 	 * - 格式：[width, height]
 	 */
 	readonly rootSize: AspectRatio;
+
+	/**
+	 * 上一次全屏时的根元素尺寸（实时）
+	 */
+	readonly previousFullscreenRect?: DOMRect;
+
 	/**
 	 * 变换状态
 	 */

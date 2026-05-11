@@ -18,7 +18,7 @@
         :default-transform="{scaleMode:'fit'}"
     />
     <hr/>
-    handleClick: {{ playerRef?.handleClick }}<br/>
+    previousFullscreenRect: {{ playerRef?.previousFullscreenRect }}<br/>
   </div>
 </template>
 

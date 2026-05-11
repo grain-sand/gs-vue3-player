@@ -142,6 +142,7 @@ const helpVisible = ref(false);
 
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
+const previousFullscreenRect = ref<DOMRect>();
 
 const transform = ref<IGsTransform>({...defaultTransform});
 
@@ -181,9 +182,15 @@ const rtLayout = computed(() => isFullscreen.value ? rootSize.value[0] / rootSiz
 
 const controlsVisible = computed(() => isHovering.value || controlVisibility.value === 'always' || listVisibility.value === 'always' && rtLayout.value === 'horizontal');
 
-const fullscreen = () => rootRef.value?.requestFullscreen?.()
+const fullscreen = () =>{
+  previousFullscreenRect.value = rootRef.value?.getBoundingClientRect();
+  rootRef.value?.requestFullscreen?.()
+}
 
-const webFullscreen = () => isWebFullscreen.value = true
+const webFullscreen = () => {
+  previousFullscreenRect.value = rootRef.value?.getBoundingClientRect();
+  isWebFullscreen.value = true
+}
 
 const exitFullscreen = () => {
   isWebFullscreen.value = false;
@@ -197,6 +204,9 @@ const setLayout = (layout: LayoutMode) => currLayout.value = layout
 const resetTransform = () => transform.value = {...defaultTransform}
 
 const widgetContext = shallowRef<IGsWidgetContext>({
+  get previousFullscreenRect() {
+    return previousFullscreenRect.value;
+  },
   get keyboardTarget() {
     return keyboardTarget.value
   },
@@ -285,6 +295,9 @@ onMounted(() => LogicManager.mount(widgetProps.value));
 onBeforeUnmount(() => LogicManager.unmount(widgetProps.value));
 
 defineExpose<IGsPlayerExpose>({
+  get previousFullscreenRect() {
+    return previousFullscreenRect.value;
+  },
   get keyboardTarget() {
     return keyboardTarget.value
   },
