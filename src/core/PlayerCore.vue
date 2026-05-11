@@ -286,14 +286,7 @@ function insertSrc(src: PlaySource | PlaySource[], index: number = -1): void {
       wrapper = new SourceWrapper(s, idCounter++);
       wrapperMap.set(s, wrapper);
     } else {
-      let existsInPlaylist = false;
-      for (let j = 0; j < playlist.value.length; j++) {
-        if (playlist.value[j]._id === wrapper._id) {
-          existsInPlaylist = true;
-          break;
-        }
-      }
-      if (existsInPlaylist) {
+      if (playlist.value.find((item) => item._id === wrapper._id)) {
         continue;
       }
     }

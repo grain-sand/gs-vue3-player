@@ -18,6 +18,8 @@
         :default-transform="{scaleMode:'fit'}"
     />
     <hr/>
+    <button @click="playerRef.core.insertSrc(oSrc)">测试</button>
+    <hr/>
     previousFullscreenRect: {{ playerRef?.previousFullscreenRect }}<br/>
   </div>
 </template>

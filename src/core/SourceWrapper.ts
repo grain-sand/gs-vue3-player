@@ -56,11 +56,19 @@ export class SourceWrapper implements ISourceWrapper {
 	}
 
 	get title(): string {
-		return this._raw.title || '';
+		const {_raw} = this;
+		if(typeof _raw==='string') {
+			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/,'')))
+		}
+		return _raw.title || '';
 	}
 
 	get link() {
-		return this._raw.link
+		const {_raw} = this;
+		if(typeof _raw==='string') {
+			return _raw
+		}
+		return _raw.link
 	}
 
 	get data(): any {
@@ -75,8 +83,14 @@ export class SourceWrapper implements ISourceWrapper {
 		return this._raw.index || 0;
 	}
 
+	private _description?: string
+
 	get description(): string {
-		return this._raw.description || '';
+		const {_raw} = this;
+		if(typeof _raw==='string') {
+			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/,'')))
+		}
+		return _raw.description || '';
 	}
 
 	get downloadUrl(): string | undefined {
