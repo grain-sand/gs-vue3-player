@@ -158,7 +158,7 @@ const transformChanged = computed(() => {
       state.translateY !== defaultTransform.translateY;
 });
 
-const keyboardTarget = computed(() => {
+const keyboardTarget = computed<Document | HTMLElement | null>(() => {
   const {keyboardTarget: kt} = props
   if (kt === null) {
     return null;
@@ -182,7 +182,7 @@ const rtLayout = computed(() => isFullscreen.value ? rootSize.value[0] / rootSiz
 
 const controlsVisible = computed(() => isHovering.value || controlVisibility.value === 'always' || listVisibility.value === 'always' && rtLayout.value === 'horizontal');
 
-const fullscreen = () =>{
+const fullscreen = () => {
   previousFullscreenRect.value = rootRef.value?.getBoundingClientRect();
   rootRef.value?.requestFullscreen?.()
 }

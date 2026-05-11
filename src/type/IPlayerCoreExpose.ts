@@ -41,6 +41,26 @@ export interface IPlayerCoreExpose {
 	readonly hasNext: boolean;
 
 	readonly bestQuality: Partial<IVideoQuality> | undefined
+	/**
+	 * 当前是否在画中画模式
+	 */
+	readonly pipState: boolean;
+	/**
+	 * 是否支持画中画功能
+	 */
+	readonly supportsPip: boolean;
+	/**
+	 * video 元素已经缓冲的详细时间片段，格式如 [[1,5],[15,30]]
+	 */
+	readonly buffered: number[][];
+	/**
+	 * 当前视频的实时尺寸（宽高比）
+	 */
+	readonly size: AspectRatio;
+	/**
+	 * video 元素的 style 属性
+	 */
+	readonly style: CSSStyleDeclaration;
 
 	play(src?: PlaySource): Promise<void>
 
@@ -57,6 +77,13 @@ export interface IPlayerCoreExpose {
 	 */
 	removeSrc(src: PlaySource | ISourceWrapper): void
 
+	/**
+	 * 向播放列表中插入视频源
+	 * @param src
+	 * @param index 插入位置，默认值为`-1`,表示插入到播放列表末尾
+	 */
+	insertSrc(src: PlaySource | PlaySource[], index?: number): void
+
 	togglePlay(): Promise<void>
 
 	pause(): Promise<void>
@@ -72,16 +99,6 @@ export interface IPlayerCoreExpose {
 	playNext(): Promise<void>
 
 	/**
-	 * 当前是否在画中画模式
-	 */
-	readonly pipState: boolean;
-
-	/**
-	 * 是否支持画中画功能
-	 */
-	readonly supportsPip: boolean;
-
-	/**
 	 * 进入画中画模式
 	 */
 	enterPip(): Promise<void>;
@@ -95,20 +112,5 @@ export interface IPlayerCoreExpose {
 	 * 切换画中画模式
 	 */
 	togglePip(): Promise<void>;
-
-	/**
-	 * video 元素已经缓冲的详细时间片段，格式如 [[1,5],[15,30]]
-	 */
-	readonly buffered: number[][];
-
-	/**
-	 * 当前视频的实时尺寸（宽高比）
-	 */
-	readonly size: AspectRatio;
-
-	/**
-	 * video 元素的 style 属性
-	 */
-	readonly style: CSSStyleDeclaration;
 
 }
