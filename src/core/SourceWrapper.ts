@@ -2,10 +2,24 @@ import {PlaySource, ISourceWrapper, PlaySourceType, IAuthor, AspectRatio} from "
 
 export class SourceWrapper implements ISourceWrapper {
 
+	private _rawIsObj: boolean
+
 	constructor(
 		public readonly _raw: PlaySource & any,
 		public readonly _id: number
 	) {
+		const isObj = this._rawIsObj = typeof _raw === 'object';
+		if (!isObj || !_raw) return;
+		const me: any = this;
+		[...Object.getOwnPropertyNames(_raw.constructor.prototype || {}), ...Object.getOwnPropertyNames(_raw)].forEach(n => {
+			if (n in me || n.startsWith('_')) return
+			Object.defineProperty(me, n, {
+				get: () => _raw[n],
+				set: (v) => _raw[n] = v,
+				enumerable: true,
+				configurable: false
+			})
+		})
 	}
 
 	private _type?: PlaySourceType
@@ -25,7 +39,7 @@ export class SourceWrapper implements ISourceWrapper {
 	}
 
 	set aspectRatio(v: AspectRatio | undefined) {
-		if (typeof this._raw === 'object') {
+		if (this._rawIsObj) {
 			this._raw.aspectRatio = v
 		}
 		this._aspectRatio = v;
@@ -38,7 +52,7 @@ export class SourceWrapper implements ISourceWrapper {
 	}
 
 	set duration(v: number) {
-		if (typeof this._raw === 'object') {
+		if (this._rawIsObj) {
 			this._raw.duration = v
 		}
 		this._duration = v
@@ -49,7 +63,7 @@ export class SourceWrapper implements ISourceWrapper {
 	}
 
 	get src(): any {
-		if (typeof this._raw === 'string') {
+		if (this._rawIsObj) {
 			return this._raw
 		}
 		return this._raw.src || this._raw;
@@ -57,15 +71,15 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get title(): string {
 		const {_raw} = this;
-		if(typeof _raw==='string') {
-			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/,'')))
+		if (typeof _raw === 'string') {
+			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/, '')))
 		}
 		return _raw.title || '';
 	}
 
 	get link() {
 		const {_raw} = this;
-		if(typeof _raw==='string') {
+		if (typeof _raw === 'string') {
 			return _raw
 		}
 		return _raw.link
@@ -87,8 +101,8 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get description(): string {
 		const {_raw} = this;
-		if(typeof _raw==='string') {
-			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/,'')))
+		if (typeof _raw === 'string') {
+			return this._description || (this._description = decodeURIComponent(_raw.replace(/^.*[/\\]/, '')))
 		}
 		return _raw.description || '';
 	}
