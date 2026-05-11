@@ -3,15 +3,14 @@
     <div
         v-if="cxt.helpVisible"
         class="gs-help-panel"
-        @click.stop.prevent=""
-        @wheel.stop=""
-        @dblclick.stop.prevent=""
     >
-      <div class="gs-help-header">
+      <div class="gs-help-header"
+           @click.stop.prevent=""
+      >
         <span>{{ cxt.i18n.titles.help }}</span>
         <GsButton
             :icon="CloseSvg"
-            @click="cxt.helpVisible = false"
+            @click.stop.prevent="cxt.helpVisible = false"
         />
       </div>
       <div class="gs-help-content">

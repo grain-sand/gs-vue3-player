@@ -435,10 +435,6 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
       newHls.loadSource(srcStr);
       newHls.attachMedia(video);
       newHls.on(Hls.Events.MANIFEST_PARSED, () => adjustHlsQuality());
-      newHls.on(Hls.Events.LEVEL_SWITCHED, () => {
-        adjustHlsQuality();
-        updateSize();
-      });
       hls.value = newHls;
     } else {
       throw new Error('Browser not supported hls')
