@@ -177,7 +177,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 下载视频处理函数
 	 * - 默认值为 `undefined`，即不处理下载
 	 */
-	downloadHandler?: (url: string, src: PlaySource) => void;
+	downloadHandler?: (src: PlaySource) => void;
 
 	/**
 	 * 上下文菜单

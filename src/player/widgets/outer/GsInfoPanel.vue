@@ -28,10 +28,10 @@
           @click="props.linkHandler(src.link, src)"
       />
       <GsButton
-          v-if="src?.downloadUrl && props.downloadHandler"
+          v-if="props.downloadHandler"
           :icon="DownloadSvg"
           :title="cxt.i18n.titles.download"
-          @click="props.downloadHandler?.(src.downloadUrl, src)"
+          @click="props.downloadHandler?.(src)"
       />
     </div>
     <div
