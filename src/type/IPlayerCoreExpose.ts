@@ -1,7 +1,7 @@
 import {ISourceWrapper, IVideoQuality, PlaySource} from "./IPlayerSource";
 import {AspectRatio, PlaybackMode} from "./UnionTypes";
 
-export interface IPlayerCoreExpose {
+export interface IPlayerCoreExpose<Data = any, Source extends PlaySource<Data> = PlaySource<Data>, Wrapper extends ISourceWrapper<Data, Source> = ISourceWrapper<Data, Source>> {
 
 	readonly el: HTMLVideoElement
 
@@ -15,7 +15,7 @@ export interface IPlayerCoreExpose {
 
 	rate: number
 
-	src: ISourceWrapper
+	src: Wrapper
 
 	/** 播放模式，可选项为：播放下一个（默认值）、禁用、单个循环，当设置了列表字段时还支持：全部循环、随机播放 */
 	mode?: PlaybackMode;
@@ -24,15 +24,15 @@ export interface IPlayerCoreExpose {
 
 	readonly error?: MediaError
 
-	readonly playlist: ISourceWrapper[]
+	readonly playlist: Wrapper[]
 	/**
 	 * 当前播放的视频索引
 	 */
 	readonly index: number;
 	/** 下一个输入源 */
-	readonly nextSrc?: PlaySource;
+	readonly nextSrc?: Source;
 	/** 上一个输入源 */
-	readonly preSrc?: PlaySource;
+	readonly preSrc?: Source;
 
 	/** 是否有上一个可播放 */
 	readonly hasPre: boolean;
@@ -62,27 +62,27 @@ export interface IPlayerCoreExpose {
 	 */
 	readonly style: CSSStyleDeclaration;
 
-	play(src?: PlaySource): Promise<void>
+	play(src?: Source): Promise<void>
 
 	/**
 	 * 设置当前播放的视频源
 	 * - 如果未在播放列表中，则将添加到播放列表
 	 * @param src
 	 */
-	setSrc(src: PlaySource): void
+	setSrc(src: Source): void
 
 	/**
 	 * 从播放列表中移除视频源
 	 * @param src
 	 */
-	removeSrc(src: PlaySource | ISourceWrapper): void
+	removeSrc(src: Source | Wrapper): void
 
 	/**
 	 * 向播放列表中插入视频源
 	 * @param src
 	 * @param index 插入位置，默认值为`-1`,表示插入到播放列表末尾
 	 */
-	insertSrc(src: PlaySource | PlaySource[], index?: number): void
+	insertSrc(src: Source | Source[], index?: number): void
 
 	togglePlay(): Promise<void>
 

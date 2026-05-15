@@ -1,11 +1,12 @@
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {IGsWidgetContext} from "./IGsWidget";
 import {IPlayerCoreMediaEmits} from "./IPlayerCoreEmits";
+import {PlaySource} from "./IPlayerSource";
 
 
-export interface IGsPlayerExpose extends Omit<IGsWidgetContext, 'updateRootSize'|'updateWrapperSize'> {
+export interface IGsPlayerExpose<Data = any, Source extends PlaySource<Data> = PlaySource<Data>> extends Omit<IGsWidgetContext, 'updateRootSize' | 'updateWrapperSize'> {
 
-	readonly core: IPlayerCoreExpose;
+	readonly core: IPlayerCoreExpose<Data, Source>;
 
 }
 
