@@ -37,6 +37,7 @@ export const zhCN: II18n = {
     download: '下载',
     info: '信息面板',
     help: '帮助',
+    clearPlaylist: '清空播放列表',
     seek: '快进快退',
     seekBackward: '-5秒',
     seekForward: '+5秒',

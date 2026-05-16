@@ -37,6 +37,7 @@ export const enUS: II18n = {
     download: 'Download',
     info: 'Info Panel',
     help: 'Help',
+    clearPlaylist: 'Clear Playlist',
     seek: 'Seek',
     seekBackward: '-5s',
     seekForward: '+5s',

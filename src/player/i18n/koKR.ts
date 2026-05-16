@@ -37,6 +37,7 @@ export const koKR: II18n = {
     download: '다운로드',
     info: '정보 패널',
     help: '도움말',
+    clearPlaylist: '재생 목록 지우기',
     seek: '씩크',
     seekBackward: '-5초',
     seekForward: '+5초',

@@ -2,11 +2,13 @@ import {ContextMenuItem, ContextMenuItemDefaultNames, IGsWidget} from '../../../
 import GsInfoMenuItem from './GsInfoMenuItem.vue';
 import GsListMenuItem from './GsListMenuItem.vue';
 import GsHelpMenuItem from './GsHelpMenuItem.vue';
+import GsClearMenuItem from './GsClearMenuItem.vue';
 
 export const defaultMenuComponents: Record<string, IGsWidget> = {
   'info': GsInfoMenuItem,
   'list': GsListMenuItem,
-  'help': GsHelpMenuItem
+  'help': GsHelpMenuItem,
+  'clear': GsClearMenuItem
 };
 
 export function resolveContextMenuComponent(item: ContextMenuItem): IGsWidget | null {

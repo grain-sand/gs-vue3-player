@@ -73,6 +73,8 @@ export interface II18n {
 		info: string;
 		/** 帮助 */
 		help: string;
+		/** 清空播放列表 */
+		clearPlaylist: string;
 		/** 快进快退 */
 		seek: string;
 		/** 快退10秒 */

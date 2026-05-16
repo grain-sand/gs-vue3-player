@@ -37,6 +37,7 @@ export const jaJP: II18n = {
     download: 'ダウンロード',
     info: '情報パネル',
     help: 'ヘルプ',
+    clearPlaylist: 'プレイリストをクリア',
     seek: 'シーク',
     seekBackward: '-5秒',
     seekForward: '+5秒',

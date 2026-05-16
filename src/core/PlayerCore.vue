@@ -33,13 +33,14 @@ import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import Hls from 'hls.js';
 import {
   DefaultHlsConfig,
+  DefaultPlaybackMode,
   IPlayerCoreEmits,
   IPlayerCoreExpose,
   IPlayerCoreProps,
-  IVideoQuality,
-  PlaySource,
   ISourceWrapper,
-  PlaybackMode, DefaultPlaybackMode
+  IVideoQuality,
+  PlaybackMode,
+  PlaySource
 } from '../type';
 import {
   findClosestHlsLevel,
@@ -835,9 +836,11 @@ defineExpose<IPlayerCoreExpose>({
   },
   clearPlaylist() {
     playlist.value = [];
+    wrapperMap.clear()
     trigger('clearPlaylist');
     setSrc(undefined);
     doPlay()
+    setTimeout(()=>videoRef.value?.pause(), 100)
   }
 })
 </script>

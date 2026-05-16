@@ -37,6 +37,7 @@ export const zhTW: II18n = {
     download: '下載',
     info: '資訊面板',
     help: '說明',
+    clearPlaylist: '清空播放列表',
     seek: '快進快退',
     seekBackward: '-5秒',
     seekForward: '+5秒',
