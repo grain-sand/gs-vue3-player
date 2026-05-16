@@ -55,7 +55,7 @@ const props = defineProps<IPlayerCoreProps>();
 
 const emit = defineEmits<IPlayerCoreEmits>();
 
-function trigger<T extends keyof IPlayerCoreEmits>(e: T, arg: Parameters<IPlayerCoreEmits[T]>[0]) {
+function trigger<T extends keyof IPlayerCoreEmits>(e: T, arg?: Parameters<IPlayerCoreEmits[T]>[0]) {
   // @ts-ignore
   emit(e, arg);
 }
@@ -832,6 +832,12 @@ defineExpose<IPlayerCoreExpose>({
   },
   get style() {
     return videoRef.value?.style || {} as CSSStyleDeclaration;
+  },
+  clearPlaylist() {
+    playlist.value = [];
+    trigger('clearPlaylist');
+    setSrc(undefined);
+    doPlay()
   }
 })
 </script>

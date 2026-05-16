@@ -41,6 +41,7 @@
             @muted-changed="trigger('mutedChanged', $event)"
             @rate-changed="trigger('rateChanged', $event)"
             @mode-changed="trigger('modeChanged', $event)"
+            @clearPlaylist="trigger('clearPlaylist', $event)"
         />
 
         <template v-if="coreRef">

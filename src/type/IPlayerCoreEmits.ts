@@ -63,6 +63,8 @@ export interface IPlayerCoreMediaEmits {
 	 */
 	modeChanged: (mode: PlaybackMode) => void | Promise<void>
 
+	clearPlaylist: () => void | Promise<void>
+
 }
 
 export interface IPlayerCoreEmits extends IPlayerCoreMouseEmits, IPlayerCoreMediaEmits {

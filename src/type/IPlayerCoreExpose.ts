@@ -113,4 +113,9 @@ export interface IPlayerCoreExpose<Data = any, Source extends PlaySource<Data> =
 	 */
 	togglePip(): Promise<void>;
 
+	/**
+	 * 清空播放列表
+	 */
+	clearPlaylist(): void
+
 }

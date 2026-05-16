@@ -167,6 +167,8 @@ export const ContextMenuItemDefaultNames = [
 	// ControlDefaultItems[8],
 	// /** 切换显示比例->二级菜单 */
 	// ControlDefaultItems[9],
+	'clear',
+	'|',
 	/**
 	 * 帮助
 	 * - 弹出帮助面板
