@@ -51,6 +51,7 @@ import {
   switchHlsQuality
 } from "../util";
 import {SourceWrapper} from './SourceWrapper';
+import {wait} from "gs-base/timer";
 
 const props = defineProps<IPlayerCoreProps>();
 
@@ -368,7 +369,7 @@ function updateSize() {
   }
 }
 
-function loadedmetadata() {
+async function loadedmetadata() {
   duration.value = videoRef.value.duration
   if (innerSrc.value) {
     innerSrc.value.duration = duration.value
@@ -380,6 +381,24 @@ function loadedmetadata() {
       videoRef.value.playbackRate = r
     }, {immediate: true})
   }
+  const next = getNextSrc(props.nextSrc);
+  if (!next) return;
+  await wait(100)
+  const {type, src} = parseVideoSource(next);
+  if (type !== 'hls') return;
+  const hls = new Hls({
+    ...DefaultHlsConfig,
+    autoStartLoad: false,
+    startFragPrefetch: true,
+  })
+  hls.loadSource(src)
+  hls.on(Hls.Events.MANIFEST_PARSED, () => {
+    adjustHlsQuality(hls, true);
+    hls.startLoad(0)
+  })
+  hls.on(Hls.Events.FRAG_LOADED, () => {
+    hls.destroy();
+  })
 }
 
 function rateChanged() {
@@ -462,7 +481,7 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
       const newHls = new Hls({...DefaultHlsConfig, ...props.hlsConfig});
       newHls.loadSource(srcStr);
       newHls.attachMedia(video);
-      newHls.on(Hls.Events.MANIFEST_PARSED, () => adjustHlsQuality());
+      newHls.on(Hls.Events.MANIFEST_PARSED, () => adjustHlsQuality(newHls, true));
       hls.value = newHls;
     } else {
       throw new Error('Browser not supported hls')
@@ -543,7 +562,7 @@ function toBestQuality(reference: Partial<IVideoQuality>, now: boolean = false) 
   const {type, src: typedSrc} = parseVideoSource(currentSrc._raw);
 
   if (type === 'hls' && hls.value) {
-    adjustHlsQuality(now);
+    adjustHlsQuality(hls.value, now);
   } else if (Array.isArray(typedSrc)) {
     let bestQualityByWidth = null;
     let bestQualityByHeight = null;
@@ -570,27 +589,27 @@ function toBestQuality(reference: Partial<IVideoQuality>, now: boolean = false) 
   }
 }
 
-function adjustHlsQuality(now: boolean = false) {
-  if (!hls.value || !bestQuality.value) return;
+function adjustHlsQuality(hls: Hls,now: boolean = false) {
+  if (!hls || !bestQuality.value) return;
 
   const reference = bestQuality.value;
   let bestLevel = -1;
 
   if (reference.width) {
-    const widthLevel = findClosestHlsLevel(hls.value, reference.width, 'width');
+    const widthLevel = findClosestHlsLevel(hls, reference.width, 'width');
     if (widthLevel !== -1) {
       bestLevel = widthLevel;
     }
   }
 
   if (reference.height) {
-    const heightLevel = findClosestHlsLevel(hls.value, reference.height, 'height');
+    const heightLevel = findClosestHlsLevel(hls, reference.height, 'height');
     if (heightLevel !== -1) {
       if (bestLevel === -1) {
         bestLevel = heightLevel;
       } else {
-        const widthLevelInfo = hls.value.levels[bestLevel];
-        const heightLevelInfo = hls.value.levels[heightLevel];
+        const widthLevelInfo = hls.levels[bestLevel];
+        const heightLevelInfo = hls.levels[heightLevel];
 
         if (widthLevelInfo && heightLevelInfo) {
           const widthArea = widthLevelInfo.width * (widthLevelInfo.height || widthLevelInfo.width);
@@ -605,7 +624,7 @@ function adjustHlsQuality(now: boolean = false) {
   }
 
   if (bestLevel !== -1) {
-    switchHlsQuality(hls.value, bestLevel, now);
+    switchHlsQuality(hls, bestLevel, now);
   }
 }
 
@@ -840,7 +859,7 @@ defineExpose<IPlayerCoreExpose>({
     trigger('clearPlaylist');
     setSrc(undefined);
     doPlay()
-    setTimeout(()=>videoRef.value?.pause(), 100)
+    setTimeout(() => videoRef.value?.pause(), 100)
   }
 })
 </script>
