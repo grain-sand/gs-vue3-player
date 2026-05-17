@@ -15,16 +15,16 @@
       @loadedmetadata="loadedmetadata"
       @progress="updateBuffer"
       @ended="onEnded"
-      @enterpictureinpicture="onEnterPip"
-      @leavepictureinpicture="onLeavePip"
+      @enterpictureinpicture="pipState.value = true"
+      @leavepictureinpicture="pipState.value = false"
       @resize="updateSize"
-      @mousedown="onMouseDown"
-      @mousemove="onMouseMove"
-      @mouseup="onMouseUp"
-      @mouseleave="onMouseLeave"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
+      @mousedown="trigger('mousedown', $event)"
+      @mousemove="trigger('mousemove', $event)"
+      @mouseup="trigger('mouseup', $event)"
+      @mouseleave="trigger('mouseleave', $event)"
+      @touchstart="trigger('touchstart', $event)"
+      @touchmove="trigger('touchmove', $event)"
+      @touchend="trigger('touchend', $event)"
   ></video>
 </template>
 
@@ -304,10 +304,6 @@ function insertSrc(src: PlaySource | PlaySource[], index: number = -1): void {
   trigger('srcInserted', newWrappers);
 }
 
-function getWrapper(src: PlaySource): ISourceWrapper | undefined {
-  return wrapperMap.get(src);
-}
-
 function addSrc(src: PlaySource): ISourceWrapper {
   let wrapper = wrapperMap.get(src);
   if (!wrapper) {
@@ -442,7 +438,7 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
     if (typeof src === 'object' && '_id' in src) {
       wrapper = src as ISourceWrapper;
     } else {
-      wrapper = getWrapper(src as PlaySource);
+      wrapper = wrapperMap.get(src as PlaySource);
       if (!wrapper) {
         wrapper = addSrc(src as PlaySource);
       }
@@ -589,7 +585,7 @@ function toBestQuality(reference: Partial<IVideoQuality>, now: boolean = false) 
   }
 }
 
-function adjustHlsQuality(hls: Hls,now: boolean = false) {
+function adjustHlsQuality(hls: Hls, now: boolean = false) {
   if (!hls || !bestQuality.value) return;
 
   const reference = bestQuality.value;
@@ -660,14 +656,6 @@ const onEnded = () => {
   }
 };
 
-function onEnterPip() {
-  pipState.value = true;
-}
-
-function onLeavePip() {
-  pipState.value = false;
-}
-
 function supportsPip(): boolean {
   return !!videoRef.value?.requestPictureInPicture;
 }
@@ -690,34 +678,6 @@ async function togglePip(): Promise<void> {
   } else {
     await enterPip();
   }
-}
-
-function onMouseDown(e: MouseEvent) {
-  trigger('mousedown', e);
-}
-
-function onMouseMove(e: MouseEvent) {
-  trigger('mousemove', e);
-}
-
-function onMouseUp(e: MouseEvent) {
-  trigger('mouseup', e);
-}
-
-function onMouseLeave(e: MouseEvent) {
-  trigger('mouseleave', e);
-}
-
-function onTouchStart(e: TouchEvent) {
-  trigger('touchstart', e);
-}
-
-function onTouchMove(e: TouchEvent) {
-  trigger('touchmove', e);
-}
-
-function onTouchEnd(e: TouchEvent) {
-  trigger('touchend', e);
 }
 
 const playPre = async () => {

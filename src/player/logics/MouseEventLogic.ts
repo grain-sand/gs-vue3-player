@@ -6,7 +6,7 @@ export function mouseEventLogic() {
 	let props: Readonly<IGsPlayerProps>, core: IPlayerCoreExpose, cxt: IGsWidgetContext;
 
 	const timer = new Timer(300);
-	let lastClickTime = 0;
+	let lastClickTime = 0, lastWheelTime = 0;
 
 	const handleClick = async () => {
 		try {
@@ -51,11 +51,14 @@ export function mouseEventLogic() {
 
 			cxt.transform.scaleMode = newScale;
 		} else {
-			if (e.deltaY < 0) {
+			const now = Date.now();
+			if (now - lastWheelTime < 500) return;
+			lastWheelTime = now;
+			if (e.deltaY < -2) {
 				if (core.hasPre) {
 					core.playPre();
 				}
-			} else {
+			} else if (e.deltaY > 2) {
 				if (core.hasNext) {
 					core.playNext();
 				}

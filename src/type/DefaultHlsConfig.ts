@@ -1,9 +1,9 @@
 import {HlsConfig} from "hls.js";
 
 export const DefaultHlsConfig: Partial<HlsConfig> = Object.freeze({
-	maxBufferLength: 3,
+	maxBufferLength: 4,
 	maxStarvationDelay: 3,
-	maxMaxBufferLength: 5,
+	maxMaxBufferLength: 6,
 	lowLatencyMode: false,      // 关闭低延迟（低延迟会多预载）
 	capLevelToPlayerSize: true, // 限制视频质量（根据播放器大小调整）
 	autoStartLoad: true,
