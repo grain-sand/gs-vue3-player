@@ -90,4 +90,6 @@ export interface ISourceWrapper<D = any, R extends PlaySource<D> = PlaySource<D>
 	readonly _id: number
 
 	readonly _raw: R
+
+	_preloaded?: boolean;
 }

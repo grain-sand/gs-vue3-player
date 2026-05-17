@@ -2,7 +2,9 @@ import {PlaySource, ISourceWrapper, PlaySourceType, IAuthor, AspectRatio} from "
 
 export class SourceWrapper implements ISourceWrapper {
 
-	private _rawIsObj: boolean
+	private readonly _rawIsObj: boolean
+
+	_preloaded?: boolean;
 
 	constructor(
 		public readonly _raw: PlaySource & any,
@@ -64,7 +66,7 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get src(): any {
 		if (this._rawIsObj) {
-			return this._raw
+			return this._raw.src;
 		}
 		return this._raw.src || this._raw;
 	}
@@ -91,10 +93,6 @@ export class SourceWrapper implements ISourceWrapper {
 
 	get author(): IAuthor | undefined {
 		return this._raw.author;
-	}
-
-	get index(): number {
-		return this._raw.index || 0;
 	}
 
 	private _description?: string

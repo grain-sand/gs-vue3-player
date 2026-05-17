@@ -13,6 +13,7 @@
       @pause="playing = false"
       @timeupdate="time = videoRef?.currentTime || 0"
       @loadedmetadata="loadedmetadata"
+      @canplaythrough="preLoad"
       @progress="updateBuffer"
       @ended="onEnded"
       @enterpictureinpicture="pipState.value = true"
@@ -51,7 +52,6 @@ import {
   switchHlsQuality
 } from "../util";
 import {SourceWrapper} from './SourceWrapper';
-import {wait} from "gs-base/timer";
 
 const props = defineProps<IPlayerCoreProps>();
 
@@ -89,14 +89,7 @@ defineOptions({inheritAttrs: false});
 watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode, {immediate: true})
 
 function updatePlaylist(list: PlaySource[]) {
-  playlist.value = list.map((src) => {
-    let wrapper = wrapperMap.get(src);
-    if (!wrapper) {
-      wrapper = new SourceWrapper(src as any, idCounter++);
-      wrapperMap.set(src, wrapper);
-    }
-    return wrapper;
-  });
+  playlist.value = list.map(getWrapper);
 
   if (list.length) {
     Array.from(wrapperMap.keys()).forEach(s => {
@@ -121,7 +114,7 @@ function getNextSrc(predefinedNextSrc?: PlaySource): PlaySource | undefined {
     return predefinedNextSrc;
   }
   const i = getIndex();
-  return playlist.value[i + 1]?.src;
+  return playlist.value[i + 1]
 }
 
 function getPreSrc(predefinedPreSrc?: PlaySource): PlaySource | undefined {
@@ -129,7 +122,7 @@ function getPreSrc(predefinedPreSrc?: PlaySource): PlaySource | undefined {
     return predefinedPreSrc;
   }
   const i = getIndex();
-  return playlist.value[i > 0 ? i - 1 : playlist.value.length - 1]?.src;
+  return playlist.value[i > 0 ? i - 1 : playlist.value.length - 1];
 }
 
 function hasPre(): boolean {
@@ -305,6 +298,10 @@ function insertSrc(src: PlaySource | PlaySource[], index: number = -1): void {
 }
 
 function addSrc(src: PlaySource): ISourceWrapper {
+  if (src instanceof SourceWrapper) {
+    wrapperMap.set(src._raw, src)
+    return src;
+  }
   let wrapper = wrapperMap.get(src);
   if (!wrapper) {
     wrapper = new SourceWrapper(src, idCounter++);
@@ -355,31 +352,11 @@ onMounted(() => {
   }
 })
 
-function updateSize() {
-  const video = videoRef.value;
-  if (video && video.videoWidth > 0 && video.videoHeight > 0) {
-    size.value = [video.videoWidth, video.videoHeight];
-  }
-  if (innerSrc.value && !innerSrc.value.aspectRatio) {
-    innerSrc.value.aspectRatio = size.value;
-  }
-}
-
-async function loadedmetadata() {
-  duration.value = videoRef.value.duration
-  if (innerSrc.value) {
-    innerSrc.value.duration = duration.value
-  }
-  updateSize();
-  if (isFirstLoadedmetadata) {
-    isFirstLoadedmetadata = false;
-    watch(() => props.rate, (r = 1.0) => {
-      videoRef.value.playbackRate = r
-    }, {immediate: true})
-  }
+async function preLoad() {
   const next = getNextSrc(props.nextSrc);
   if (!next) return;
-  await wait(100)
+  const wrapper = getWrapper(next);
+  if (wrapper._preloaded) return;
   const {type, src} = parseVideoSource(next);
   if (type !== 'hls') return;
   const hls = new Hls({
@@ -394,7 +371,32 @@ async function loadedmetadata() {
   })
   hls.on(Hls.Events.FRAG_LOADED, () => {
     hls.destroy();
+    wrapper._preloaded = true;
   })
+}
+
+function updateSize() {
+  const video = videoRef.value;
+  if (video && video.videoWidth > 0 && video.videoHeight > 0) {
+    size.value = [video.videoWidth, video.videoHeight];
+  }
+  if (innerSrc.value && !innerSrc.value.aspectRatio) {
+    innerSrc.value.aspectRatio = size.value;
+  }
+}
+
+function loadedmetadata() {
+  duration.value = videoRef.value.duration
+  if (innerSrc.value) {
+    innerSrc.value.duration = duration.value
+  }
+  updateSize();
+  if (isFirstLoadedmetadata) {
+    isFirstLoadedmetadata = false;
+    watch(() => props.rate, (r = 1.0) => {
+      videoRef.value.playbackRate = r
+    }, {immediate: true})
+  }
 }
 
 function rateChanged() {
@@ -431,19 +433,20 @@ function getQuality() {
   return videoRef.value?.getBoundingClientRect()?.width || 320;
 }
 
-function setSrc(src: PlaySource | ISourceWrapper | undefined) {
-  let wrapper: ISourceWrapper | undefined;
-
+function getWrapper(src: PlaySource | ISourceWrapper | undefined) {
   if (src) {
-    if (typeof src === 'object' && '_id' in src) {
-      wrapper = src as ISourceWrapper;
-    } else {
-      wrapper = wrapperMap.get(src as PlaySource);
-      if (!wrapper) {
-        wrapper = addSrc(src as PlaySource);
-      }
+    if (src instanceof SourceWrapper) {
+      return src as ISourceWrapper;
     }
+    if (wrapperMap.has(src)) {
+      return wrapperMap.get(src as PlaySource);
+    }
+    return addSrc(src as PlaySource);
   }
+}
+
+function setSrc(src: PlaySource | ISourceWrapper | undefined) {
+  const wrapper = getWrapper(src);
 
   if (innerSrc.value === wrapper) {
     return;

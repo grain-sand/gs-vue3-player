@@ -15,15 +15,15 @@ export function parseVideoSource(source: PlaySource): ITypedSource {
 			src: source
 		};
 	}
-	const typedSourc = source as IStringSource & IQualitiesSource;
-	if (!typedSourc.type) {
-		if (Array.isArray(typedSourc.src)) {
-			typedSourc.type = getSourceTypeFromUrl(typedSourc.src[0]?.url)
-		} else if (Array.isArray(typedSourc.src)) {
-			typedSourc.type = getSourceTypeFromUrl(typedSourc.src as string);
+	const typedSrc = source as IStringSource & IQualitiesSource;
+	if (!typedSrc.type) {
+		if (Array.isArray(typedSrc.src)) {
+			typedSrc.type = getSourceTypeFromUrl(typedSrc.src[0]?.url)
+		} else if (Array.isArray(typedSrc.src)) {
+			typedSrc.type = getSourceTypeFromUrl(typedSrc.src as string);
 		}
 	}
-	return typedSourc;
+	return typedSrc;
 }
 
 function getSourceTypeFromUrl(url: string): PlaySourceType {
