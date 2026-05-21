@@ -162,7 +162,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 链接处理函数
 	 * - 默认值为 `window.open`
 	 */
-	linkHandler?: (url: string, src: PlaySource) => void | Promise<void>;
+	linkHandler?: (url: string, src: PlaySource, props: IGsPlayerProps) => void | Promise<void>;
 
 	/**
 	 *  社交关键词处理函数
@@ -177,7 +177,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 下载视频处理函数
 	 * - 默认值为 `undefined`，即不处理下载
 	 */
-	downloadHandler?: (src: PlaySource) => void;
+	downloadHandler?: (src: PlaySource, props: IGsPlayerProps) => void;
 
 	/**
 	 * 上下文菜单

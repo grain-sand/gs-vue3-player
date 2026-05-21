@@ -15,6 +15,7 @@
           ]
         }"
         :download-handler="download"
+        :link-handler="openLink"
         :default-transform="{scaleMode:'fit'}"
     />
     <hr/>
@@ -52,8 +53,12 @@ watch(() => playerRef.value?.isFullscreen, (isFullscreen) => {
   console.log('isFullscreen', isFullscreen)
 })
 
-function download(url, src) {
-  console.log(url, src)
+function download(src,props) {
+  console.log(src,props)
+}
+
+function openLink(url,src,props) {
+  console.log(url,src,props)
 }
 
 </script>

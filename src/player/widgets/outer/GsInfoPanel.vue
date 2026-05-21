@@ -25,13 +25,13 @@
           v-if="src?.link&&props.linkHandler"
           :icon="LinkSvg"
           :title="src.link"
-          @click="props.linkHandler(src.link, src)"
+          @click="props.linkHandler(src.link, src,p)"
       />
       <GsButton
           v-if="props.downloadHandler"
           :icon="DownloadSvg"
           :title="cxt.i18n.titles.download"
-          @click="props.downloadHandler?.(src)"
+          @click="props.downloadHandler?.(src,p)"
       />
     </div>
     <div
@@ -98,7 +98,7 @@ onUnmounted(() => {
   resizeObserver = null;
 })
 
-const authorLink = (url: string) => p.props.linkHandler?.(url, src.value);
+const authorLink = (url: string) => p.props.linkHandler?.(url, src.value, p);
 
 function parseSocioWords(text: string): string {
   let result = text;
