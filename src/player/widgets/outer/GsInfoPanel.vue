@@ -112,7 +112,7 @@ function handleContentClick(event: MouseEvent) {
   if (target.classList.contains('gs-socio-word')) {
     const word = target.textContent || '';
     if (p.props.socioWordHandler) {
-      p.props.socioWordHandler(word, p.core?.src);
+      p.props.socioWordHandler(word, p.core?.src, p);
     }
   }
 }

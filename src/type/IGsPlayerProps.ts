@@ -1,7 +1,7 @@
 import {IPlayerCoreProps} from "./IPlayerCoreProps";
 import {II18n} from "./II18n";
 import {AspectRatioMode, I18nName, LayoutMode, VisibilityMode} from "./UnionTypes";
-import {IGsLogic, IGsWidget} from "./IGsWidget";
+import {IGsLogic, IGsWidget, IGsWidgetProps} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
@@ -162,7 +162,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 链接处理函数
 	 * - 默认值为 `window.open`
 	 */
-	linkHandler?: (url: string, src: PlaySource, props: IGsPlayerProps) => void | Promise<void>;
+	linkHandler?: (url: string, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>;
 
 	/**
 	 *  社交关键词处理函数
@@ -171,13 +171,13 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - 可以根据需要自定义处理函数
 	 * @param word
 	 */
-	socioWordHandler?: (word: string, src: PlaySource) => void | Promise<void>
+	socioWordHandler?: (word: string, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>
 
 	/**
 	 * 下载视频处理函数
 	 * - 默认值为 `undefined`，即不处理下载
 	 */
-	downloadHandler?: (src: PlaySource, props: IGsPlayerProps) => void;
+	downloadHandler?: (src: PlaySource, props: IGsWidgetProps) => void;
 
 	/**
 	 * 上下文菜单
