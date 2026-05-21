@@ -16,6 +16,7 @@
         }"
         :download-handler="download"
         :link-handler="openLink"
+        :socio-word-handler="openLink"
         :default-transform="{scaleMode:'fit'}"
     />
     <hr/>

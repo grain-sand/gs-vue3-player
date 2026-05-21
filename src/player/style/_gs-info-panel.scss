@@ -41,6 +41,16 @@
 	  }
 	}
 
+	&.has-word-handler {
+	  .gs-socio-word{
+		cursor: pointer;
+		&:hover{
+		  color: var(--gs-text-hover);
+		  text-decoration: underline;
+		}
+	  }
+	}
+
   }
 
   &.layout-horizontal {

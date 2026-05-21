@@ -1,13 +1,13 @@
 <template>
-  <div class="gs-info-panel"
-       v-show="cxt.infoPanelVisible"
-       @click.stop.prevent=""
-       @wheel.stop=''
-       @dblclick.stop.prevent=""
-       @mouseleave="onMouseleave"
-       :class="{hovered}"
-       ref="panelRef"
-       :style="{pointerEvents: hovered ? 'auto' : 'none'}"
+  <div
+      :class="['gs-info-panel', {'hovered': hovered,'has-word-handler':wordHandler}]"
+      v-show="cxt.infoPanelVisible"
+      @click.stop.prevent=""
+      @wheel.stop=''
+      @dblclick.stop.prevent=""
+      @mouseleave="onMouseleave"
+      ref="panelRef"
+      :style="{pointerEvents: hovered ? 'auto' : 'none'}"
   >
     <div class="gs-info-header">
       <GsAuthor
@@ -62,10 +62,11 @@ const hovered = ref(false);
 const p = defineProps<IGsWidgetProps>();
 
 const src = computed(() => p.core?.src);
+const wordHandler = computed(() => p.props.socioWordHandler);
 
 const html = computed(() => {
   const text = src.value?.description || src.value?.title?.replace(/\n/g, '<br/>');
-  if (!text || !p.props.socioWordHandler) {
+  if (!text || !wordHandler.value) {
     return text;
   }
   return parseSocioWords(text);
@@ -111,14 +112,13 @@ function handleContentClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
   if (target.classList.contains('gs-socio-word')) {
     const word = target.textContent || '';
-    if (p.props.socioWordHandler) {
-      p.props.socioWordHandler(word, p.core?.src, p);
-    }
+    wordHandler.value?.(word, p.core?.src, p);
   }
 }
 
 function onMouseleave() {
   hovered.value = false;
+  if (p.cxt?.layout !== 'horizontal') return;
   const {value: el} = contentRef;
   if (!el) return;
   el.scroll({
