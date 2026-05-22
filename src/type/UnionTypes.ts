@@ -184,6 +184,10 @@ export const ContextMenuItemNames = [
 
 export type ContextMenuItemName = (typeof ContextMenuItemNames)[number];
 
-export const AuthorTypes = ['none', 'blue', 'government','business','vip','svip','supper'] as const;
+export const AuthorTypes = ['none', 'blue', 'government', 'business', 'vip', 'svip', 'supper'] as const;
 
 export type AuthorType = (typeof AuthorTypes)[number];
+
+export const DefaultListTabHeaderPartNames = ['title'] as const
+
+export type ListTabHeaderPartName = (typeof DefaultListTabHeaderPartNames)[number];
