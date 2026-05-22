@@ -8,15 +8,24 @@
     <div class="gs-list-container-wrapper">
       <div v-if="showHeader" class="gs-list-header">
         <div class="gs-list-tabs">
-          <button
-              v-for="(tab, index) in tabs"
-              :key="index"
-              class="gs-list-tab"
-              :class="{ active: activeTabIndex === index }"
-              @click="activeTabIndex = index"
-          >
-            {{ tab.title }}
-          </button>
+          <template v-for="(tab, index) in tabs" :key="index">
+            <div
+                class="gs-list-tab-wrapper"
+                :class="{ active: activeTabIndex === index }"
+            >
+              <component
+                  v-for="(part, partIndex) in getTabHeaderParts(tab)"
+                  :key="partIndex"
+                  :is="getHeaderPartComponent(part)"
+                  :tab="tab"
+                  :active="activeTabIndex === index"
+                  :setActive="() => activeTabIndex = index"
+                  :core="core"
+                  :cxt="cxt"
+                  :props="props"
+              />
+            </div>
+          </template>
         </div>
         <button class="gs-list-pin" @click="cxt.toggleListVisibility()">
           <PinSvg/>
@@ -37,8 +46,9 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {DefaultListHeaderVisible, IGsWidget, IGsWidgetProps, IListContainerTab, PlaylistItemPart} from '../../../type';
+import {DefaultListHeaderVisible, DefaultListTabHeaderPartNames, IGsWidget, IGsWidgetProps, IListContainerTab, IListTabHeaderPart, ListTabHeaderPart, PlaylistItemPart} from '../../../type';
 import GsPlaylist from './GsPlaylist.vue';
+import GsListHeaderTab from './GsListHeaderTab.vue';
 import {PinSvg} from '../../../svgs';
 
 const {props, core, cxt} = defineProps<IGsWidgetProps>();
@@ -65,7 +75,7 @@ const tabs = computed<IListContainerTab[]>(() => {
   const allTabs = [...customTabs.length ? customTabs : [defaultTab]];
 
   appendTabs.forEach(tab => {
-    const position = Math.min(Math.max(tab.position, 0), allTabs.length);
+    const position = Math.min(Math.max(tab.position ?? allTabs.length, 0), allTabs.length);
     allTabs.splice(position, 0, tab);
   });
 
@@ -80,6 +90,23 @@ const getTabBodyComponent = (tab: IListContainerTab): IGsWidget => {
     return tab.body as IGsWidget;
   }
   return GsPlaylist;
+};
+
+const getTabHeaderParts = (tab: IListContainerTab): ListTabHeaderPart[] => {
+  if (!tab.header) return [...DefaultListTabHeaderPartNames];
+  if (Array.isArray(tab.header)) return tab.header;
+  return [tab.header as IListTabHeaderPart];
+};
+
+const getHeaderPartComponent = (part: ListTabHeaderPart): IGsWidget => {
+  if (typeof part === 'string') {
+    switch (part) {
+      case 'title':
+      default:
+        return GsListHeaderTab;
+    }
+  }
+  return part as IGsWidget;
 };
 
 </script>
