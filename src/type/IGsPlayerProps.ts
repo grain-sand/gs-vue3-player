@@ -12,6 +12,11 @@ export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) 
 	window.open(url)
 });
 
+/**
+ * 用于确定该元素是否需要响应键盘事件
+ */
+export type KeyboardTargetFn = (target: EventTarget) => boolean;
+
 export interface IGsPlayerProps extends IPlayerCoreProps {
 
 	/**
@@ -54,8 +59,10 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 */
 	pageRoot?: string | HTMLElement;
 
-	/** 键盘事件注册到的元素，默认 gs-player(需要设置可以获取焦点)；如果值为`null`则键盘事件无效 */
-	keyboardTarget?: HTMLElement | Document | null | string;
+	/**
+	 * 响应键盘事件的元素，默认 gs-player；如果值为`null`则键盘事件无效
+	 */
+	keyboardTarget?: null | string | KeyboardTargetFn;
 
 	/**
 	 * 是否禁用鼠标滚轮切换上一个下一个，默认为false（不禁用）

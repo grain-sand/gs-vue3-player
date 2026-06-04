@@ -1,7 +1,7 @@
 import {AspectRatio, AspectRatioMode, LayoutMode, VisibilityMode} from "./UnionTypes";
 import {IPlayerCoreExpose} from "./IPlayerCoreExpose";
 import {DefineComponent} from "vue";
-import {IGsPlayerProps} from "./IGsPlayerProps";
+import {IGsPlayerProps, KeyboardTargetFn} from "./IGsPlayerProps";
 import {II18n} from "./II18n";
 import {IGsTransform} from "./IGsTransform";
 
@@ -47,12 +47,7 @@ export interface IGsWidgetContext {
 	 */
 	readonly videoWrapper: HTMLElement;
 
-	/**
-	 * 键盘事件注册到的元素
-	 * - 默认 gs-player(需要设置可以获取焦点)
-	 * - 如果值为`null`则键盘事件无效
-	 */
-	readonly keyboardTarget: HTMLElement | Document
+	readonly keyboardTarget?: null | string | KeyboardTargetFn;
 
 	/**
 	 * 视频容器元素实时尺寸（实时）
