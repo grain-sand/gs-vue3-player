@@ -21,7 +21,7 @@
         :always-expand-info-panel="true"
     />
     <hr/>
-    <button @click="playerRef.core.insertSrc(oSrc)">测试</button>
+    <button @click="playerRef.core.play(oSrc)">测试</button>
     <hr/>
     previousFullscreenRect: {{ playerRef?.previousFullscreenRect }}<br/>
   </div>

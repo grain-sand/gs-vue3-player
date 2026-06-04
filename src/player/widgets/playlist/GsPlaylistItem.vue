@@ -1,13 +1,13 @@
 <template>
   <li
       class="gs-playlist-item"
-      :class="{ active: current._id === core.src._id }"
+      :class="{ active: current._id === core.src?._id }"
       @click="core?.play(current)"
       ref="itemRef"
   >
     <div class="gs-playlist-item-thumb">
       <img v-if="current.poster" :src="current.poster" class="gs-playlist-item-poster" alt="poster" loading="lazy"/>
-      <component :is="PlayStateIcons[(current._id !== core.src._id).toString()]"/>
+      <component :is="PlayStateIcons[(current._id !== core.src?._id).toString()]"/>
     </div>
     <div class="gs-playlist-item-info">
       <div class="gs-playlist-item-title">{{ current.title }}</div>
