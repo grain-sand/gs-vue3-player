@@ -1,11 +1,11 @@
-import {IGsWidgetProps} from "../../type";
+import {IGsWidgetProps, KeyboardTargetFn} from "../../type";
 
 export function keyboardLogic() {
-	let target: HTMLElement | Document | null = null;
+	let isTarget: KeyboardTargetFn = null;
 	let boundHandler: ((e: KeyboardEvent) => void) | null = null;
 
 	const handleKeydown = (core: IGsWidgetProps['core'], cxt: IGsWidgetProps['cxt'], e: KeyboardEvent) => {
-		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).getAttribute?.('contenteditable')) {
+		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).getAttribute?.('contenteditable') || !isTarget(e.target, cxt)) {
 			return;
 		}
 
@@ -24,11 +24,11 @@ export function keyboardLogic() {
 				break;
 			case 'ArrowUp':
 				e.preventDefault();
-				core.volume = Math.min(1, core.volume + 0.1);
+				core.playPre();
 				break;
 			case 'ArrowDown':
 				e.preventDefault();
-				core.volume = Math.max(0, core.volume - 0.1);
+				core.playNext();
 				break;
 			case 'KeyM':
 				e.preventDefault();
@@ -54,14 +54,6 @@ export function keyboardLogic() {
 				e.preventDefault();
 				core.togglePip();
 				break;
-			case 'KeyN':
-				e.preventDefault();
-				core.playNext();
-				break;
-			case 'KeyP':
-				e.preventDefault();
-				core.playPre();
-				break;
 			case 'F1':
 				e.preventDefault();
 				if (cxt.helpVisible !== undefined) {
@@ -73,21 +65,17 @@ export function keyboardLogic() {
 
 	return {
 		mount({cxt, core}: IGsWidgetProps): void {
-			const {keyboardTarget} = cxt;
-			if ((target = keyboardTarget)) {
-				boundHandler = handleKeydown.bind(null, core, cxt);
-				target.addEventListener('keydown', boundHandler);
-				if ('setAttribute' in target) {
-					target.setAttribute('tabindex', '0');
-				}
-			}
+			const {keyboardTarget: selector} = cxt;
+			isTarget = selector instanceof Function ? selector : ((target) => cxt.isFullscreen || (target as HTMLElement)?.matches?.(selector as string));
+			boundHandler = handleKeydown.bind(null, core, cxt);
+			document.addEventListener('keydown', boundHandler);
 		},
 		unmount(): void {
-			if (target && boundHandler) {
-				target.removeEventListener('keydown', boundHandler);
+			if (boundHandler) {
+				document.removeEventListener('keydown', boundHandler);
 			}
-			target = null;
 			boundHandler = null;
+			isTarget = null;
 		}
 	};
 }

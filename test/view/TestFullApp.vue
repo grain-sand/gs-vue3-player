@@ -4,7 +4,6 @@
         ref="playerRef"
         :playlist="videoList"
         @src-changed="eventChange('src-changed',$event)"
-        :keyboard-target="tar"
         :list-container="{
           appendTabs: playerRef?.layout === 'vertical' ?undefined: [
               {

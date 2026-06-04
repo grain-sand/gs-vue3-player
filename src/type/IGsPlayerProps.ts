@@ -1,7 +1,7 @@
 import {IPlayerCoreProps} from "./IPlayerCoreProps";
 import {II18n} from "./II18n";
 import {AspectRatioMode, I18nName, LayoutMode, VisibilityMode} from "./UnionTypes";
-import {IGsLogic, IGsWidget, IGsWidgetProps} from "./IGsWidget";
+import {IGsLogic, IGsWidget, IGsWidgetContext, IGsWidgetProps} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
@@ -15,7 +15,7 @@ export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) 
 /**
  * 用于确定该元素是否需要响应键盘事件
  */
-export type KeyboardTargetFn = (target: EventTarget) => boolean;
+export type KeyboardTargetFn = (target: EventTarget, cxt: IGsWidgetContext) => boolean;
 
 export interface IGsPlayerProps extends IPlayerCoreProps {
 

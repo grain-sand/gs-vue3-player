@@ -37,7 +37,7 @@ yarn add gs-vue3-player
       :mode="playbackMode"
       :rates="[0.5, 1.0, 1.5, 2.0]"
       :visibleItems="['play', 'pre', 'next', 'time', 'speed', 'volume', 'fullscreen', 'progress', 'infoPanel', 'playlist']"
-      :keyboardTarget=".gs-player"
+      :keyboardTarget=".gs-player,.gs-player *"
       @srcChanged="handleSrcChange"
       @volumeChanged="handleVolumeChange"
       @modeChanged="handleModeChange"

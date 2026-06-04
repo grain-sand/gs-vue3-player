@@ -11,6 +11,7 @@
           }
         ]"
         ref="rootRef"
+        tabindex="0"
     >
       <div class="gs-video-wrapper"
            ref="wrapperRef"
@@ -114,6 +115,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   infoPanelVisible: true,
   linkHandler: DefaultLinkHandler,
   defaultTransform: <any>DefaultTransform,
+  keyboardTarget: '.gs-player,.gs-player *',
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -160,21 +162,6 @@ const transformChanged = computed(() => {
       state.translateY !== defaultTransform.translateY;
 });
 
-const keyboardTarget = computed<Document | HTMLElement | null>(() => {
-  const {keyboardTarget: kt} = props
-  if (kt === null) {
-    return null;
-  } else if (kt === document || (kt as any) === window) {
-    return document;
-  } else if (kt instanceof HTMLElement) {
-    return kt;
-  } else if (typeof kt === 'string') {
-    return document.querySelector(kt) || rootRef.value;
-  } else {
-    return rootRef.value;
-  }
-});
-
 const isFullscreen = computed(() => {
   rootSize.value
   return isWebFullscreen.value || !!document.fullscreenElement;
@@ -210,7 +197,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     return previousFullscreenRect.value;
   },
   get keyboardTarget() {
-    return keyboardTarget.value
+    return props.keyboardTarget
   },
   get aspectRatio() {
     return currentAspectRatio.value;
@@ -301,7 +288,7 @@ defineExpose<IGsPlayerExpose>({
     return previousFullscreenRect.value;
   },
   get keyboardTarget() {
-    return keyboardTarget.value
+    return props.keyboardTarget
   },
   get core() {
     return coreRef.value;
