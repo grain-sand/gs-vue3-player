@@ -40,12 +40,13 @@
 		}
 
 		.gs-list-tab-wrapper {
-		  flex: 80px 0 1;
+		  flex: auto 0 1;
 		  display: flex;
 		  white-space: nowrap;
 		  overflow: hidden;
 		  flex-flow: nowrap row;
 		  border-bottom: 2px solid transparent;
+		  min-width: 60px;
 
 		  &.active {
 			color: var(--gs-primary);

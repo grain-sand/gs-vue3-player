@@ -101,11 +101,12 @@ onUnmounted(() => {
 
 const authorLink = (url: string) => p.props.linkHandler?.(url, src.value, p);
 
-function parseSocioWords(text: string): string {
-  let result = text;
-  result = result.replace(/#(\w+)/g, '<span class="gs-socio-word gs-hashtag">#$1</span>');
-  result = result.replace(/@(\w+)/g, '<span class="gs-socio-word gs-mention">@$1</span>');
-  return result;
+const reg = /([#@])[^\s<@#]+/g;
+
+function parseSocioWords(text: string = ''): string {
+  return text.replace(reg, (match, p1) => {
+    return `<span class="gs-socio-word gs-${p1 === '@' ? 'mention' : 'hashtag'}">${match}</span>`;
+  });
 }
 
 function handleContentClick(event: MouseEvent) {

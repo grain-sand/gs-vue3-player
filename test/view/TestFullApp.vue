@@ -11,7 +11,7 @@
                 title: 'TestBtn',
                 body: TestBtn,
                 position: 1,
-                header:['title',TestBtn]
+                header:TestBtn
               }
           ]
         }"
