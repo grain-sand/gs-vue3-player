@@ -86,7 +86,7 @@
 		text-shadow: .2em .2em 10px rgba(0, 0, 0, 0.5);
 	  }
 
-	  &:not(.hovered) > .gs-info-content.not-hovered {
+	  &:not(.expand) > .gs-info-content.not-hovered {
 		> * {
 		  display: inline !important;
 		}
@@ -96,7 +96,7 @@
 		}
 	  }
 
-	  &.hovered {
+	  &.expand {
 		> .gs-info-content {
 		  max-height: calc(100% - 48px);
 		  max-width: 100%;

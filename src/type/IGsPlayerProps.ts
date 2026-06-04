@@ -108,6 +108,12 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	infoPanelVisible?: boolean;
 
 	/**
+	 * 是否始终展开信息面板
+	 * - 默认值为 `false`
+	 */
+	alwaysExpandInfoPanel?: boolean;
+
+	/**
 	 * 列表容器
 	 * - 未定义时，包含默认列表容器
 	 * - `null` 整体不包含列表容器组件

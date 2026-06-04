@@ -18,6 +18,7 @@
         :link-handler="openLink"
         :socio-word-handler="openLink"
         :default-transform="{scaleMode:'fit'}"
+        :always-expand-info-panel="true"
     />
     <hr/>
     <button @click="playerRef.core.insertSrc(oSrc)">测试</button>

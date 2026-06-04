@@ -1,13 +1,13 @@
 <template>
   <div
-      :class="['gs-info-panel', {'hovered': hovered,'has-word-handler':wordHandler}]"
+      :class="['gs-info-panel', {'has-word-handler':wordHandler,expand}]"
       v-show="cxt.infoPanelVisible"
       @click.stop.prevent=""
       @wheel.stop=''
       @dblclick.stop.prevent=""
       @mouseleave="onMouseleave"
       ref="panelRef"
-      :style="{pointerEvents: hovered ? 'auto' : 'none'}"
+      :style="{pointerEvents: expand ? 'auto' : 'none'}"
   >
     <div class="gs-info-header">
       <GsAuthor
@@ -63,20 +63,24 @@ const p = defineProps<IGsWidgetProps>();
 
 const src = computed(() => p.core?.src);
 const wordHandler = computed(() => p.props.socioWordHandler);
+const expand = computed(() => p.props.alwaysExpandInfoPanel || hovered.value);
 
 const html = computed(() => {
   const text = src.value?.description || src.value?.title?.replace(/\n/g, '<br/>');
   if (!text || !wordHandler.value) {
-    return text;
+    return text?.trim() || '';
   }
-  return parseSocioWords(text);
+  return parseSocioWords(text)?.trim() || '';
 });
 
 const height = computed(() => {
   if (p.cxt.layout === 'vertical') {
     return '4.5em';
   }
-  if (!hovered.value) {
+  if (!html.value) {
+    return '0';
+  }
+  if (!expand.value) {
     return '1.8em';
   }
   const maxWidth = `${panelWidth.value}px`
