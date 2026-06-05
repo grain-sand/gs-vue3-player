@@ -73,9 +73,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  const videoWrapper = cxt.value.videoWrapper;
-  videoWrapper.removeEventListener('contextmenu', handleContextMenu);
   document.removeEventListener('click', handleClickOutside);
+  cxt.value.videoWrapper?.removeEventListener('contextmenu', handleContextMenu);
 });
 
 watch(() => props.props.contextMenu, (newVal) => {

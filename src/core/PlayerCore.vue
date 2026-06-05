@@ -90,13 +90,15 @@ watch(() => props.mode, mode => currentMode.value = mode || DefaultPlaybackMode,
 
 function updatePlaylist(list: PlaySource[]) {
   playlist.value = list.map(getWrapper);
-
   if (list.length) {
     Array.from(wrapperMap.keys()).forEach(s => {
       if (!list.includes(s)) {
         wrapperMap.delete(s);
       }
     });
+    if(!innerSrc.value) {
+      setSrc(playlist.value[0])
+    }
   } else {
     wrapperMap.clear();
   }
