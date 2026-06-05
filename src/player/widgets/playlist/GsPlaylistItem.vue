@@ -1,9 +1,9 @@
 <template>
   <li
-      class="gs-playlist-item"
-      :class="{ active: current._id === core.src?._id }"
+      :class="['gs-playlist-item',{ active: current._id === core.src?._id }]"
       @click="core?.play(current)"
       ref="itemRef"
+      :style="{top: index * 54 + 'px'}"
   >
     <div class="gs-playlist-item-thumb">
       <img

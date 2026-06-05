@@ -1,158 +1,176 @@
 .gs-player {
+  .gs-list-container {
+	.gs-playlist {
+	  padding: 8px 1px 1px;
+	  background: var(--gs-panel-bg);
+	  backdrop-filter: blur(4px);
+	  overflow-y: auto;
+	  flex: 1;
 
-  ul.gs-playlist {
-	display: flex;
-	flex-flow: nowrap column;
-	gap: 1px;
-	padding: 8px 1px 1px;
-	background: var(--gs-panel-bg);
-	backdrop-filter: blur(4px);
-	overflow-y: auto;
-	max-height: 200px;
-
-	> li.gs-playlist-item {
-	  padding: 6px 8px 6px 5px;
-	  cursor: pointer;
-	  display: flex;
-	  align-items: center;
-	  gap: 12px;
-	  transition: background 0.2s;
-	  border-bottom: 1px solid var(--border-light);
-	  border-left: 3px solid transparent;
-
-	  > .gs-playlist-item-thumb {
-		width: 40px;
-		height: 40px;
-		background: var(--bg-tertiary);
-		border-radius: 4px;
-		flex-shrink: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	  > ul {
 		position: relative;
-		overflow: hidden;
+		min-width: 100%;
 
-		> .gs-playlist-item-poster {
-		  position: absolute;
-		  inset: 0;
-		  width: 100%;
-		  height: 100%;
-		  object-fit: cover;
-		}
-
-		> svg {
-		  color: var(--text-tertiary);
-		  position: relative;
-		  z-index: 1;
-		  padding: 4px;
-		  width: 85%;
-		  opacity: .8;
-		}
-
-		img + svg {
-		  opacity: .2;
-		}
-	  }
-
-	  > .gs-playlist-item-info {
-		flex: 1;
-		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-
-		> .gs-playlist-item-title {
-		  font-size: 13px;
-		  font-weight: 500;
-		  color: var(--text-primary);
-		  text-overflow: ellipsis;
-		  overflow: hidden;
-		  white-space: nowrap;
-		}
-
-		> .gs-playlist-item-parts {
+		> li.gs-playlist-item {
+		  padding: 6px 8px 6px 5px;
+		  cursor: pointer;
 		  display: flex;
 		  align-items: center;
-		  gap: 8px;
-		  color: var(--text-secondary);
-		  font-size: 12px;
+		  gap: 12px;
+		  transition: background 0.2s;
+		  border-bottom: 1px solid var(--border-light);
+		  border-left: 3px solid transparent;
+		  height: 53px;
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  min-width: 100%;
 
-		  > .gs-spacer {
-			margin-left: -8px !important;
+		  > .gs-playlist-item-thumb {
+			width: 40px;
+			height: 40px;
+			background: var(--bg-tertiary);
+			border-radius: 4px;
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			overflow: hidden;
+
+			> .gs-playlist-item-poster {
+			  position: absolute;
+			  inset: 0;
+			  width: 100%;
+			  height: 100%;
+			  object-fit: cover;
+			}
+
+			> svg {
+			  color: var(--text-tertiary);
+			  position: relative;
+			  z-index: 1;
+			  padding: 4px;
+			  width: 85%;
+			  opacity: .8;
+			}
+
+			img + svg {
+			  opacity: .2;
+			}
 		  }
 
-		  > .gs-author {
-			font-size: 12px;
-			color: var(--text-secondary);
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+		  > .gs-playlist-item-info {
+			flex: 1;
+			min-width: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
 
-			.gs-author-icon {
-			  svg {
-				transform: translateY(.05em);
+			> .gs-playlist-item-title {
+			  font-size: 13px;
+			  font-weight: 500;
+			  color: var(--text-primary);
+			  text-overflow: ellipsis;
+			  overflow: hidden;
+			  white-space: nowrap;
+			}
+
+			> .gs-playlist-item-parts {
+			  display: flex;
+			  align-items: center;
+			  gap: 8px;
+			  color: var(--text-secondary);
+			  font-size: 12px;
+
+			  > .gs-spacer {
+				margin-left: -8px !important;
+			  }
+
+			  > .gs-author {
+				font-size: 12px;
+				color: var(--text-secondary);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+
+				.gs-author-icon {
+				  svg {
+					transform: translateY(.05em);
+				  }
+				}
+			  }
+
+			  > .gs-playlist-item-time {
+				font-size: 12px;
+				color: var(--text-tertiary);
+				font-variant-numeric: tabular-nums;
+				flex-shrink: 0;
+			  }
+
+			  > .gs-playlist-item-remove {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: none;
+				border: none;
+				width: 16px;
+				height: 16px;
+				color: var(--text-tertiary);
+				font-size: 16px;
+				cursor: pointer;
+				border-radius: 50%;
+				transition: var(--gs-transition);
+				flex-shrink: 0;
+				transform: scale(1.2) translate(-2%, 1.3px);
 			  }
 			}
 		  }
 
-		  > .gs-playlist-item-time {
-			font-size: 12px;
-			color: var(--text-tertiary);
-			font-variant-numeric: tabular-nums;
-			flex-shrink: 0;
+		  &:hover {
+			background: var(--gs-hover-bg);
 		  }
 
-		  > .gs-playlist-item-remove {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: none;
-			border: none;
-			width: 16px;
-			height: 16px;
-			color: var(--text-tertiary);
-			font-size: 16px;
-			cursor: pointer;
-			border-radius: 50%;
-			transition: var(--gs-transition);
-			flex-shrink: 0;
-			transform: scale(1.2) translate(-2%, 1.3px);
+		  &.active {
+			background-color: var(--bg-tertiary);
+			border-left-color: var(--gs-primary);
+
+			> .gs-playlist-item-thumb > svg {
+			  opacity: 1;
+			}
+		  }
+
+		  > .gs-playlist-item-info > .gs-playlist-item-parts > .gs-playlist-item-remove:hover {
+			background-color: var(--gs-hover-bg);
+			color: var(--text-primary);
+			transform: scale(1.7) translate(-5%, -5%);
 		  }
 		}
 	  }
 
-	  &:hover {
-		background: var(--gs-hover-bg);
-	  }
+	}
 
-	  &.active {
-		background-color: var(--bg-tertiary);
-		border-left-color: var(--gs-primary);
+	&:not(.show-header) .gs-playlist {
+	  max-height: 100%;
+	}
 
-		> .gs-playlist-item-thumb > svg {
-		  opacity: 1;
-		}
-	  }
-
-	  > .gs-playlist-item-info > .gs-playlist-item-parts > .gs-playlist-item-remove:hover {
-		background-color: var(--gs-hover-bg);
-		color: var(--text-primary);
-		transform: scale(1.7) translate(-5%, -5%);
-	  }
+	&.show-header .gs-playlist {
+	  max-height: calc(100% - 45px);
 	}
   }
 
-  &.layout-horizontal ul.gs-playlist {
+  &.layout-horizontal .gs-playlist {
 	background: transparent;
 	backdrop-filter: none;
 	max-height: none;
   }
 
-  &.layout-horizontal ul.gs-playlist > li.gs-playlist-item {
+  &.layout-horizontal .gs-playlist > ul > li.gs-playlist-item {
 	border-bottom-color: var(--border-light);
   }
 
-  &.layout-horizontal ul.gs-playlist > li.gs-playlist-item.active {
+  &.layout-horizontal .gs-playlist > ul > li.gs-playlist-item.active {
 	background: rgba(64, 158, 255, 0.08);
   }
 }

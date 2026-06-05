@@ -4,6 +4,7 @@ import {ISourceWrapper} from "./IPlayerSource";
 
 export interface IPlaylistItemProps extends IGsWidgetProps {
 	current: ISourceWrapper
+	index: number
 }
 
 export type IPlaylistItemPart = IGsWidget<IPlaylistItemProps>

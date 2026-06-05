@@ -58,7 +58,15 @@ export function styleVariableLogic() {
 		}
 
 		if (target) {
-			setStyleVars(target, {playerCoreHeight, playerCoreWidth});
+			const info = <HTMLElement>cxt.playerRoot.querySelector('.gs-info-panel')
+			const infoHided = info?.style?.display === 'none';
+			setStyleVars(target, {
+				playerCoreHeight,
+				playerCoreWidth,
+				playerHeight: height,
+				infoPanelHeight: infoHided ? 0 : info?.offsetHeight || 0,
+				windowHeight: window.innerHeight,
+			});
 		}
 		cxt.updateWrapperSize([Number(playerCoreWidth), Number(playerCoreHeight)]);
 	};

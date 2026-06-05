@@ -1,6 +1,6 @@
 <template>
   <div
-      class="gs-list-container"
+      :class="['gs-list-container', {'show-header':showHeader}]"
       @click.stop.prevent=""
       @wheel.stop=''
       @dblclick.stop.prevent=""
@@ -46,7 +46,16 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {DefaultListHeaderVisible, DefaultListTabHeaderPartNames, IGsWidget, IGsWidgetProps, IListContainerTab, IListTabHeaderPart, ListTabHeaderPart, PlaylistItemPart} from '../../../type';
+import {
+  DefaultListHeaderVisible,
+  DefaultListTabHeaderPartNames,
+  IGsWidget,
+  IGsWidgetProps,
+  IListContainerTab,
+  IListTabHeaderPart,
+  ListTabHeaderPart,
+  PlaylistItemPart
+} from '../../../type';
 import GsPlaylist from './GsPlaylist.vue';
 import GsListHeaderTab from './GsListHeaderTab.vue';
 import {PinSvg} from '../../../svgs';

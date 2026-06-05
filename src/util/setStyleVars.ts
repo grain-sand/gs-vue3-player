@@ -5,7 +5,7 @@ const KeyRegex = /([a-z])([A-Z])/g
 export function setStyleVars(el: HTMLElement, props: Record<string, any>, unit: string = 'px') {
 	if (!el) return;
 	for (const [k, v] of Object.entries(props)) {
-		if (k && v) {
+		if (k && (v || v === 0)) {
 			el.style.setProperty(toVarName(k), toVarValue(v, unit))
 		}
 	}

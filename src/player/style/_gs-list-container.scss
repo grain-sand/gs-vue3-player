@@ -2,6 +2,7 @@
   .gs-list-container {
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 
 	&, & > .gs-list-container-wrapper {
 	  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
@@ -14,6 +15,7 @@
 	  display: flex;
 	  flex-direction: column;
 	  max-height: 100%;
+	  overflow: hidden;
 
 	  > .gs-list-header {
 		display: flex;
@@ -103,9 +105,19 @@
   }
 
   &.list-visibility-always {
-	&.layout-vertical .gs-list-container {
-	  order: 3;
-	  border-top: 1px solid var(--border-light);
+	&.layout-vertical {
+	  .gs-list-container {
+		order: 3;
+		border-top: 1px solid var(--border-light);
+	  }
+
+	  &:not(.fullscreen) .gs-list-container {
+		max-height: 216px
+	  }
+
+	  &.fullscreen .gs-list-container {
+		max-height: max(calc(min(var(--player-height), var(--window-height)) - var(--info-panel-height) - var(--player-core-height)), 216px);
+	  }
 	}
 
 	&.layout-horizontal .gs-list-container {
