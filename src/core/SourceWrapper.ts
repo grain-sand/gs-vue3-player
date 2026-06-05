@@ -117,4 +117,8 @@ export class SourceWrapper implements ISourceWrapper {
 		}
 		return this._createdAt || (this._createdAt = new Date(this._raw.createdAt));
 	}
+
+	get thumbnail(): string | undefined {
+		return this._raw.thumbnail;
+	}
 }

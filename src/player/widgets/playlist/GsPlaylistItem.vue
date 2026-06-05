@@ -6,7 +6,13 @@
       ref="itemRef"
   >
     <div class="gs-playlist-item-thumb">
-      <img v-if="current.poster" :src="current.poster" class="gs-playlist-item-poster" alt="poster" loading="lazy"/>
+      <img
+          class="gs-playlist-item-poster"
+          alt="poster"
+          loading="lazy"
+          v-if="current.thumbnail || current.poster"
+          :src="current.thumbnail || current.poster"
+      />
       <component :is="PlayStateIcons[(current._id !== core.src?._id).toString()]"/>
     </div>
     <div class="gs-playlist-item-info">

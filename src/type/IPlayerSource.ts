@@ -21,7 +21,15 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 
 	type?: PlaySourceType;
 
+	/**
+	 * 封面图片URL
+	 */
 	poster?: string;
+
+	/**
+	 * 缩略图URL
+	 */
+	thumbnail?: string;
 
 
 	/**
