@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import '../../src/player/style/main.scss'
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {videos} from "./videos.local";
 import {GsPlayer, IGsPlayerExpose} from "../../src";
 import TestBtn from './TestBtn.vue'
@@ -69,6 +69,7 @@ function addManyList() {
     videoList.value.push(...copyObject(videos));
   }
 }
+onMounted(addManyList)
 </script>
 
 <style lang="scss">

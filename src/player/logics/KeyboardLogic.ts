@@ -8,6 +8,7 @@ export function keyboardLogic() {
 		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).getAttribute?.('contenteditable') || !isTarget(e.target, cxt)) {
 			return;
 		}
+		console.log(e.code)
 
 		switch (e.code) {
 			case 'Space':
@@ -24,11 +25,28 @@ export function keyboardLogic() {
 				break;
 			case 'ArrowUp':
 				e.preventDefault();
-				core.playPre();
+				if (core.hasPre) {
+					core.playPre();
+				}
 				break;
 			case 'ArrowDown':
 				e.preventDefault();
-				core.playNext();
+				if (core.hasNext) {
+					core.playNext();
+				}
+				break;
+			case 'Home':
+				e.preventDefault();
+				if (core.playlist[0]) {
+					core.play(core.playlist[0]);
+				}
+				break;
+			case 'End':
+				e.preventDefault();
+				const last = core.playlist[core.playlist.length - 1];
+				if (last) {
+					core.play(last);
+				}
 				break;
 			case 'KeyM':
 				e.preventDefault();
