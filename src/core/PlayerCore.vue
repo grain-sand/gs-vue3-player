@@ -260,7 +260,11 @@ function removeSrc(src: PlaySource | ISourceWrapper): void {
   } else {
     wrapper = wrapperMap.get(src as PlaySource);
   }
-  if (wrapper) {
+  if (!wrapper) {
+    return;
+  }
+  removePlaylistItem(wrapper);
+  if(wrapper._id===innerSrc.value._id) {
     if (hasNext()) {
       playNext()
     } else if (hasPre()) {
@@ -268,7 +272,6 @@ function removeSrc(src: PlaySource | ISourceWrapper): void {
     } else {
       setSrc(undefined)
     }
-    removePlaylistItem(wrapper);
   }
 }
 
