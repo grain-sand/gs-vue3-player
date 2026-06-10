@@ -182,9 +182,8 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - 默认值为 `undefined`，即不处理社交关键词
 	 * - 当信息面板包含：#hashtag、@user等被点击时，会调用此函数，
 	 * - 可以根据需要自定义处理函数
-	 * @param word
 	 */
-	socioWordHandler?: (word: string, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>
+	socioWordHandler?: (word: string, el: HTMLElement, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>
 
 	/**
 	 * 下载视频处理函数

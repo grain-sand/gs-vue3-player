@@ -3,7 +3,7 @@
       :class="['gs-info-panel', {'has-word-handler':wordHandler,expand}]"
       v-show="cxt.infoPanelVisible"
       @click.stop.prevent=""
-      @wheel.stop=''
+      @wheel='onWheel'
       @dblclick.stop.prevent=""
       @mouseleave="onMouseleave"
       ref="panelRef"
@@ -38,7 +38,7 @@
         :class="['gs-info-content', {'not-hovered': !hovered}]"
         v-html="html"
         ref="contentRef"
-        @click.stop.prevent="handleContentClick"
+        @click.stop.prevent="onContentClick"
         @mouseenter="hovered = true"
         :style="{height}"
     ></div>
@@ -75,7 +75,7 @@ const html = computed(() => {
 
 const height = computed(() => {
   if (p.cxt.layout === 'vertical') {
-    return '4.5em';
+    return 'auto';
   }
   if (!html.value) {
     return '0';
@@ -113,11 +113,11 @@ function parseSocioWords(text: string = ''): string {
   });
 }
 
-function handleContentClick(event: MouseEvent) {
+function onContentClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
   if (target.classList.contains('gs-socio-word')) {
     const word = target.textContent || '';
-    wordHandler.value?.(word, p.core?.src, p);
+    wordHandler.value?.(word, target, p.core?.src, p);
   }
 }
 
@@ -131,5 +131,16 @@ function onMouseleave() {
     top: 0,
     behavior: 'smooth',
   })
+}
+
+function onWheel(e: WheelEvent) {
+  if (e.deltaY === 0) return;
+  const el = contentRef.value;
+  if (e.deltaY < 0) {
+    if (el.scrollTop === 0) return;
+  } else {
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) return;
+  }
+  e.stopPropagation();
 }
 </script>

@@ -82,7 +82,10 @@ const handleClickOutside = (e: MouseEvent) => {
   if (!(e.target instanceof HTMLElement)) {
     return;
   }
-  const el = <HTMLElement>e.target
+  let el = <HTMLElement>e.target
+  if(el.shadowRoot) {
+    el = el.shadowRoot.elementFromPoint(e.clientX, e.clientY) as HTMLElement
+  }
   if (el === contextMenuRef.value || el.closest(selector) === contextMenuRef.value) {
     return;
   }
