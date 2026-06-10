@@ -2,8 +2,9 @@
   <teleport :to="pageRoot">
     <div
         v-if="isVisible"
-        class="gs-context-menu"
+        :class="className"
         :style="menuStyle"
+        ref="contextMenuRef"
         @contextmenu.prevent
     >
       <template v-for="(item, index) in resolvedItems" :key="index">
@@ -31,8 +32,12 @@ import {
   resolveContextMenuItems
 } from './contextMenuComponents';
 
+const className = 'gs-context-menu'
+const selector = `.${className}`
+
 const props = defineProps<IGsWidgetProps>();
 
+const contextMenuRef = ref<HTMLDivElement>();
 const isVisible = ref(false);
 const menuPosition = ref({x: 0, y: 0});
 const pageRoot = computed(() => props.props.pageRoot ?? document.body);
@@ -46,9 +51,9 @@ const menuStyle = computed(() => ({
 const resolvedItems = computed(() => {
   const {contextMenu} = props.props;
   return resolveContextMenuItems(
-    undefined,
-    contextMenu?.items,
-    contextMenu?.insertItems
+      undefined,
+      contextMenu?.items,
+      contextMenu?.insertItems
   );
 });
 
@@ -57,6 +62,11 @@ const handleContextMenu = (e: MouseEvent) => {
 
   if (props.props.contextMenu === null) return;
 
+  if (isVisible.value) {
+    isVisible.value = false;
+    return;
+  }
+
   const x = e.clientX;
   const y = e.clientY;
 
@@ -64,16 +74,30 @@ const handleContextMenu = (e: MouseEvent) => {
   isVisible.value = true;
 };
 
-const handleClickOutside = () => isVisible.value = false
+const handleClickOutside = (e: MouseEvent) => {
+  if (isVisible.value === false) {
+    return;
+  }
+  isVisible.value = false;
+  if (!(e.target instanceof HTMLElement)) {
+    return;
+  }
+  const el = <HTMLElement>e.target
+  if (el === contextMenuRef.value || el.closest(selector) === contextMenuRef.value) {
+    return;
+  }
+  e.stopPropagation();
+  e.preventDefault();
+}
 
 onMounted(() => {
   const videoWrapper = cxt.value.videoWrapper;
   videoWrapper.addEventListener('contextmenu', handleContextMenu);
-  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('click', handleClickOutside, true);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('click', handleClickOutside, true);
   cxt.value.videoWrapper?.removeEventListener('contextmenu', handleContextMenu);
 });
 

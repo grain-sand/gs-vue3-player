@@ -19,6 +19,8 @@
         :socio-word-handler="openLink"
         :default-transform="{scaleMode:'fit'}"
         :always-expand-info-panel="true"
+        :info-panel-visible="false"
+        list-visibility="hover"
     />
     <hr/>
     <button @click="playerRef.core.play(oSrc)">测试</button>

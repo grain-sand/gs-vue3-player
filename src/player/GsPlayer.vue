@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
+import {computed, onBeforeUnmount, onMounted, ref, shallowRef, watch} from 'vue';
 import {PlayerCore} from '../core';
 import {
   AspectRatio,
@@ -141,7 +141,7 @@ const isHovering = ref(false);
 const controlVisibility = ref<VisibilityMode>(props.controlVisibility);
 const listVisibility = ref<VisibilityMode>(props.listVisibility || 'always');
 const handleClick = ref(props.handleClick);
-const infoPanelVisible = ref(true);
+const infoPanelVisible = ref(props.infoPanelVisible);
 const helpVisible = ref(false);
 
 const rootSize = ref<AspectRatio>([0, 0]);
@@ -191,6 +191,9 @@ const toggleListVisibility = () => listVisibility.value = listVisibility.value =
 const setLayout = (layout: LayoutMode) => currLayout.value = layout
 
 const resetTransform = () => transform.value = {...defaultTransform}
+
+watch(() => props.infoPanelVisible, (v) => infoPanelVisible.value = v)
+watch(() => props.listVisibility, (v) => listVisibility.value = v)
 
 const widgetContext = shallowRef<IGsWidgetContext>({
   get previousFullscreenRect() {
