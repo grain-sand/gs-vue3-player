@@ -20,6 +20,7 @@
           v-if="src?.createdAt"
           :date="src.createdAt"
           :i18n="cxt.i18n.date"
+          :showFullOnHover="false"
       />
       <GsButton
           v-if="src?.link&&props.linkHandler"
@@ -136,10 +137,12 @@ function onMouseleave() {
 function onWheel(e: WheelEvent) {
   if (e.deltaY === 0) return;
   const el = contentRef.value;
-  if (e.deltaY < 0) {
-    if (el.scrollTop === 0) return;
-  } else {
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) return;
+  if (p.cxt.layout !== 'vertical') {
+    if (e.deltaY < 0) {
+      if (el.scrollTop === 0) return;
+    } else {
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) return;
+    }
   }
   e.stopPropagation();
 }

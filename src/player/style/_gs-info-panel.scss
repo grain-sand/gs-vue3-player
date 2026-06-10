@@ -27,7 +27,7 @@
 	  }
 
 	  > .gs-btn-wrapper {
-		margin: -7.5px 0!important;
+		margin: -7.5px 0 !important;
 
 		> .gs-btn {
 		  width: 28px;
@@ -42,9 +42,10 @@
 	}
 
 	&.has-word-handler {
-	  .gs-socio-word{
+	  .gs-socio-word {
 		cursor: pointer;
-		&:hover{
+
+		&:hover {
 		  color: var(--gs-text-hover);
 		  text-decoration: underline;
 		}
@@ -65,8 +66,10 @@
 
 	  > .gs-info-header {
 		text-shadow: .2em .2em 10px rgba(255, 255, 255, 0.5);
-		.gs-author-icon{
+
+		.gs-author-icon {
 		  transform: translateY(-.2em);
+
 		  &.type-svip, &.type-vip {
 			transform: translateY(.5px);
 		  }
@@ -122,8 +125,8 @@
 
 	  > .gs-info-content {
 		font-size: 13px;
-		line-height: 1.5em;
-		max-height: 7.5em;
+		line-height: 1.8em;
+		max-height: 9em;
 		//height: 4.5em;
 		overflow: auto;
 	  }

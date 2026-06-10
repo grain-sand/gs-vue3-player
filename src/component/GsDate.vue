@@ -8,6 +8,7 @@
       @mouseleave="timeHover = false"
       :style="{width: `${showFullOnHover && timeHover ? fullWidth : shotWidth}px`}"
       @transitionend="!timeHover && (display = shortDate)"
+      :title="showFullOnHover?'':fullDate"
   >
     <DateSvg/>
     <span v-text="display"></span>
