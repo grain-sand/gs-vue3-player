@@ -120,7 +120,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
 
 const emit = defineEmits<IGsPlayerEmits>();
 
-const defaultTransform = Object.freeze({...DefaultTransform, ...props.defaultTransform});
+const defaultTransform = ref(Object.freeze({...DefaultTransform, ...props.defaultTransform}));
 
 function trigger<T extends keyof IGsPlayerEmits>(e: T, arg: Parameters<IGsPlayerEmits[T]>[0]) {
   // @ts-ignore
@@ -149,18 +149,19 @@ const wrapperSize = ref<AspectRatio>([0, 0]);
 const previousFullscreenRect = ref<DOMRect>();
 const pageUrl = ref(location.href);
 
-const transform = ref<IGsTransform>({...defaultTransform});
+const transform = ref<IGsTransform>({...defaultTransform.value});
 
 const i18nConfig = computed<II18n>(() => getI18nConfig(props.i18n));
 
 const transformChanged = computed(() => {
   const state = transform.value;
-  return state.flipHorizontal !== defaultTransform.flipHorizontal ||
-      state.flipVertical !== defaultTransform.flipVertical ||
-      state.rotation !== defaultTransform.rotation ||
-      state.scaleMode !== defaultTransform.scaleMode ||
-      state.translateX !== defaultTransform.translateX ||
-      state.translateY !== defaultTransform.translateY;
+  const df = defaultTransform.value;
+  return state.flipHorizontal !== df.flipHorizontal ||
+      state.flipVertical !== df.flipVertical ||
+      state.rotation !== df.rotation ||
+      state.scaleMode !== df.scaleMode ||
+      state.translateX !== df.translateX ||
+      state.translateY !== df.translateY;
 });
 
 const isFullscreen = computed(() => {
@@ -191,10 +192,15 @@ const toggleListVisibility = () => listVisibility.value = listVisibility.value =
 
 const setLayout = (layout: LayoutMode) => currLayout.value = layout
 
-const resetTransform = () => transform.value = {...defaultTransform}
+const resetTransform = () => transform.value = {...defaultTransform.value}
 
 watch(() => props.infoPanelVisible, (v) => infoPanelVisible.value = v)
 watch(() => props.listVisibility, (v) => listVisibility.value = v)
+watch(() => props.aspectRatio, (v) => currentAspectRatio.value = v);
+watch(() => props.defaultTransform, (v) => {
+  defaultTransform.value = Object.freeze({...DefaultTransform, ...v})
+  resetTransform()
+}, {deep: true})
 
 const widgetContext = shallowRef<IGsWidgetContext>({
   get pageUrl() {
