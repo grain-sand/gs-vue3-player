@@ -147,6 +147,7 @@ const helpVisible = ref(false);
 const rootSize = ref<AspectRatio>([0, 0]);
 const wrapperSize = ref<AspectRatio>([0, 0]);
 const previousFullscreenRect = ref<DOMRect>();
+const pageUrl = ref(location.href);
 
 const transform = ref<IGsTransform>({...defaultTransform});
 
@@ -196,6 +197,12 @@ watch(() => props.infoPanelVisible, (v) => infoPanelVisible.value = v)
 watch(() => props.listVisibility, (v) => listVisibility.value = v)
 
 const widgetContext = shallowRef<IGsWidgetContext>({
+  get pageUrl() {
+    return pageUrl.value;
+  },
+  updatePageUrl(url: string) {
+    if (url !== pageUrl.value) pageUrl.value = url;
+  },
   get previousFullscreenRect() {
     return previousFullscreenRect.value;
   },
@@ -287,6 +294,9 @@ onMounted(() => LogicManager.mount(widgetProps.value));
 onBeforeUnmount(() => LogicManager.unmount(widgetProps.value));
 
 defineExpose<IGsPlayerExpose>({
+  get pageUrl() {
+    return pageUrl.value;
+  },
   get previousFullscreenRect() {
     return previousFullscreenRect.value;
   },

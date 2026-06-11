@@ -1,9 +1,9 @@
 <template>
   <figure
       v-if="author"
-      :class="['gs-author', { 'gs-author-clickable': link }]"
-      @click="link && props.linkHandler?.(link)"
-      :title="link"
+      :class="['gs-author', { 'gs-author-clickable': link && props.pageUrl !== link }]"
+      @click="link && props.pageUrl !== link && props.linkHandler?.(link)"
+      :title="link && props.pageUrl !== link ?link:''"
   >
     <div class="gs-author-avatar">
       <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">
@@ -27,7 +27,8 @@ import {computed, DefineComponent} from "vue";
 defineOptions({inheritAttrs: false});
 
 const props = withDefaults(defineProps<IAuthorProps>(), {
-  handleClick: true
+  handleClick: true,
+  pageUrl: location.href,
 });
 
 const link = computed(() => props.handleClick && props.linkHandler && props.author?.link);

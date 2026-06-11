@@ -14,6 +14,7 @@
           v-if="src?.author"
           :author="src.author"
           :link-handler="authorLink"
+          :page-url="cxt.pageUrl"
           class="gs-info-author"
       />
       <GsDate
@@ -23,7 +24,7 @@
           :showFullOnHover="false"
       />
       <GsButton
-          v-if="src?.link&&props.linkHandler"
+          v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"
           :icon="LinkSvg"
           :title="src.link"
           @click="props.linkHandler(src.link, src,p)"

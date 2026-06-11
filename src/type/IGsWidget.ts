@@ -75,6 +75,10 @@ export interface IGsWidgetContext {
 	 */
 	readonly transformChanged: boolean;
 
+	readonly pageUrl: string
+
+	updatePageUrl(url: string): void;
+
 	/**
 	 * 更新根元素实时尺寸（内部使用）
 	 */

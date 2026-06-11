@@ -20,4 +20,6 @@ export interface IAuthorProps {
 	handleClick?: boolean;
 
 	linkHandler?: (url: string) => undefined | void | Promise<void>;
+
+	pageUrl?: string;
 }

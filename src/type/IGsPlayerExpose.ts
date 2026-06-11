@@ -4,7 +4,7 @@ import {IPlayerCoreMediaEmits} from "./IPlayerCoreEmits";
 import {PlaySource} from "./IPlayerSource";
 
 
-export interface IGsPlayerExpose<Data = any, Source extends PlaySource<Data> = PlaySource<Data>> extends Omit<IGsWidgetContext, 'updateRootSize' | 'updateWrapperSize'> {
+export interface IGsPlayerExpose<Data = any, Source extends PlaySource<Data> = PlaySource<Data>> extends Omit<IGsWidgetContext, 'updateRootSize' | 'updateWrapperSize' | 'updatePageUrl'> {
 
 	readonly core: IPlayerCoreExpose<Data, Source>;
 
