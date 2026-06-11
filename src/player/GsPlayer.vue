@@ -194,6 +194,7 @@ const setLayout = (layout: LayoutMode) => currLayout.value = layout
 
 const resetTransform = () => transform.value = {...defaultTransform.value}
 
+watch(() => isFullscreen.value, v => v && (isHovering.value = false));
 watch(() => props.infoPanelVisible, (v) => infoPanelVisible.value = v)
 watch(() => props.listVisibility, (v) => listVisibility.value = v)
 watch(() => props.aspectRatio, (v) => currentAspectRatio.value = v);
