@@ -107,7 +107,7 @@ onUnmounted(() => {
 
 const authorLink = (url: string) => p.props.linkHandler?.(url, src.value, p);
 
-const reg = /([#@])[^\s<@#]+/g;
+const reg = /([#@])[^\s<《@#:：;；"“”'.!！?？]+/g;
 
 function parseSocioWords(text: string = ''): string {
   return text.replace(reg, (match, p1) => {
