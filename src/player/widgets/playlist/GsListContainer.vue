@@ -27,7 +27,15 @@
             </div>
           </template>
         </div>
-        <button class="gs-list-pin" @click="cxt.toggleListVisibility()">
+        <template v-if="activeTab && appendButtons?.length" v-for="btn of appendButtons">
+          <component
+              :is="btn"
+              :core="core"
+              :cxt="cxt"
+              :props="props"
+          />
+        </template>
+        <button class="gs-list-btn" @click="cxt.toggleListVisibility()">
           <PinSvg/>
         </button>
       </div>
@@ -90,6 +98,8 @@ const tabs = computed<IListContainerTab[]>(() => {
 
   return allTabs;
 });
+
+const appendButtons = computed(() => (props.listContainer?.appendButtons || []).reverse());
 
 const activeTab = computed(() => tabs.value[activeTabIndex.value]);
 

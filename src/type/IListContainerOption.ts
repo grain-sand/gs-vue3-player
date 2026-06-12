@@ -64,4 +64,6 @@ export interface IListContainerOption {
 
 	appendTabs?: IListContainerAppendTab[];
 
+	appendButtons?: IGsWidget[];
+
 }

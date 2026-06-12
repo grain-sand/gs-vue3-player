@@ -75,7 +75,7 @@
 		  }
 		}
 
-		.gs-list-pin {
+		.gs-list-btn {
 		  width: 36px;
 		  height: 36px;
 		  display: flex;
@@ -87,11 +87,14 @@
 		  border-radius: var(--gs-radius);
 		  color: var(--text-secondary);
 		  transition: color 0.2s, background 0.2s;
-		  margin-right: 8px;
 
 		  svg {
 			width: 18px;
 			height: 18px;
+		  }
+
+		  &:last-child {
+			margin-right: 8px;
 		  }
 
 		  &:hover {
