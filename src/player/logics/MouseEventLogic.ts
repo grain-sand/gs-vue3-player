@@ -30,8 +30,10 @@ export function mouseEventLogic() {
 		if (!props.handleDblClick) return;
 		if (cxt.isFullscreen) {
 			cxt.exitFullscreen();
-		} else {
+		} else if (props.dbClickHandler === 'web-fullscreen') {
 			cxt.webFullscreen();
+		} else if (props.dbClickHandler === 'fullscreen') {
+			cxt.fullscreen();
 		}
 	};
 

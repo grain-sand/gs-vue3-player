@@ -21,6 +21,7 @@
         :always-expand-info-panel="true"
         :info-panel-visible="false"
         list-visibility="hover"
+        db-click-handler="fullscreen"
     />
     <hr/>
     <button @click="playerRef.core.play(oSrc)">测试</button>

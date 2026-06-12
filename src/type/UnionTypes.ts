@@ -191,3 +191,9 @@ export type AuthorType = (typeof AuthorTypes)[number];
 export const DefaultListTabHeaderPartNames = ['title'] as const
 
 export type ListTabHeaderPartName = (typeof DefaultListTabHeaderPartNames)[number];
+
+export const DbClickHandlers = ['web-fullscreen', 'fullscreen','none'] as const
+
+export type DbClickHandler = (typeof DbClickHandlers)[number];
+
+export const DefaultDbClickHandler: DbClickHandler = DbClickHandlers[0];

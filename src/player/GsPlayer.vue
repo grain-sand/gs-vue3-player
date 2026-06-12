@@ -95,7 +95,7 @@ import {
   IPlayerCoreExpose,
   IGsTransform,
   LayoutMode,
-  VisibilityMode
+  VisibilityMode, DefaultDbClickHandler
 } from '../type';
 import {getI18nConfig} from './i18n';
 import {resolveWidgets} from './widgets';
@@ -116,6 +116,7 @@ const props = withDefaults(defineProps<IGsPlayerProps>(), {
   linkHandler: DefaultLinkHandler,
   defaultTransform: <any>DefaultTransform,
   keyboardTarget: '.gs-player,.gs-player *',
+  dbClickHandler: DefaultDbClickHandler,
 });
 
 const emit = defineEmits<IGsPlayerEmits>();
@@ -173,19 +174,23 @@ const rtLayout = computed(() => isFullscreen.value ? rootSize.value[0] / rootSiz
 
 const controlsVisible = computed(() => isHovering.value || controlVisibility.value === 'always' || listVisibility.value === 'always' && rtLayout.value === 'horizontal');
 
-const fullscreen = () => {
-  previousFullscreenRect.value = rootRef.value?.getBoundingClientRect();
-  rootRef.value?.requestFullscreen?.()
-}
-
 const webFullscreen = () => {
   previousFullscreenRect.value = rootRef.value?.getBoundingClientRect();
   isWebFullscreen.value = true
 }
 
+const fullscreen = () => {
+  webFullscreen();
+  if(document.fullscreenEnabled) {
+    document.documentElement.requestFullscreen?.()
+  }
+}
+
 const exitFullscreen = () => {
   isWebFullscreen.value = false;
-  if (document.fullscreenElement) document.exitFullscreen?.();
+  if(document.fullscreenEnabled && document.fullscreenElement) {
+    document.exitFullscreen();
+  }
 };
 
 const toggleListVisibility = () => listVisibility.value = listVisibility.value === 'hover' ? 'always' : 'hover';

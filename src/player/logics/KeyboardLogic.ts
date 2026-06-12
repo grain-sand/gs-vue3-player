@@ -8,8 +8,6 @@ export function keyboardLogic() {
 		if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).getAttribute?.('contenteditable') || !isTarget(e.target, cxt)) {
 			return;
 		}
-		console.log(e.code)
-
 		switch (e.code) {
 			case 'Space':
 				e.preventDefault();

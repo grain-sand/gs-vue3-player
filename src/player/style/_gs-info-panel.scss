@@ -126,9 +126,10 @@
 	  > .gs-info-content {
 		font-size: 13px;
 		line-height: 1.8em;
-		max-height: 9em;
-		//height: 4.5em;
 		overflow: auto;
+	  }
+	  &:not(.always-expand-info-panel) > .gs-info-content{
+		max-height: 9em;
 	  }
 	}
   }

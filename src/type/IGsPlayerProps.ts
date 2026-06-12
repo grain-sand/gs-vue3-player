@@ -1,6 +1,6 @@
 import {IPlayerCoreProps} from "./IPlayerCoreProps";
 import {II18n} from "./II18n";
-import {AspectRatioMode, I18nName, LayoutMode, VisibilityMode} from "./UnionTypes";
+import {AspectRatioMode, DbClickHandler, I18nName, LayoutMode, VisibilityMode} from "./UnionTypes";
 import {IGsLogic, IGsWidget, IGsWidgetContext, IGsWidgetProps} from "./IGsWidget";
 import {IControlBarOption} from "./IControlBarOption";
 import {IListContainerOption} from "./IListContainerOption";
@@ -201,5 +201,11 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	contextMenu?: null | IGsWidget | IContextMenuOption;
 
 	defaultTransform?: Partial<IGsTransform>;
+
+	/**
+	 * 双击处理方式
+	 * - 默认值为 `web-fullscreen`
+	 */
+	dbClickHandler?: DbClickHandler;
 
 }

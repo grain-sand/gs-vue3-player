@@ -1,6 +1,6 @@
 <template>
   <div
-      :class="['gs-info-panel', {'has-word-handler':wordHandler,expand}]"
+      :class="['gs-info-panel', {'has-word-handler':wordHandler,expand,'always-expand-info-panel':props.alwaysExpandInfoPanel}]"
       v-show="cxt.infoPanelVisible"
       @click.stop.prevent=""
       @wheel='onWheel'
@@ -76,7 +76,7 @@ const html = computed(() => {
 });
 
 const height = computed(() => {
-  if (p.cxt.layout === 'vertical') {
+  if (p.cxt.layout === 'vertical' || p.props.alwaysExpandInfoPanel) {
     return 'auto';
   }
   if (!html.value) {
