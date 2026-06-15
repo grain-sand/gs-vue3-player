@@ -85,7 +85,7 @@ function getPartComponent(part: PlaylistItemPart) {
             if (!duration) return null;
             const minutes = Math.floor(duration / 60);
             const seconds = Math.floor(duration % 60);
-            return h('span', {class: 'gs-playlist-item-time'}, `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+            return h('span', {class: 'gs-playlist-item-text'}, `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
           }
         } as any);
       case 'remove':

@@ -59,12 +59,14 @@ export function styleVariableLogic() {
 
 		if (target) {
 			const info = <HTMLElement>cxt.playerRoot.querySelector('.gs-info-panel')
+			const list = <HTMLElement>cxt.playerRoot.querySelector('.gs-list-container')
 			const infoHided = info?.style?.display === 'none';
 			setStyleVars(target, {
 				playerCoreHeight,
 				playerCoreWidth,
 				playerHeight: height,
 				infoPanelHeight: infoHided ? 0 : info?.offsetHeight || 0,
+				listContainerHeight: list?.offsetHeight || 0,
 				windowHeight: window.innerHeight,
 			});
 		}

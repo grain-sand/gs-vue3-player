@@ -22,8 +22,14 @@
 	  > .gs-author {
 		font-size: 13px;
 		opacity: 0.7;
-		flex-shrink: 0;
 		margin-right: 8px;
+		flex-shrink: 1;
+		min-width: calc(4.5em + 12px);
+		overflow: hidden;
+	  }
+
+	  > .gs-date {
+		flex-shrink: 0;
 	  }
 
 	  > .gs-btn-wrapper {
@@ -115,11 +121,20 @@
 
   &.layout-vertical {
 	.gs-info-panel {
-	  > .gs-info-header .gs-author-icon {
-		transform: translateY(-1px);
+	  --gs-info-content-height: calc(var(--player-max-height, var(--player-height)) - var(--player-core-height) - var(--list-container-height) - 30px);
 
-		&.type-svip, &.type-vip {
-		  transform: translateY(1px);
+	  > .gs-info-header {
+		max-width: 100%;
+
+		> .gs-author {
+
+		  .gs-author-icon {
+			transform: translateY(-1px);
+
+			&.type-svip, &.type-vip {
+			  transform: translateY(1px);
+			}
+		  }
 		}
 	  }
 
@@ -128,8 +143,13 @@
 		line-height: 1.8em;
 		overflow: auto;
 	  }
-	  &:not(.always-expand-info-panel) > .gs-info-content{
-		max-height: 9em;
+
+	  &:not(.always-expand-info-panel) > .gs-info-content {
+		max-height: min(9em, var(--gs-info-content-height));
+	  }
+
+	  &.always-expand-info-panel > .gs-info-content {
+		max-height: max(1.8em, var(--gs-info-content-height));
 	  }
 	}
   }

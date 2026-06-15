@@ -7,14 +7,16 @@
   cursor: default;
 
   .gs-author-avatar {
-	width: 1.3em;
-	height: 1.3em;
 	border-radius: 100%;
 	background: var(--gs-bg-tertiary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
+	flex-shrink: 0;
+	width: 1.3em;
+	height: 1.3em;
+	min-width: 1.3em;
 
 	img {
 	  max-height: 100%;
@@ -33,17 +35,19 @@
 	flex-flow: nowrap row;
 	align-items: center;
 	gap: 2px;
+	flex-shrink: 1;
 
 	> .gs-author-text {
 	  overflow: hidden;
 	  text-overflow: ellipsis;
-	  flex: 1;
 	  min-width: 0;
+	  flex: 0 1 auto;
 	}
 
 	> .gs-author-icon {
 	  flex: auto 0 0;
 	  height: 1.2em;
+	  flex-shrink: 0;
 
 	  svg {
 		height: 100%;
