@@ -9,8 +9,8 @@ export const defaultLogics: IGsLogic[] = [
 	styleVariableLogic(),
 	keyboardLogic(),
 	fullscreenLogic(),
-	mouseEventLogic(),
-	new TransformLogic()
+	new TransformLogic(),
+	mouseEventLogic()
 ];
 
 export class LogicManager {

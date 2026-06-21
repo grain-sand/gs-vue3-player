@@ -181,14 +181,14 @@ const webFullscreen = () => {
 
 const fullscreen = () => {
   webFullscreen();
-  if(document.fullscreenEnabled) {
+  if (document.fullscreenEnabled) {
     document.documentElement.requestFullscreen?.()
   }
 }
 
 const exitFullscreen = () => {
   isWebFullscreen.value = false;
-  if(document.fullscreenEnabled && document.fullscreenElement) {
+  if (document.fullscreenEnabled && document.fullscreenElement) {
     document.exitFullscreen();
   }
 };
@@ -261,7 +261,7 @@ const widgetContext = shallowRef<IGsWidgetContext>({
     listVisibility.value = value;
   },
   get handleClick() {
-    return handleClick.value;
+    return handleClick.value !== false;
   },
   set handleClick(value: boolean) {
     handleClick.value = value;
@@ -355,7 +355,7 @@ defineExpose<IGsPlayerExpose>({
     listVisibility.value = value;
   },
   get handleClick() {
-    return handleClick.value;
+    return handleClick.value !== false;
   },
   set handleClick(value: boolean) {
     handleClick.value = value;

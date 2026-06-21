@@ -11,7 +11,7 @@
       :title="showFullOnHover?'':fullDate"
   >
     <DateSvg/>
-    <span v-text="display"></span>
+    <span v-text="formatDate(props.date, {i18n: props.i18n})"></span>
   </time>
 </template>
 

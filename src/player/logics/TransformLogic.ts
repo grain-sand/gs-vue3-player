@@ -9,12 +9,10 @@ export class TransformLogic implements IGsLogic {
 	private startTranslate = {x: 0, y: 0};
 	private stopWatchTrans: Function;
 	private stopWatchOther: Function;
-	private handleClick = false;
 	private timer = new Timer(100)
 
 	mount(props: IGsWidgetProps): void {
 		this.props = props;
-		this.handleClick = props.cxt.handleClick;
 		this.registerEvents();
 		this.setupWatcher();
 	}
@@ -120,7 +118,7 @@ export class TransformLogic implements IGsLogic {
 		}
 
 		style.transform = transforms.join(' ');
-		if(cxt.isFullscreen) {
+		if (cxt.isFullscreen) {
 			const vs = core.el.getBoundingClientRect();
 			const [ww, wh] = cxt.wrapperSize;
 			core.toBestQuality({
@@ -136,14 +134,14 @@ export class TransformLogic implements IGsLogic {
 		const state = this.props!.cxt.transform;
 		this.startTranslate = {x: state.translateX, y: state.translateY};
 
-		document.addEventListener('mousemove', this.onMouseMove);
 		document.addEventListener('mouseup', this.onMouseUp);
+		setTimeout(() => this.isDragging && document.addEventListener('mousemove', this.onMouseMove), 100);
 		e.preventDefault();
 	};
 
 	private onMouseMove = (e: MouseEvent) => {
 		if (!this.isDragging || !this.props) return;
-		this.props.cxt.handleClick = false;
+		this.props.cxt.handleClick = false
 
 		const dx = e.clientX - this.startPos.x;
 		const dy = e.clientY - this.startPos.y;

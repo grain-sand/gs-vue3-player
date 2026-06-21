@@ -14,9 +14,10 @@ export function mouseEventLogic() {
 		} finally {
 			lastClickTime = Date.now();
 		}
-		if (!cxt.handleClick || !core) return;
+		if (!core) return;
 		const lastTime = core.time;
 		await timer.wait();
+		if (!cxt.handleClick) return;
 		core.time = lastTime;
 		if (core.muted) {
 			core.unmute();
@@ -72,7 +73,6 @@ export function mouseEventLogic() {
 		mount(p: IGsWidgetProps): void {
 			({props, core, cxt} = p);
 			const {playerRoot} = cxt;
-
 			playerRoot.addEventListener('click', handleClick);
 			playerRoot.addEventListener('dblclick', handleDblClick);
 			playerRoot.addEventListener('wheel', handleWheel, {passive: false});
