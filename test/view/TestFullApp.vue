@@ -19,7 +19,7 @@
         :socio-word-handler="openLink"
         :default-transform="{scaleMode:'fit'}"
         :always-expand-info-panel="true"
-        :info-panel-visible="false"
+        :info-panel-visible="true"
         list-visibility="hover"
         db-click-handler="fullscreen"
     />

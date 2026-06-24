@@ -34,6 +34,7 @@
           :icon="DownloadSvg"
           :title="cxt.i18n.titles.download"
           @click="props.downloadHandler?.(src,p)"
+          :class="{'downloaded': src?.downloaded}"
       />
     </div>
     <div

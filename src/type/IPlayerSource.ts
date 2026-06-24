@@ -78,6 +78,12 @@ export interface ITypedSource<D = any, T extends string | IVideoQualityItem[] = 
 	 * -  `string`时，为兼容`new Date()`参数的字符串，如：ISO时间字符串
 	 */
 	createdAt?: number | string | Date;
+
+	/**
+	 * 是否已下载
+	 */
+	downloaded?: boolean;
+
 }
 
 // 指定类型与URL
