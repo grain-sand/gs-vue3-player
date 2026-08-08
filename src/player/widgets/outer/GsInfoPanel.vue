@@ -23,12 +23,22 @@
           :i18n="cxt.i18n.date"
           :showFullOnHover="false"
       />
-      <GsButton
+<!--      <GsButton-->
+<!--          v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"-->
+<!--          :icon="LinkSvg"-->
+<!--          :title="src.link"-->
+<!--          @click="props.linkHandler(src.link, src,p)"-->
+<!--      />-->
+      <a
+          class="gs-btn gs-text-btn"
           v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"
-          :icon="LinkSvg"
           :title="src.link"
           @click="props.linkHandler(src.link, src,p)"
-      />
+          target="_blank"
+          :href="src.link"
+      >
+        <component :is="LinkSvg"/>
+      </a>
       <GsButton
           v-if="props.downloadHandler"
           :icon="DownloadSvg"

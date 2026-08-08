@@ -1,22 +1,24 @@
 <template>
-  <figure
+  <a
       v-if="author"
       :class="['gs-author', { 'gs-author-clickable': link && props.pageUrl !== link }]"
       @click="link && props.pageUrl !== link && props.linkHandler?.(link)"
       :title="link && props.pageUrl !== link ?link:''"
+      target="_blank"
+      :href="link && props.pageUrl !== link ?link:''"
   >
     <div class="gs-author-avatar">
       <img v-if="author.profileImage" :src="author.profileImage" :alt="author.name">
       <UserSvg v-else/>
     </div>
-    <figcaption class="gs-author-name">
+    <div class="gs-author-name">
       <span class="gs-author-text">{{ author.name }}</span>
       <span v-if="typeIcon.src||typeIcon.svg" :class="['gs-author-icon', authorTypeClass]">
         <img v-if="typeIcon.src" :src="typeIcon.src" alt="verified">
         <component v-else :is="typeIcon.svg"/>
       </span>
-    </figcaption>
-  </figure>
+    </div>
+  </a>
 </template>
 
 <script setup lang="ts">
