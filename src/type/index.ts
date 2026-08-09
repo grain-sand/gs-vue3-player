@@ -27,3 +27,5 @@ export * from './IGsWidget';
 export * from './IControlBarOption';
 export * from './IListContainerOption';
 export * from './IContextMenuOption';
+
+export * from './ILinkHandlerContext';

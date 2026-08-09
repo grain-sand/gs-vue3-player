@@ -2,7 +2,7 @@
   <a
       v-if="author"
       :class="['gs-author', { 'gs-author-clickable': link && props.pageUrl !== link }]"
-      @click="link && props.pageUrl !== link && props.linkHandler?.(link)"
+      @click="handleClick"
       :title="link && props.pageUrl !== link ?link:''"
       target="_blank"
       :href="link && props.pageUrl !== link ?link:''"
@@ -50,4 +50,15 @@ const authorTypeClass = computed(() => {
   }
   return `type-none`;
 });
+
+function handleClick(e: MouseEvent | TouchEvent) {
+  if (!props.handleClick) {
+    e.preventDefault();
+  } else {
+    // noinspection JSIncompatibleTypesComparison
+    if (link && props.pageUrl !== link) {
+      props.linkHandler?.(link.value, e as any);
+    }
+  }
+}
 </script>

@@ -64,6 +64,8 @@
 	&.has-word-handler {
 	  .gs-socio-word {
 		cursor: pointer;
+		text-decoration: none;
+		color: var(--gs-text);
 
 		&:hover {
 		  color: var(--gs-text-hover);

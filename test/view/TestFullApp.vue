@@ -17,6 +17,7 @@
         :download-handler="download"
         :link-handler="openLink"
         :socio-word-handler="openLink"
+        :socio-word-link-creator="linkCreator"
         :default-transform="{scaleMode:'fit'}"
         :always-expand-info-panel="true"
         :info-panel-visible="true"
@@ -63,16 +64,23 @@ function download(src, props) {
   console.log(src, props)
 }
 
-function openLink(url, src, props) {
-  console.log(url, src, props)
+function openLink(url, cxt) {
+  const e:PointerEvent = cxt.event;
+  console.log(url, e.ctrlKey)
 }
 
 function addManyList() {
-  for(let i=0; i<20; i++) {
+  for (let i = 0; i < 20; i++) {
     videoList.value.push(...copyObject(videos));
   }
 }
+
 onMounted(addManyList)
+
+function linkCreator(word: string) {
+  return `https://www.baidu.com/s?ie=utf-8&wd=${word}`;  //
+}
+
 </script>
 
 <style lang="scss">

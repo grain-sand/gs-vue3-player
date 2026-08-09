@@ -7,6 +7,7 @@ import {IListContainerOption} from "./IListContainerOption";
 import {PlaySource} from "./IPlayerSource";
 import {IContextMenuOption} from "./IContextMenuOption";
 import {IGsTransform} from "./IGsTransform";
+import {LinkHandler, SocioWordHandler} from "./ILinkHandlerContext";
 
 export const DefaultLinkHandler = <IGsPlayerProps['linkHandler']>((url: string) => {
 	window.open(url)
@@ -175,7 +176,7 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * 链接处理函数
 	 * - 默认值为 `window.open`
 	 */
-	linkHandler?: (url: string, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>;
+	linkHandler?: LinkHandler;
 
 	/**
 	 *  社交关键词处理函数
@@ -183,7 +184,13 @@ export interface IGsPlayerProps extends IPlayerCoreProps {
 	 * - 当信息面板包含：#hashtag、@user等被点击时，会调用此函数，
 	 * - 可以根据需要自定义处理函数
 	 */
-	socioWordHandler?: (word: string, el: HTMLElement, src: PlaySource, props: IGsWidgetProps) => void | Promise<void>
+	socioWordHandler?: SocioWordHandler
+
+	/**
+	 * 社交关键词链接创建函数
+	 * - 当信息面板包含：#hashtag、@user，会调用此函数创建链接
+	 */
+	socioWordLinkCreator?: (word: string, src: PlaySource, props: IGsWidgetProps) => string;
 
 	/**
 	 * 下载视频处理函数

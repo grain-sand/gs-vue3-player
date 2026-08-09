@@ -23,17 +23,17 @@
           :i18n="cxt.i18n.date"
           :showFullOnHover="false"
       />
-<!--      <GsButton-->
-<!--          v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"-->
-<!--          :icon="LinkSvg"-->
-<!--          :title="src.link"-->
-<!--          @click="props.linkHandler(src.link, src,p)"-->
-<!--      />-->
+      <!--      <GsButton-->
+      <!--          v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"-->
+      <!--          :icon="LinkSvg"-->
+      <!--          :title="src.link"-->
+      <!--          @click="props.linkHandler(src.link, src,p)"-->
+      <!--      />-->
       <a
           class="gs-btn gs-text-btn"
           v-if="src?.link && src?.link !== cxt.pageUrl && props.linkHandler"
           :title="src.link"
-          @click="props.linkHandler(src.link, src,p)"
+          @click="props.linkHandler(src.link, {src, props, event: $event} as any)"
           target="_blank"
           :href="src.link"
       >
@@ -116,11 +116,21 @@ onUnmounted(() => {
   resizeObserver = null;
 })
 
-const authorLink = (url: string) => p.props.linkHandler?.(url, src.value, p);
+const authorLink = (url: string, e: MouseEvent) => p.props.linkHandler?.(url, {
+  src: src.value,
+  props: p,
+  event: e
+} as any);
 
 const reg = /([#@])[^\s<《@#:：;；"“”'.!！?？]+/g;
 
 function parseSocioWords(text: string = ''): string {
+  const creator = p.props.socioWordLinkCreator;
+  if (creator instanceof Function) {
+    return text.replace(reg, (match, p1) => {
+      return `<a href="${creator(match, src.value, p)}" class="gs-socio-word gs-${p1 === '@' ? 'mention' : 'hashtag'}" target="_blank">${match}</a>`;
+    });
+  }
   return text.replace(reg, (match, p1) => {
     return `<span class="gs-socio-word gs-${p1 === '@' ? 'mention' : 'hashtag'}">${match}</span>`;
   });
@@ -130,7 +140,7 @@ function onContentClick(event: MouseEvent) {
   const target = event.target as HTMLElement;
   if (target.classList.contains('gs-socio-word')) {
     const word = target.textContent || '';
-    wordHandler.value?.(word, target, p.core?.src, p);
+    wordHandler.value?.(word, {src: src.value, props: p, event} as any);
   }
 }
 
