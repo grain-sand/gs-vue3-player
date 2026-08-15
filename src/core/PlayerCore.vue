@@ -96,7 +96,7 @@ function updatePlaylist(list: PlaySource[]) {
         wrapperMap.delete(s);
       }
     });
-    if(!innerSrc.value) {
+    if (!innerSrc.value) {
       setSrc(playlist.value[0])
     }
   } else {
@@ -264,7 +264,7 @@ function removeSrc(src: PlaySource | ISourceWrapper): void {
     return;
   }
   removePlaylistItem(wrapper);
-  if(wrapper._id===innerSrc.value._id) {
+  if (wrapper._id === innerSrc.value._id) {
     if (hasNext()) {
       playNext()
     } else if (hasPre()) {
@@ -474,7 +474,7 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
   }
 
   const autoplay = video.autoplay;
-  const {type, src: typedSrc, poster = ''} = parseVideoSource(wrapper._raw);
+  const {type, src: typedSrc, poster = '', aspectRatio} = parseVideoSource(wrapper._raw);
   const srcStr = getStringSource(typedSrc, getQuality());
   video.poster = poster
   const hlsSupped = Hls.isSupported();
@@ -496,6 +496,9 @@ function setSrc(src: PlaySource | ISourceWrapper | undefined) {
   video.poster = poster
   video.autoplay = autoplay
   video.playbackRate = rate.value;
+  if (Array.isArray(aspectRatio) && aspectRatio.length > 1) {
+    size.value = [aspectRatio[0], aspectRatio[1]]
+  }
 }
 
 watch(() => props.src, (newSrc) => {
